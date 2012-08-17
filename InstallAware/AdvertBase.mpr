@@ -1,0 +1,95 @@
+AdvertBase.mia
+prereq.dfm
+prereq.dfm.miaf
+componentstree.dfm
+componentstree.dfm.miaf
+wizard.dfm
+wizard.dfm.miaf
+welcome.dfm
+welcome.dfm.miaf
+startmenu.dfm
+startmenu.dfm.miaf
+setuptype.dfm
+setuptype.dfm.miaf
+registrationwithserial.dfm
+registrationwithserial.dfm.miaf
+registration.dfm
+registration.dfm.miaf
+readme.dfm
+readme.dfm.miaf
+startinstallation.dfm
+startinstallation.dfm.miaf
+progressprereq.dfm
+progressprereq.dfm.miaf
+destination.dfm
+destination.dfm.miaf
+finish.dfm
+finish.dfm.miaf
+licensecheck.dfm
+licensecheck.dfm.miaf
+maintenance.dfm
+maintenance.dfm.miaf
+progress.dfm
+progress.dfm.miaf
+$
+$
+$
+$
+1
+4
+FALSE
+C:\Users\hp\Desktop\Projects\AdvertBase\Setup
+Yaponiz.com
+AdvertBase
+{2b7b10d0-a783-45de-b39d-e432eda13e13}
+{d378745a-b42a-466e-b253-189dfb6b2413}
+0.5.0.2
+English
+AdvertBase
+AdvertBase
+hp
+AdvertBase
+{e3662b06-9570-46da-bd65-4eee532e10a1}
+Yaponiz.com
+Yaponiz.com
+http://www.yaponiz.com
+http://www.yaponiz.com
+All Rights Reserved
+FALSE
+
+TRUE
+FALSE
+
+
+
+
+UAC=requireAdministrator
+$
+$
+
+
+
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+
+C:\Users\hp\documents\visual studio 2010\Projects\AdvertBase\InstallAware\InstallAutogen.mia
+C:\Users\hp\documents\visual studio 2010\Projects\AdvertBase\InstallAware\UninstallAutogen.mia
+C:\Users\hp\documents\visual studio 2010\Projects\AdvertBase\InstallAware\PostInstallAutogen.mia
+C:\Users\hp\documents\visual studio 2010\Projects\AdvertBase\InstallAware\FinishAutogen.mia
+C:\Program Files (x86)\InstallAware\InstallAware 9 R2\runtimes\checkmsi30.mia
+C:\Program Files (x86)\InstallAware\InstallAware 9 R2\runtimes\checknet20.mia
+C:\Program Files (x86)\InstallAware\InstallAware 9 R2\runtimes\setupmsi30.mia
+C:\Program Files (x86)\InstallAware\InstallAware 9 R2\runtimes\setupnet20.mia
+$
+FALSE
+
+FALSE
+FALSE
+FALSE
+FALSE

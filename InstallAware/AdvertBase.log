@@ -1,0 +1,75 @@
+Building Project: AdvertBase
+Output Folder: C:\Users\hp\Desktop\Projects\AdvertBase\Setup\Release\Single\
+Deployment Type: Compressed Single Self Installing EXE
+Code Signing: Disabled
+Compression: Best
+Compiler Variables: UAC=requireAdministrator
+###
+Cleared output folder C:\Users\hp\Desktop\Projects\AdvertBase\Setup\Release\Single\
+Built plug-in action Windows Installer
+Built plug-in action .NET Framework
+Built plug-in action (Un)Install MSI Setup
+Built plug-in action Windows Installer
+Built plug-in action .NET Framework
+Copied file C:\Users\hp\Documents\Visual Studio 2010\Projects\AdvertBase\AdvertBase\bin\Debug\AdvertBase.exe
+Copied file C:\Users\hp\Documents\Visual Studio 2010\Projects\AdvertBase\AdvertBase\bin\Debug\properties.xml
+Copied file C:\Users\hp\documents\visual studio 2010\Projects\AdvertBase\AdvertBase\bin\Debug\AdvertBase.exe
+Copied file C:\Users\hp\documents\visual studio 2010\Projects\AdvertBase\DatabaseMover\bin\Debug\DatabaseMover.exe
+Copied assembly C:\Program Files (x86)\Microsoft Visual Studio 10.0\Visual Studio Tools for Office\PIA\Office12\Microsoft.Office.Interop.Word.dll
+Copied assembly C:\Program Files (x86)\MySQL\MySQL Connector Net 6.1.6\Assemblies\MySql.Data.dll
+Created Windows Installer database
+Built installation executable
+Injected setup languages
+Storing support files: componentstree.dfm (0%)
+Injected runtime files
+Compressing install: readme.dfm (39%)
+Compressing install: AdvertBase.msi (0%)
+Compressing install: data\AdvertBase.msi (0%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\instmsi.msi (0%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\netfx.msi (1%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\eula.1043.txt (76%)
+Compressing install: data\Microsoft .NET Framework 2.0\4A91D242\C9E85996\AdvertBase.exe (76%)
+Compressing install: data\OFFLINE\A14CB0B3\C9E85996\AdvertBase.exe (77%)
+Compressing install: AdvertBase.exe (77%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.exe (80%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\msiexec.exe (81%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\unicode\update.exe (81%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1025.dll (83%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1029.dll (83%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1031.dll (83%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1032.dll (83%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1035.dll (83%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1036.dll (84%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1038.dll (84%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1040.dll (84%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1042.dll (84%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1044.dll (84%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1045.dll (84%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1049.dll (84%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.1053.dll (84%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.2052.dll (85%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.3076.dll (85%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\install.res.3082.dll (85%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\mDotNetExec.dll (85%)
+Compressing install: data\OFFLINE\mDotNet.dll\mDotNetExec.dll (85%)
+Compressing install: data\OFFLINE\C_\Program Files (x86)\Microsoft Visual Studio 10.0\Visual Studio Tools for Office\PIA\Office12\Microsoft.Office.Interop.Word.dll (86%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\mMSIExec.dll (87%)
+Compressing install: data\OFFLINE\mMSI.dll\mMSIExec.dll (87%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\mscoree.dll (87%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\msi.dll (88%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\msihnd.dll (89%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\msimsg.dll (90%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\mspatcha.dll (91%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\mWinRunExec.dll (91%)
+Compressing install: data\OFFLINE\mWinRun.dll\mWinRunExec.dll (91%)
+Compressing install: data\OFFLINE\C_\Program Files (x86)\MySQL\MySQL Connector Net 6.1.6\Assemblies\MySql.Data.dll (92%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\riched20.dll (92%)
+Compressing install: data\Microsoft .NET Framework 2.0\mDotNet.dll\unicows.dll (92%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\usp10.dll (93%)
+Compressing install: mia.lib (93%)
+Compressing install: AdvertBase.res (94%)
+Compressing install: data\Microsoft Windows Installer 3.0\mWinRun.dll\ansi\msimain.sdb (99%)
+Compressed setup files
+Prepared SFX data
+Created SFX file
+Cleaned up

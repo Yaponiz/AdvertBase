@@ -1,0 +1,83 @@
+Install Files
+Create Shortcut
+Install Files
+Create Shortcut
+Install Assembly
+Install Assembly
+$
+{B98E81D8-29CA-4CBA-A9B1-43B377061AB7}
+{C9527064-025B-4E54-B309-4A665EB4CAEB}
+{EC80C4F5-7BEC-497E-923D-13443E6BA642}
+{87CECB43-7807-4DE6-A892-8B72B6AAABE3}
+{5354F78C-3460-4AD7-8F59-E7740DE389F1}
+{9615A583-E41B-4829-BA7A-1DAB95AED56C}
+$
+{B98E81D8-29CA-4CBA-A9B1-43B377061AB7}
+C:\Users\hp\documents\visual studio 2010\Projects\AdvertBase\AdvertBase\bin\Debug\AdvertBase.exe
+FALSE
+$TARGETDIR$
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+{C9527064-025B-4E54-B309-4A665EB4CAEB}
+$TARGETDIR$\AdvertBase.exe
+AdvertBase
+$SHORTCUTFOLDER$
+AdvertBase
+
+
+
+
+0
+{EC80C4F5-7BEC-497E-923D-13443E6BA642}
+C:\Users\hp\documents\visual studio 2010\Projects\AdvertBase\DatabaseMover\bin\Debug\DatabaseMover.exe
+FALSE
+$TARGETDIR$
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+{87CECB43-7807-4DE6-A892-8B72B6AAABE3}
+$TARGETDIR$\DatabaseMover.exe
+DatabaseMover
+$SHORTCUTFOLDER$
+DatabaseMover
+
+
+
+
+0
+{5354F78C-3460-4AD7-8F59-E7740DE389F1}
+C:\Program Files (x86)\Microsoft Visual Studio 10.0\Visual Studio Tools for Office\PIA\Office12\Microsoft.Office.Interop.Word.dll
+FALSE
+$TARGETDIR$
+{9615A583-E41B-4829-BA7A-1DAB95AED56C}
+C:\Program Files (x86)\MySQL\MySQL Connector Net 6.1.6\Assemblies\MySql.Data.dll
+TRUE
+
+$
+
+
+
+
+
+
+$
+
+
+
+
+
+
+$
