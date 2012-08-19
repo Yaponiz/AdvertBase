@@ -7,6 +7,9 @@ using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using AdvertBase;
+using System.IO;
+using System.Xml;
+using System.Collections;
 namespace AdvertBase
 {
     public partial class EditControl : UserControl
@@ -19,6 +22,25 @@ namespace AdvertBase
         public EditControl(string id)
         {
             InitializeComponent();
+            FileStream f = new FileStream("properties.xml", FileMode.OpenOrCreate);
+
+            XmlTextReader settings = new XmlTextReader(f);
+            while (settings.Read())
+            {
+
+                if (settings.NodeType == XmlNodeType.Element)
+                {
+                    if (settings.Name.Equals("server"))
+                    {
+                        server = settings.GetAttribute("servername");
+                        dbname = settings.GetAttribute("dbname");
+                        dbuser = settings.GetAttribute("dbuser");
+                        dbpass = settings.GetAttribute("dbpass");
+                        dbPort = settings.GetAttribute("dbport");
+                    }
+                }
+            }
+            f.Close();
             string CommandText = "select * from ria_rim.ob where ID_OB='"+id+"'";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
             //Переменная Connect - это строка подключения в которой:
