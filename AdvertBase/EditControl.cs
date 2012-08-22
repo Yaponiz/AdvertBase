@@ -61,28 +61,28 @@ namespace AdvertBase
                 MyDataReader.Read();
                
                     //KOD_R-KOD_PPPR
-                    MessageBox.Show("1");
+                    
                     kod_r.Text = MyDataReader.GetInt32(4).ToString();
-                    MessageBox.Show("1");
+                    
                     kod_pr.Text = MyDataReader.GetInt32(5).ToString();
-                    MessageBox.Show("1");
+                    
                     kod_ppr.Text = MyDataReader.GetInt32(6).ToString();
-                    MessageBox.Show("1");
+                    
                     kod_pppr.Text = MyDataReader.GetInt32(7).ToString();
                     //KOD_R-KOD_PPPR
 
-                    MessageBox.Show("1");
+                    
                     k_word.Text = MyDataReader.GetString(12);
-                    MessageBox.Show("1"); 
+                    
                     string_ob.Text = MyDataReader.GetString(13);
-                    MessageBox.Show("1"); 
+                    
                     phone.Text = MyDataReader.GetString(14);
-                    MessageBox.Show("1"); 
+                    
                     secPhone.Text = MyDataReader.GetString(15);
-                    //cost.Text = MyDataReader.GetString(20);
-                    MessageBox.Show("1"); 
+                    cost.Text = MyDataReader.GetString(20);
+                    
                     kol_p.Value = MyDataReader.GetDecimal(16);
-                   // richTextBox9.Text = MyDataReader.GetString(14);
+                    //richTextBox9.Text = MyDataReader.GetString(14);
                 
                 //f.Show();
                 MyDataReader.Close();

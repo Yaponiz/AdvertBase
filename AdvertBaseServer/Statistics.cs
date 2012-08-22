@@ -103,5 +103,56 @@ namespace AdvertBaseServer
         {
 
         }
+
+        private void countByDate1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                string CommandText = "select distinct datepost from ria_rim.ob order by datepost asc";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand;
+                // myConnection.Open(); //Устанавливаем соединение с базой данных.
+                MySqlDataReader MyDataReader;
+                for (int i = 0; i < 5; i++)
+                {
+                    //CommandText = "select count(*) from ria_rim.ob where kol_p='" + i.ToString() + "' and datepost='" + date.ToString("yyyy-MM-dd") + "'";
+                    myCommand = new MySqlCommand(CommandText, myConnection);
+                    myConnection.Open();
+                    MyDataReader = myCommand.ExecuteReader();    
+                    int d=0;
+                    while (MyDataReader.Read())
+                    {
+                       dateKolP.Rows[d].Cells[0].Value = MyDataReader.GetString(0).ToString();
+                       d++;
+                       dateKolP.Rows.Add();
+                    }
+                    d = 0;
+                    myConnection.Close(); //Обязательно закрываем соединение!
+                    /*
+                    CommandText = "select count(*) from ria_rim.ob where kol_p='" + i.ToString() +"order by datepost";
+                    myCommand = new MySqlCommand(CommandText, myConnection);
+                    myConnection.Open();
+                    MyDataReader = myCommand.ExecuteReader();
+                    Control[] controls = countByDate1.Controls.Find("count" + i.ToString() + "0", true);
+
+
+                    while (MyDataReader.Read())
+                    {
+                        controls[0].Text = MyDataReader.GetString(0).ToString();
+                    }
+                    myConnection.Close(); //Обязательно закрываем соединение!
+                    controls = countByDate1.Controls.Find("count" + i.ToString() + "1", true);
+                    controls[0].Text = date.ToString("yyyy-MM-dd");*/
+                }
+                    
+                
+                    
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
     }
 }

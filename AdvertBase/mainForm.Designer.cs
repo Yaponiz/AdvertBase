@@ -75,15 +75,6 @@ namespace AdvertBase
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.catalogName = new System.Windows.Forms.TextBox();
             this.button6 = new System.Windows.Forms.Button();
-            this.sortedCatalog = new System.Windows.Forms.DataGridView();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button2 = new System.Windows.Forms.Button();
             this.rubName = new System.Windows.Forms.TextBox();
             this.catalogSelector = new System.Windows.Forms.ComboBox();
@@ -99,6 +90,7 @@ namespace AdvertBase
             this.button1 = new System.Windows.Forms.Button();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.sortedTree = new System.Windows.Forms.TreeView();
             this.toolStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -106,7 +98,6 @@ namespace AdvertBase
             this.catalogTab.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sortedCatalog)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainCatalog)).BeginInit();
             this.SuspendLayout();
@@ -439,9 +430,9 @@ namespace AdvertBase
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.sortedTree);
             this.groupBox2.Controls.Add(this.catalogName);
             this.groupBox2.Controls.Add(this.button6);
-            this.groupBox2.Controls.Add(this.sortedCatalog);
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.rubName);
             this.groupBox2.Controls.Add(this.catalogSelector);
@@ -469,76 +460,6 @@ namespace AdvertBase
             this.button6.Text = "Новый каталог";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // sortedCatalog
-            // 
-            this.sortedCatalog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.sortedCatalog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.sortedCatalog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column8,
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4,
-            this.dataGridViewTextBoxColumn5,
-            this.Column6,
-            this.Column7});
-            this.sortedCatalog.Location = new System.Drawing.Point(6, 44);
-            this.sortedCatalog.Name = "sortedCatalog";
-            this.sortedCatalog.Size = new System.Drawing.Size(625, 521);
-            this.sortedCatalog.TabIndex = 28;
-            // 
-            // Column8
-            // 
-            this.Column8.HeaderText = "id";
-            this.Column8.Name = "Column8";
-            this.Column8.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "Название";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 200;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.HeaderText = "1";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.Width = 20;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.HeaderText = "2";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            this.dataGridViewTextBoxColumn3.Width = 20;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.HeaderText = "3";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.ReadOnly = true;
-            this.dataGridViewTextBoxColumn4.Width = 20;
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
-            this.dataGridViewTextBoxColumn5.HeaderText = "4";
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            this.dataGridViewTextBoxColumn5.ReadOnly = true;
-            this.dataGridViewTextBoxColumn5.Width = 20;
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "Видимая";
-            this.Column6.Name = "Column6";
-            this.Column6.Width = 25;
-            // 
-            // Column7
-            // 
-            this.Column7.HeaderText = "Номер";
-            this.Column7.Name = "Column7";
             // 
             // button2
             // 
@@ -662,6 +583,13 @@ namespace AdvertBase
             this.serviceController1.MachineName = "hp-ПК";
             this.serviceController1.ServiceName = "MySQL51";
             // 
+            // sortedTree
+            // 
+            this.sortedTree.Location = new System.Drawing.Point(6, 60);
+            this.sortedTree.Name = "sortedTree";
+            this.sortedTree.Size = new System.Drawing.Size(576, 502);
+            this.sortedTree.TabIndex = 31;
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -686,7 +614,6 @@ namespace AdvertBase
             this.tabPage3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sortedCatalog)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainCatalog)).EndInit();
             this.ResumeLayout(false);
@@ -725,20 +652,11 @@ namespace AdvertBase
         private ColumnHeader columnHeader1;
         private ToolTip toolTip1;
         private GroupBox groupBox2;
-        private DataGridView sortedCatalog;
         private ComboBox catalogSelector;
         private GroupBox groupBox1;
         private DataGridView mainCatalog;
         private GroupBox groupBox3;
         private Button button5;
-        private DataGridViewTextBoxColumn Column8;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-        private DataGridViewCheckBoxColumn Column6;
-        private DataGridViewTextBoxColumn Column7;
         private TextBox catalogName;
         private Button button6;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
@@ -755,6 +673,7 @@ namespace AdvertBase
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+        private TreeView sortedTree;
     }
 }
 

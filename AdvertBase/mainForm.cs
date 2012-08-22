@@ -952,7 +952,7 @@ private void button5_Click(object sender, EventArgs e)
     DataGridViewSelectedRowCollection rows = mainCatalog.SelectedRows;
     foreach (DataGridViewRow row in rows)
     {
-        sortedCatalog.Rows.Add(row.Cells[0].Value, row.Cells[1].Value, row.Cells[2].Value, row.Cells[3].Value, row.Cells[4].Value, row.Cells[5].Value, true, 0);
+        sortedTree.Nodes.Add(row.Cells[0].Value.ToString());
     }
 }
 
