@@ -164,7 +164,7 @@ namespace AdvertBase
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
             //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
             //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
+            sortedTree.Nodes.Add(catalogSelector.Text);
 
             MySqlConnection myConnection = new MySqlConnection(Connect);
             MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
@@ -172,10 +172,10 @@ namespace AdvertBase
 
 
 
-            CommandText = "select idMainCatalog,idParentCatalog,ShortName from ads_paper.maincatalog where order by idParentCatalog, ShortName";
+            CommandText = "select * from ads_paper." + catalogSelector.Text + "";
             myCommand = new MySqlCommand(CommandText, myConnection);
             myConnection.Open(); //Устанавливаем соединение с базой данных.
-            /*
+            
 
             MyDataReader = myCommand.ExecuteReader();
 
@@ -183,23 +183,24 @@ namespace AdvertBase
             {
 
                 string id = MyDataReader.GetString(0); //Получаем строку
-                string name = MyDataReader.GetString(2); //Получаем строку
+                string name = MyDataReader.GetString(1); //Получаем строку
                 string parentID;
                 TreeNode[] nodes;
-
+                
                 if (MyDataReader.IsDBNull(1))
                 {
-                    //catalogTree.Nodes.Add(id, name);
+                    sortedTree.Nodes.Add(id, name);
                 }
                 else
                 {
-                    parentID = MyDataReader.GetString(1);
-                    //nodes = catalogTree.Nodes.Find(parentID, true);
-                    //nodes[0].Nodes.Add(id, name);
+                    parentID = MyDataReader.GetString(6);
+                    nodes = sortedTree.Nodes.Find(parentID, true);
+                    nodes[0].Nodes.Add(id, name);
                 }
             }
-            MyDataReader.Close();*/
+            MyDataReader.Close();
             myConnection.Close(); //Обязательно закрываем соединение!
+            sortedTree.ExpandAll();
         }
 
         private void mainForm_Load(object sender, EventArgs e)
@@ -952,7 +953,7 @@ private void button5_Click(object sender, EventArgs e)
     DataGridViewSelectedRowCollection rows = mainCatalog.SelectedRows;
     foreach (DataGridViewRow row in rows)
     {
-        sortedTree.Nodes.Add(row.Cells[0].Value.ToString());
+        sortedTree.SelectedNode.Nodes.Add(row.Cells[0].Value.ToString(), row.Cells[1].Value.ToString());
     }
 }
 
@@ -977,7 +978,9 @@ private void button6_Click(object sender, EventArgs e)
         MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
         myConnection.Open(); //Устанавливаем соединение с базой данных.
         myCommand.ExecuteNonQuery();
-        CommandText = "CREATE TABLE 'ads_paper." + catalogName.Text + "' (  `idcatalogItems` int(10) unsigned NOT NULL AUTO_INCREMENT,  `name` varchar(100) NOT NULL,  `R1` int(10) unsigned NOT NULL,  `R2` int(10) unsigned NOT NULL,  `R3` int(10) unsigned NOT NULL,  `R4` int(10) unsigned NOT NULL,  PRIMARY KEY (`id" + catalogName.Text + "`),  UNIQUE KEY `id" + catalogName.Text + "_UNIQUE` (`idcatalogItems`)) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8 COMMENT='Список рубрик'";
+        CommandText = "CREATE TABLE ads_paper." + catalogName.Text + " (  `idcatalogItems` int(10) unsigned NOT NULL AUTO_INCREMENT,  `name` varchar(100) NOT NULL,  `R1` int(10) unsigned NOT NULL,  `R2` int(10) unsigned NOT NULL,  `R3` int(10) unsigned NOT NULL,  `R4` int(10) unsigned NOT NULL,  `parentID` int(10) unsigned NOT NULL, `real` int(10) unsigned NOT NULL,  PRIMARY KEY (`idcatalogItems`),`sum` int(10) unsigned NOT NULL,  UNIQUE KEY `idcatalogItems_UNIQUE` (`idcatalogItems`)) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8 COMMENT='Список рубрик'";
+        myCommand.CommandText = CommandText;
+        myCommand.ExecuteNonQuery();
         myConnection.Close(); //Обязательно закрываем соединение!
         loadCatalogs();
     }
@@ -1376,6 +1379,82 @@ private void cardsView_ItemActivate(object sender, EventArgs e)
     }     
 }
 
+private void button7_Click(object sender, EventArgs e)
+{
+    try
+    {
+        string CommandText = "drop table if exists `ads_paper`.`"+catalogSelector.Text+"`";
+        string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+        //Переменная Connect - это строка подключения в которой:
+        //БАЗА - Имя базы в MySQL
+        //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+        //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+        //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+
+
+        MySqlConnection myConnection = new MySqlConnection(Connect);
+        MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+        myConnection.Open(); //Устанавливаем соединение с базой данных.
+
+
+
+        myCommand.ExecuteNonQuery();
+        
+        myCommand.CommandText = "delete from ads_paper.cataloglist where catalogName = '" + catalogSelector.Text + "'";
+        myCommand.ExecuteNonQuery(); 
+        myConnection.Close();
+        loadCatalogs();
+    }
+    catch (Exception except)
+    {
+        MessageBox.Show(except.Message);
+    }
+}
+
+private void button8_Click(object sender, EventArgs e)
+{
+    try
+    {
+        string CommandText = "";
+        string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+        //Переменная Connect - это строка подключения в которой:
+        //БАЗА - Имя базы в MySQL
+        //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+        //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+        //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+        MySqlConnection myConnection = new MySqlConnection(Connect);
+        MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+
+        myConnection = new MySqlConnection(Connect);
+        myCommand = new MySqlCommand(CommandText, myConnection);
+        myConnection.Open(); //Устанавливаем соединение с базой данных.
+        int count = mainCatalog.Rows.Count - 1;
+        DataGridViewRow row;
+        for (int i = 0; i < count; i++)
+        {
+            row = mainCatalog.Rows[i];
+
+
+            CommandText = "INSERT INTO `ads_paper`.`"+catalogSelector.Text+"` (`name`, `R1`, `R2`, `R3`, `R4`) VALUES ('" + mainCatalog.Rows[i].Cells[1].Value + "', " + mainCatalog.Rows[i].Cells[2].Value + ", " + mainCatalog.Rows[i].Cells[3].Value + ", " + mainCatalog.Rows[i].Cells[4].Value + ", " + mainCatalog.Rows[i].Cells[5].Value + ");";
+            //myCommand.CommandText = CommandText;
+            //myCommand.ExecuteNonQuery();
+            myCommand.CommandText = CommandText;
+            myCommand.ExecuteNonQuery();
+
+
+        }
+        myConnection.Close(); //Обязательно закрываем соединение! 
+    }
+    catch (Exception except)
+    {
+        MessageBox.Show(except.Message);
+    }
+}
+private bool AddNode(TreeNode node)
+{ 
+    //node.
+    return false;
+}
 
 }
 }

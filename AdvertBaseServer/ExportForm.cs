@@ -64,14 +64,15 @@ namespace AdvertBaseServer
 
 
                 MyDataReader = myCommand.ExecuteReader();
-
+                int i = 0;
                 while (MyDataReader.Read())
                 {
 
                     int id = MyDataReader.GetInt32(0); //Получаем строку
                     string name = MyDataReader.GetString(1); //Получаем строку
 
-                    catalogsComboBox.Items.Insert(id - 1, name);
+                    catalogsComboBox.Items.Insert(i, name);
+                    i++;
 
                 }
                 MyDataReader.Close();
@@ -151,17 +152,22 @@ namespace AdvertBaseServer
                     wdApp.Selection.Font.Size = 12;
                     wdApp.ActiveDocument.Select();
 
-                    string CommandText = "select * from `ads_paper`.`catalogItems` order by R1,R2,R3,R4";
+                    string CommandText = "select * from `ads_paper`.`"+catalogsComboBox.Text+"` order by r1,r2,r3,r4";
                     string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
 
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
                 MySqlDataReader MyDataReader;
-
+                
                 bool state = false;
                 MyDataReader = myCommand.ExecuteReader();
+               
                 int[] catID = new int[5];
+                int parentID;
+                int real;
+                int sum;
+                
                 while (MyDataReader.Read())
                 {
                     catID[0] = MyDataReader.GetInt32(0);
@@ -170,10 +176,11 @@ namespace AdvertBaseServer
                     catID[3] = MyDataReader.GetInt32(4);
                     catID[4] = MyDataReader.GetInt32(5);
                     string name = MyDataReader.GetString(1); //Получаем строку
-                    
+                    parentID = MyDataReader.GetInt32(6);
+                    real = MyDataReader.GetInt32(7);
+                    sum = MyDataReader.GetInt32(8);
                     if (checkCount(catID))
                     {
-
                         wdApp.Selection.TypeParagraph();
                         if (catID[2] == 0)
                         {
@@ -190,6 +197,7 @@ namespace AdvertBaseServer
                             if (catID[1] == 1 || catID[1] == 4 || catID[1] == 5 || catID[1] == 11 || catID[1] == 18)
                             {
                                 wdApp.Selection.TypeText("-" + catID[1].ToString() + "." + catID[2].ToString() + "-");
+                                wdApp.Selection.TypeParagraph();
                             }
                             else
                             {
@@ -217,259 +225,18 @@ namespace AdvertBaseServer
                 MyDataReader.Close();
                 myConnection.Close();
                 ReplaceTextWord(ref wdApp, "  ", " ");
-                wdApp.ActiveDocument.SaveAs("Объявления.doc");
+                wdApp.ActiveDocument.SaveAs(catalogsComboBox.Text+".doc");
                 wdDoc.Close();
                 //wdApp.Documents.Close();
                 wdApp.Quit();
                 MessageBox.Show("Выгрузка завершена, выгружено: "+col.ToString()+" объявлений");
-                //mainForm f = new mainForm();
-                    //f.catalogSelector.Select(1, 1);
-                   /* TreeNodeCollection nodes = f.catalogList.Nodes;
-                    foreach (TreeNode groupeNode in nodes)
-                    {
-                        PrintRecursive(groupeNode, ref wdApp);
-                    }
-
-                    ReplaceTextWord(ref wdApp, "@@@-", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@,", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@ -", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@ ", "@@@");
-                    ReplaceTextWord(ref wdApp, ",,", ",");
-
-                    //col++;
-
-
-                    MessageBox.Show("Выгружено объявлений: " + col.ToString());
-                    col = 0;
-                    rubNum = 0;
-              /* }
-                else if (catalogsComboBox.SelectedIndex == 0)
-                {
-                    Microsoft.Office.Interop.Word.Application wdApp = new Microsoft.Office.Interop.Word.Application();
-                    Microsoft.Office.Interop.Word.Document wdDoc = new Microsoft.Office.Interop.Word.Document();
-                    wdDoc = wdApp.Documents.Add();
-                    wdDoc.SpellingChecked = false;
-                    wdDoc.ShowSpellingErrors = false;
-                    wdApp.ActiveDocument.Select();
-                    mainForm f = new mainForm();
-                    f.catalogSelector.Select(0, 1);
-                    TreeNodeCollection nodes = f.catalogList.Nodes;
-                    foreach (TreeNode groupeNode in nodes)
-                    {
-                        PrintRecursiveRIO(groupeNode, ref wdApp);
-                    }
-
-                    ReplaceTextWord(ref wdApp, "@@@-", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@,", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@ -", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@ ", "@@@");
-                    wdApp.ActiveDocument.SaveAs("РИО.doc");
-                    wdDoc.Close();
-                    //wdApp.Documents.Close();
-                    wdApp.Quit();
-                    //col++;
-
-
-                    MessageBox.Show("Выгружено объявлений: " + col.ToString());
-                    col = 0;
-                    rubNum = 0;
-                }
-                else
-                {
-                    Microsoft.Office.Interop.Word.Application wdApp = new Microsoft.Office.Interop.Word.Application();
-                    Microsoft.Office.Interop.Word.Document wdDoc = new Microsoft.Office.Interop.Word.Document();
-                    wdDoc = wdApp.Documents.Add();
-                    wdDoc.SpellingChecked = false;
-                    wdDoc.ShowSpellingErrors = false;
-                    wdApp.ActiveDocument.Select();
-                    mainForm f = new mainForm();
-                    f.catalogSelector.Select(0,1);
-                    f.catalogSelector.SelectedIndex = 0;
-                    TreeNodeCollection nodes = f.catalogList.Nodes;
-                    foreach (TreeNode groupeNode in nodes)
-                    {
-                        PrintRecursiveOB(groupeNode, ref wdApp);
-                    }
-
-                    ReplaceTextWord(ref wdApp, "@@@-", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@,", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@ -", "@@@");
-                    ReplaceTextWord(ref wdApp, "@@@ ", "@@@");
-                    //wdApp.Selection.Select();
-                    //wdApp.Selection.Font.
-                    wdApp.ActiveDocument.SaveAs("Объявления.doc");
-                    wdDoc.Close();
-                    //wdApp.Documents.Close();
-                    wdApp.Quit();
-                    //col++;
-
-
-                    MessageBox.Show("Выгружено объявлений: " + col.ToString());
-                    col = 0;
-                    rubNum = 0;
-                }*/
+             
             }
             catch (Exception except)
             {
                 MessageBox.Show(except.Message);
             }
         }
-
-        //private void PrintRecursive(TreeNode treeNode, ref Microsoft.Office.Interop.Word.Application wdApp)
-        //{
-           
-        //    // Print the node.
-        //    wdApp.Selection.Font.Bold = 0;
-        //    if (treeNode.Name != "Node0")
-        //    {
-        //            idRub = treeNode.Name;
-        //            //wdApp.Selection.Select();
-        //            //wdApp.Selection.Characters.Last.Select();
-        //            if (treeNode.Name == "1" || treeNode.Name == "19" || treeNode.Name == "35")
-        //            {
-        //                rubNum++;
-        //                wdApp.Selection.TypeText("-" + rubNum.ToString() + "-");
-        //                wdApp.Selection.TypeParagraph();
-        //                wdApp.Selection.TypeText(treeNode.Text);
-        //                wdApp.Selection.TypeParagraph();
-        //                wdApp.Selection.TypeParagraph();
-        //            }
-        //            else
-        //            {
-        //                if (treeNode.Name == "40")
-        //                {
-        //                    rubNum++;
-        //                    wdApp.Selection.TypeText("-" + rubNum.ToString() + "-");
-        //                    wdApp.Selection.TypeParagraph();
-        //                    wdApp.Selection.TypeText(treeNode.Text);
-        //                    wdApp.Selection.TypeParagraph();
-        //                    wdApp.Selection.TypeParagraph();
-
-        //                }
-        //                else
-        //                {
-        //                    wdApp.Selection.TypeText("@@" + treeNode.Text);
-                            
-        //                    wdApp.Selection.TypeParagraph();
-        //                    wdApp.Selection.TypeParagraph();
-        //                }
-        //                string CommandText = "select * from " + dbname + ".rubrikator3 where ID_RUBRIKATOR ='" + treeNode.Name.ToString() + "'";
-        //                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass;
-
-        //                MySqlConnection myConnection = new MySqlConnection(Connect);
-        //                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-        //                myConnection.Open(); //Устанавливаем соединение с базой данных.
-        //                MySqlDataReader MyDataReader;
-
-
-        //                MyDataReader = myCommand.ExecuteReader();
-        //                int[] catID = new int[5];
-        //                while (MyDataReader.Read())
-        //                {
-        //                    catID[0] = MyDataReader.GetInt32(0);
-        //                    catID[1] = MyDataReader.GetInt32(1);                           
-        //                    catID[2] = MyDataReader.GetInt32(2);
-        //                    catID[3] = MyDataReader.GetInt32(3);
-        //                    catID[4] = MyDataReader.GetInt32(4);                           
-        //                   // string name = MyDataReader.GetString(5); //Получаем строку
-        //                }
-        //                MyDataReader.Close();
-        //                myConnection.Close();
-
-        //                if (treeNode.Name == "8")
-        //                {
-        //                    catID[1] = 1;
-        //                    catID[2] = 4;
-        //                    catID[3] = 0;
-        //                    catID[4] = 0;
-        //                    PrintAds8(catID, ref wdApp);
-
-        //                }
-        //                else if (treeNode.Name == "9")
-        //                {
-        //                    catID[1] = 1;
-        //                    catID[2] = 5;
-        //                    catID[3] = 0;
-        //                    catID[4] = 0;
-        //                    PrintAds9(catID, ref wdApp);
-        //                }
-        //                else if (treeNode.Name == "40")
-        //                {
-        //                    PrintAdsRSU(19,3, ref wdApp);
-        //                }
-        //                else
-        //                {                            
-        //                    PrintAds(catID, ref wdApp);
-        //                }
-        //            }
-                    
-        //        }
-
-        //        //wdApp.Selection.TypeText("l");
-        //        // Print each node recursively.
-        //        foreach (TreeNode tn in treeNode.Nodes)
-        //        {
-        //            PrintRecursive(tn, ref wdApp);
-        //        }           
-        //}
-
-       
-
-        //private void PrintRecursiveOB(ref Microsoft.Office.Interop.Word.Application wdApp)
-        //{
-
-
-        //        string CommandText = "select * from " + dbname + ".rubrikator where ID_RUBRIKATOR ='" + treeNode.Name.ToString() + "'";
-        //        string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass;
-
-        //        MySqlConnection myConnection = new MySqlConnection(Connect);
-        //        MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-        //        myConnection.Open(); //Устанавливаем соединение с базой данных.
-        //        MySqlDataReader MyDataReader;
-
-
-        //        MyDataReader = myCommand.ExecuteReader();
-        //        int[] catID = new int[5];
-        //        while (MyDataReader.Read())
-        //        {
-        //            catID[0] = MyDataReader.GetInt32(0);
-        //            catID[1] = MyDataReader.GetInt32(1);
-        //            catID[2] = MyDataReader.GetInt32(2);
-        //            catID[3] = MyDataReader.GetInt32(3);
-        //            catID[4] = MyDataReader.GetInt32(4);
-        //            string name = MyDataReader.GetString(5); //Получаем строку
-        //        }
-        //        MyDataReader.Close();
-        //        myConnection.Close();
-
-        //        if (catID[1] == 0)
-        //        {
-        //            rubNum++;
-        //            wdApp.Selection.TypeText("@@" + rubNum.ToString() + "");
-        //            wdApp.Selection.TypeParagraph();
-        //            wdApp.Selection.TypeText(treeNode.Text);
-        //            wdApp.Selection.TypeParagraph();
-        //            wdApp.Selection.TypeParagraph();
-        //        }
-        //        else
-        //        {
-        //            wdApp.Selection.TypeParagraph();
-        //            wdApp.Selection.TypeText(treeNode.Text);
-        //            wdApp.Selection.TypeParagraph();
-        //            wdApp.Selection.TypeParagraph();
-
-        //        }
-        //        PrintAdsOB(catID, ref wdApp);
-
-        //    }
-
-        //    //wdApp.Selection.TypeText("l");
-        //    // Print each node recursively.
-        //    foreach (TreeNode tn in treeNode.Nodes)
-        //    {
-        //        PrintRecursiveOB(ref wdApp);
-        //    }
-        //}
 
         private void PrintAdsRIO(int[] catalogNum, ref Microsoft.Office.Interop.Word.Application wdApp)
         {
@@ -584,10 +351,6 @@ namespace AdvertBaseServer
            
             
             
-           
-            //wdApp.Selection.TypeText("l");
-            // Print each node recursively.
-           
              }
             catch (Exception e)
             {
@@ -756,7 +519,8 @@ namespace AdvertBaseServer
         };
             foreach (string auto in listOfAuto)
             {
-                
+
+                wdApp.Selection.TypeParagraph(); 
                 wdApp.Selection.TypeText(auto);
                 wdApp.Selection.TypeParagraph(); 
                 wdApp.Selection.TypeParagraph();
@@ -890,34 +654,18 @@ namespace AdvertBaseServer
                     id = MyDataReader.GetString(0); //Получаем id
                     cost = MyDataReader.GetInt32(20); //Получаем строку
                     costStr = MyDataReader.GetString(22); //Получаем строку
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-                   // wdApp.Selection.ClearFormatting();
-                   // wdApp.Selection.Select();
-                   // wdApp.Selection.Characters.Last.Select();
+                    
                     wdApp.Selection.Font.Bold = 1;
                     wdApp.Selection.TypeText("@@@" + cost.ToString("N", nfi));
                     wdApp.Selection.TypeText(" ");
-                    //wdApp.Selection.Font.Bold = 0;
-                   // wdApp.Selection.Select();
-                   // wdApp.Selection.Characters.Last.Select();
-                  //  wdApp.Selection.ClearFormatting();
+          
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText(" руб." + costStr);
                     //wdApp.Selection.Font.Bold = 1;
                     wdApp.Selection.TypeParagraph();
-                  //  wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
-                  //  wdApp.Selection.Font.Bold = 0;
-                  //  wdApp.Selection.ClearFormatting();
+                 
                     wdApp.Selection.TypeText(header);
-                  //  wdApp.Selection.Font.Bold = 0;
-                  //  wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
-                  //  wdApp.Selection.Font.Bold = 0;
-                  //  wdApp.Selection.ClearFormatting();
+               
                     wdApp.Selection.TypeText(", " + text + " ");
                   //  wdApp.Selection.Select();
                   //  wdApp.Selection.Characters.Last.Select();
@@ -1232,16 +980,7 @@ namespace AdvertBaseServer
                     header = MyDataReader.GetString(12); //Получаем строку
                     text = MyDataReader.GetString(13); //Получаем строку                    
                     phone = MyDataReader.GetString(14); //Получаем строку
-                    //date = MyDataReader.GetString(2); //Получаем дату
-                    //cost = MyDataReader.GetString(20); //Получаем строку
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-                    //wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Select();
-                   // wdApp.Selection.Characters.Last.Select();
-                    //wdApp.Selection.TypeText(cost);
-                  ///  wdApp.Selection.ClearFormatting();
+             
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.TypeParagraph();
                     wdApp.Selection.TypeText(header+ " ");

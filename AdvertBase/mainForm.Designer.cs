@@ -73,6 +73,7 @@ namespace AdvertBase
             this.catalogTab = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.sortedTree = new System.Windows.Forms.TreeView();
             this.catalogName = new System.Windows.Forms.TextBox();
             this.button6 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -90,7 +91,8 @@ namespace AdvertBase
             this.button1 = new System.Windows.Forms.Button();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.sortedTree = new System.Windows.Forms.TreeView();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -106,7 +108,7 @@ namespace AdvertBase
             // 
             this.statusStrip1.Location = new System.Drawing.Point(0, 619);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1052, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1230, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -128,7 +130,7 @@ namespace AdvertBase
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStrip1.Size = new System.Drawing.Size(1052, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1230, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -414,7 +416,7 @@ namespace AdvertBase
             this.catalogTab.Location = new System.Drawing.Point(0, 25);
             this.catalogTab.Name = "catalogTab";
             this.catalogTab.SelectedIndex = 0;
-            this.catalogTab.Size = new System.Drawing.Size(1052, 594);
+            this.catalogTab.Size = new System.Drawing.Size(1230, 594);
             this.catalogTab.TabIndex = 3;
             // 
             // tabPage3
@@ -423,13 +425,15 @@ namespace AdvertBase
             this.tabPage3.Controls.Add(this.groupBox1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1044, 568);
+            this.tabPage3.Size = new System.Drawing.Size(1222, 568);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Редактор рубрик";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button8);
+            this.groupBox2.Controls.Add(this.button7);
             this.groupBox2.Controls.Add(this.sortedTree);
             this.groupBox2.Controls.Add(this.catalogName);
             this.groupBox2.Controls.Add(this.button6);
@@ -437,12 +441,19 @@ namespace AdvertBase
             this.groupBox2.Controls.Add(this.rubName);
             this.groupBox2.Controls.Add(this.catalogSelector);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox2.Location = new System.Drawing.Point(410, 0);
+            this.groupBox2.Location = new System.Drawing.Point(605, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(634, 568);
+            this.groupBox2.Size = new System.Drawing.Size(617, 568);
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Каталоги";
+            // 
+            // sortedTree
+            // 
+            this.sortedTree.Location = new System.Drawing.Point(26, 82);
+            this.sortedTree.Name = "sortedTree";
+            this.sortedTree.Size = new System.Drawing.Size(556, 480);
+            this.sortedTree.TabIndex = 31;
             // 
             // catalogName
             // 
@@ -583,18 +594,34 @@ namespace AdvertBase
             this.serviceController1.MachineName = "hp-ПК";
             this.serviceController1.ServiceName = "MySQL51";
             // 
-            // sortedTree
+            // button7
             // 
-            this.sortedTree.Location = new System.Drawing.Point(6, 60);
-            this.sortedTree.Name = "sortedTree";
-            this.sortedTree.Size = new System.Drawing.Size(576, 502);
-            this.sortedTree.TabIndex = 31;
+            this.button7.Location = new System.Drawing.Point(271, 10);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(101, 23);
+            this.button7.TabIndex = 32;
+            this.button7.Text = "Удалить";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button8
+            // 
+            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
+            this.button8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button8.Location = new System.Drawing.Point(270, 37);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(102, 39);
+            this.button8.TabIndex = 33;
+            this.button8.Text = "Сохранить";
+            this.button8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1052, 641);
+            this.ClientSize = new System.Drawing.Size(1230, 641);
             this.ContextMenuStrip = this.contextMenuStrip1;
             this.Controls.Add(this.catalogTab);
             this.Controls.Add(this.toolStrip1);
@@ -674,6 +701,8 @@ namespace AdvertBase
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
         private TreeView sortedTree;
+        private Button button7;
+        private Button button8;
     }
 }
 
