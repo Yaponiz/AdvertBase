@@ -369,14 +369,17 @@ namespace AdvertBaseServer
                 {
                   if (catalogNum[2] == 1)
                   {
-                      aut = true;  
-                      PrintAuto(catalogNum, ref wdApp);
+                      if (catalogNum[3] == 1)
+                      {
+                          aut = true;
+                          PrintAuto(catalogNum, ref wdApp);
+                      }
                   }
                 }
 
                 if(!aut)
                 {
-                    string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' and `KOD_PPR` = '" + catalogNum[3] + "' AND `KOD_PPPR` = '" + catalogNum[4] + "' AND `KOL_P` > '0' ORDER BY K_WORD";
+                    string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' and `KOD_PPR` = '" + catalogNum[3] + "' AND `KOD_PPPR` = '" + catalogNum[4] + "' AND `KOL_P` > '0' and DATEPOST='2012-01-01' ORDER BY K_WORD";
                     string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
                     //todo: Проверить по выписаным ошибкам
                     //Переменная Connect - это строка подключения в которой:
@@ -448,6 +451,47 @@ namespace AdvertBaseServer
 
                     }
                     MyDataReader.Close();
+                    myCommand.CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' and `KOD_PPR` = '" + catalogNum[3] + "' AND `KOD_PPPR` = '" + catalogNum[4] + "' AND `KOL_P` > '0' and NOT DATEPOST= '2012-01-01' ORDER BY K_WORD";
+                    MyDataReader = myCommand.ExecuteReader();
+
+                    while (MyDataReader.Read())
+                    {
+
+                        header = MyDataReader.GetString(12); //Получаем строку
+                        text = MyDataReader.GetString(13); //Получаем строку                    
+                        phone = MyDataReader.GetString(14); //Получаем строку
+                        id = MyDataReader.GetString(0); //Получаем id
+
+                        //toshow = MyDataReader.GetUInt16(9); //Получаем строку
+                        //catalog = MyDataReader.GetString(11); //Получаем строку
+
+
+                        wdApp.Selection.Font.Bold = 1;
+
+                        wdApp.Selection.TypeText(header);
+                        //wdApp.Selection.TypeText(" ");
+                        wdApp.Selection.Font.Bold = 0;
+                        if (text != " ")
+                        {
+                            wdApp.Selection.TypeText(" " + text);
+                        }
+                        wdApp.Selection.TypeText(" " + phone);
+                        wdApp.Selection.TypeParagraph();
+                        //wdApp.Selection.TypeParagraph();
+
+                        col++;
+                        if (checkBox2.Checked)
+                        {
+                            //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
+                            //MessageBox.Show(CommandText);
+
+                            //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
+                            //int res = updateCommand.ExecuteNonQuery();
+                        }
+
+                    }
+                    MyDataReader.Close();
+                    
                     myConnection2.Close();
                     myConnection.Close(); //Обязательно закрываем соединение!
                 }
@@ -520,10 +564,7 @@ namespace AdvertBaseServer
             foreach (string auto in listOfAuto)
             {
 
-                wdApp.Selection.TypeParagraph(); 
-                wdApp.Selection.TypeText(auto);
-                wdApp.Selection.TypeParagraph(); 
-                wdApp.Selection.TypeParagraph();
+                
                 string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' and `KOD_PPR` = '" + catalogNum[3] + "' AND `KOD_PPPR` = '" + catalogNum[4] + "' AND `KOL_P` > '0' AND K_WORD like '%%"+auto+"%%' ORDER BY K_WORD";
                 string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
                 //todo: Проверить по выписаным ошибкам
@@ -558,6 +599,15 @@ namespace AdvertBaseServer
                 string id;
                 string costStr;
                 MyDataReader = myCommand.ExecuteReader();
+                if (MyDataReader.HasRows)
+                { 
+                //wdApp.Selection.TypeParagraph();
+                wdApp.Selection.TypeParagraph();
+                wdApp.Selection.Font.Bold = 1; 
+                wdApp.Selection.TypeText(auto);
+                wdApp.Selection.Font.Bold = 0;
+                wdApp.Selection.TypeParagraph();
+                wdApp.Selection.TypeParagraph();
 
                 while (MyDataReader.Read())
                 {
@@ -593,6 +643,7 @@ namespace AdvertBaseServer
                         //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
                         //int res = updateCommand.ExecuteNonQuery();
                     }
+                }
 
                 }
                 MyDataReader.Close();
@@ -647,7 +698,6 @@ namespace AdvertBaseServer
 
                 while (MyDataReader.Read())
                 {
-
                     header = MyDataReader.GetString(12); //Получаем строку
                     text = MyDataReader.GetString(13); //Получаем строку                    
                     phone = MyDataReader.GetString(14); //Получаем строку
