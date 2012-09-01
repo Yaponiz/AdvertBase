@@ -142,95 +142,98 @@ namespace AdvertBaseServer
                /* if (catalogsComboBox.SelectedIndex == 1)
                  {*/
                 col = 0;
+                if (DialogResult.OK == saveFileDialog1.ShowDialog())
+                {
                     Microsoft.Office.Interop.Word.Application wdApp = new Microsoft.Office.Interop.Word.Application();
                     Microsoft.Office.Interop.Word.Document wdDoc = new Microsoft.Office.Interop.Word.Document();
                     wdDoc = wdApp.Documents.Add();
+                                        
                     wdDoc.SpellingChecked = false;
-                    
+
                     wdDoc.ShowSpellingErrors = false;
                     wdApp.Selection.Font.Name = "Times New Roman";
                     wdApp.Selection.Font.Size = 12;
                     wdApp.ActiveDocument.Select();
 
-                    string CommandText = "select * from `ads_paper`.`"+catalogsComboBox.Text+"` order by r1,r2,r3,r4";
-                    string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+                    string CommandText = "select * from `ads_paper`.`" + catalogsComboBox.Text + "` order by r1,r2,r3,r4";
+                    string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                MySqlDataReader MyDataReader;
-                
-                bool state = false;
-                MyDataReader = myCommand.ExecuteReader();
-               
-                int[] catID = new int[5];
-                int parentID;
-                int real;
-                int sum;
-                
-                while (MyDataReader.Read())
-                {
-                    catID[0] = MyDataReader.GetInt32(0);
-                    catID[1] = MyDataReader.GetInt32(2);
-                    catID[2] = MyDataReader.GetInt32(3);
-                    catID[3] = MyDataReader.GetInt32(4);
-                    catID[4] = MyDataReader.GetInt32(5);
-                    string name = MyDataReader.GetString(1); //Получаем строку
-                    parentID = MyDataReader.GetInt32(6);
-                    real = MyDataReader.GetInt32(7);
-                    sum = MyDataReader.GetInt32(8);
-                    if (checkCount(catID))
+                    MySqlConnection myConnection = new MySqlConnection(Connect);
+                    MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                    myConnection.Open(); //Устанавливаем соединение с базой данных.
+                    MySqlDataReader MyDataReader;
+
+                    bool state = false;
+                    MyDataReader = myCommand.ExecuteReader();
+
+                    int[] catID = new int[5];
+                    int parentID;
+                    int real;
+                    int sum;
+
+                    while (MyDataReader.Read())
                     {
-                        wdApp.Selection.TypeParagraph();
-                        if (catID[2] == 0)
+                        catID[0] = MyDataReader.GetInt32(0);
+                        catID[1] = MyDataReader.GetInt32(2);
+                        catID[2] = MyDataReader.GetInt32(3);
+                        catID[3] = MyDataReader.GetInt32(4);
+                        catID[4] = MyDataReader.GetInt32(5);
+                        string name = MyDataReader.GetString(1); //Получаем строку
+                        parentID = MyDataReader.GetInt32(6);
+                        real = MyDataReader.GetInt32(7);
+                        sum = MyDataReader.GetInt32(8);
+                        if (checkCount(catID))
                         {
-                            wdApp.Selection.TypeText("@@" + catID[1].ToString());
                             wdApp.Selection.TypeParagraph();
-                            wdApp.Selection.TypeParagraph();
-                            wdApp.Selection.TypeText(name);
-                            wdApp.Selection.TypeParagraph();
-                            wdApp.Selection.TypeParagraph();
-                            
-                        }
-                        else if (catID[3] == 0)
-                        {
-                            if (catID[1] == 1 || catID[1] == 4 || catID[1] == 5 || catID[1] == 11 || catID[1] == 18)
+                            if (catID[2] == 0)
                             {
-                                wdApp.Selection.TypeText("-" + catID[1].ToString() + "." + catID[2].ToString() + "-");
+                                wdApp.Selection.TypeText("@@" + catID[1].ToString());
                                 wdApp.Selection.TypeParagraph();
+                                wdApp.Selection.TypeParagraph();
+                                wdApp.Selection.TypeText(name);
+                                wdApp.Selection.TypeParagraph();
+                                wdApp.Selection.TypeParagraph();
+
+                            }
+                            else if (catID[3] == 0)
+                            {
+                                if (catID[1] == 1 || catID[1] == 4 || catID[1] == 5 || catID[1] == 11 || catID[1] == 18)
+                                {
+                                    wdApp.Selection.TypeText("-" + catID[1].ToString() + "." + catID[2].ToString() + "-");
+                                    wdApp.Selection.TypeParagraph();
+                                }
+                                else
+                                {
+                                    wdApp.Selection.TypeText(catID[1].ToString() + "." + catID[2].ToString());
+                                }
+
+                                wdApp.Selection.TypeText(" " + name);
+                                wdApp.Selection.TypeParagraph();
+                                state = true;
+
                             }
                             else
                             {
-                                wdApp.Selection.TypeText(catID[1].ToString() + "." + catID[2].ToString());
+
+                                wdApp.Selection.TypeText(name);
+                                wdApp.Selection.TypeParagraph();
+                                wdApp.Selection.TypeParagraph();
+                                state = false;
                             }
-                            
-                            wdApp.Selection.TypeText(" "+name);
-                            wdApp.Selection.TypeParagraph();
-                            state = true;
+
+                            PrintAdsOB(catID, ref wdApp);
 
                         }
-                        else
-                        {
-                            
-                            wdApp.Selection.TypeText(name);
-                            wdApp.Selection.TypeParagraph();
-                            wdApp.Selection.TypeParagraph();
-                            state = false;
-                        }
-                        
-                        PrintAdsOB(catID, ref wdApp);
-
                     }
+                    MyDataReader.Close();
+                    myConnection.Close();
+                    ReplaceTextWord(ref wdApp, "  ", " ");
+                    wdApp.ActiveDocument.SaveAs(saveFileDialog1.FileName+".doc");
+                    wdDoc.Close();
+                    //wdApp.Documents.Close();
+                    wdApp.Quit();
+                    MessageBox.Show("Выгрузка завершена, выгружено: " + col.ToString() + " объявлений");
                 }
-                MyDataReader.Close();
-                myConnection.Close();
-                ReplaceTextWord(ref wdApp, "  ", " ");
-                wdApp.ActiveDocument.SaveAs(catalogsComboBox.Text+".doc");
-                wdDoc.Close();
-                //wdApp.Documents.Close();
-                wdApp.Quit();
-                MessageBox.Show("Выгрузка завершена, выгружено: "+col.ToString()+" объявлений");
-             
             }
             catch (Exception except)
             {
