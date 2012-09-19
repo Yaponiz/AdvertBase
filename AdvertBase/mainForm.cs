@@ -1336,10 +1336,10 @@ private void toolStripButton12_Click_1(object sender, EventArgs e)
 private void catalogList_CellContentClick(object sender, DataGridViewCellEventArgs e)
 {
     
-    int count;
+    //int count;
     DateTime now = DateTime.Now;
     //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
-    string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
+    //string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
     string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
     
     try
