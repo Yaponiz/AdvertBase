@@ -47,80 +47,85 @@ namespace AdvertBaseServer
                 }
                 f.Close();
 
-            
-                string CommandText = "select * from ads_paper.cataloglist order by idcatalogList";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
-                //Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
 
-                MySqlConnection myConnection2 = new MySqlConnection(Connect);
-                MySqlCommand myCommand2 = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open(); //Устанавливаем соединение с базой данных.
-                MySqlConnection myConnection3 = new MySqlConnection(Connect);
-                MySqlCommand myCommand3 = new MySqlCommand(CommandText, myConnection3);
-                myConnection3.Open(); //Устанавливаем соединение с базой данных.
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                MySqlDataReader MyDataReader;
-                MySqlDataReader MyDataReader2;
-                MySqlDataReader MyDataReader3;
-
-
-                MyDataReader = myCommand.ExecuteReader();
-                int i = 0;
-                while (MyDataReader.Read())
-                {
-
-                    int id = MyDataReader.GetInt32(0); //Получаем строку
-                    string name = MyDataReader.GetString(1); //Получаем строку
-
-                    catalogsComboBox.Items.Insert(i, name);
-                    i++;
-
-                }
-                MyDataReader.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                CommandText = "select distinct DATEPOST from ria_rim.ob";
-                myCommand.CommandText = CommandText;
-
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                
-                MyDataReader = myCommand.ExecuteReader();
-                DateTime date;
-                while (MyDataReader.Read())
-                {
-                    date = MyDataReader.GetDateTime(0);
-                    CommandText = "select distinct KOL_P from ria_rim.ob where DATEPOST = '" + date.ToString("yyyy-MM-dd") + "'";
-                    myCommand2.CommandText = CommandText;
-                    MyDataReader2 = myCommand2.ExecuteReader();
-                 while (MyDataReader2.Read())
-                {
-                    CommandText = "select count(*) from ria_rim.ob where DATEPOST = '" + date.ToString("yyyy-MM-dd") + "' and KOL_P ='" + MyDataReader2.GetString(0) + "'";
-                    myCommand3.CommandText = CommandText;
-                    MyDataReader3 = myCommand3.ExecuteReader();
-                 while (MyDataReader3.Read())
-                {
-                    dataGridView1.Rows.Add(date, MyDataReader3.GetString(0), MyDataReader2.GetString(0));
-                }
-                 MyDataReader3.Close();
-                }
-                 MyDataReader2.Close();
-                }
-                MyDataReader.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-                myConnection2.Close();
-                myConnection3.Close();
+                updateDateTable();
 
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
+        }
+
+        private void updateDateTable()
+        {
+            string CommandText = "select * from ads_paper.cataloglist order by idcatalogList";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+
+            MySqlConnection myConnection2 = new MySqlConnection(Connect);
+            MySqlCommand myCommand2 = new MySqlCommand(CommandText, myConnection2);
+            myConnection2.Open(); //Устанавливаем соединение с базой данных.
+            MySqlConnection myConnection3 = new MySqlConnection(Connect);
+            MySqlCommand myCommand3 = new MySqlCommand(CommandText, myConnection3);
+            myConnection3.Open(); //Устанавливаем соединение с базой данных.
+            MySqlConnection myConnection = new MySqlConnection(Connect);
+            MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+            myConnection.Open(); //Устанавливаем соединение с базой данных.
+            MySqlDataReader MyDataReader;
+            MySqlDataReader MyDataReader2;
+            MySqlDataReader MyDataReader3;
+
+
+            MyDataReader = myCommand.ExecuteReader();
+            int i = 0;
+            while (MyDataReader.Read())
+            {
+
+                int id = MyDataReader.GetInt32(0); //Получаем строку
+                string name = MyDataReader.GetString(1); //Получаем строку
+
+                catalogsComboBox.Items.Insert(i, name);
+                i++;
+
+            }
+            MyDataReader.Close();
+            myConnection.Close(); //Обязательно закрываем соединение!
+
+            CommandText = "select distinct DATEPOST from ria_rim.ob";
+            myCommand.CommandText = CommandText;
+
+            myConnection.Open(); //Устанавливаем соединение с базой данных.
+
+            MyDataReader = myCommand.ExecuteReader();
+            DateTime date;
+            while (MyDataReader.Read())
+            {
+                date = MyDataReader.GetDateTime(0);
+                CommandText = "select distinct KOL_P from ria_rim.ob where DATEPOST = '" + date.ToString("yyyy-MM-dd") + "'";
+                myCommand2.CommandText = CommandText;
+                MyDataReader2 = myCommand2.ExecuteReader();
+                while (MyDataReader2.Read())
+                {
+                    CommandText = "select count(*) from ria_rim.ob where DATEPOST = '" + date.ToString("yyyy-MM-dd") + "' and KOL_P ='" + MyDataReader2.GetString(0) + "'";
+                    myCommand3.CommandText = CommandText;
+                    MyDataReader3 = myCommand3.ExecuteReader();
+                    while (MyDataReader3.Read())
+                    {
+                        dataGridView1.Rows.Add(date, MyDataReader3.GetString(0), MyDataReader2.GetString(0));
+                    }
+                    MyDataReader3.Close();
+                }
+                MyDataReader2.Close();
+            }
+            MyDataReader.Close();
+            myConnection.Close(); //Обязательно закрываем соединение!
+            myConnection2.Close();
+            myConnection3.Close();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -3469,22 +3474,7 @@ namespace AdvertBaseServer
             try
             {
 
-                string CommandText = "select count(*) from " + dbname + ".ob where kol_p >0";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
-
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-
-                MySqlDataReader MyDataReader;
-                 MyDataReader = myCommand.ExecuteReader();
-
-                 while (MyDataReader.Read())
-                 {
-                     this.Text = MyDataReader.GetString(0).ToString() + " объявлений в базе";
-                 }
-                 myConnection.Close();
+                getCount();
 
 
         }
@@ -3492,6 +3482,26 @@ namespace AdvertBaseServer
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void getCount()
+        {
+            string CommandText = "select count(*) from " + dbname + ".ob where kol_p >0";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+            MySqlConnection myConnection = new MySqlConnection(Connect);
+            MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+            myConnection.Open(); //Устанавливаем соединение с базой данных.
+
+
+            MySqlDataReader MyDataReader;
+            MyDataReader = myCommand.ExecuteReader();
+
+            while (MyDataReader.Read())
+            {
+                this.Text = MyDataReader.GetString(0).ToString() + " объявлений в базе";
+            }
+            myConnection.Close();
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -3504,6 +3514,46 @@ namespace AdvertBaseServer
         {
             Statistics f = new Statistics(monthCalendar1.SelectionStart);
             f.Show();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            updateCount(1);
+        }
+
+        private void updateCount(int i)
+        {
+            try
+            {
+
+                int index = dataGridView1.SelectedCells[0].RowIndex;
+                DateTime date = DateTime.Parse(dataGridView1.Rows[index].Cells[0].Value.ToString());
+
+                string CommandText = "update " + dbname + ".ob set KOL_P = '" + (int.Parse(dataGridView1.Rows[index].Cells[2].Value.ToString()) + i).ToString() + "' where `DATEPOST`= '" + date.ToString("yyyy-MM-dd") + "' AND KOL_P = '" + dataGridView1.Rows[index].Cells[2].Value.ToString() + "'";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+
+                MySqlDataReader MyDataReader;
+
+
+                myCommand.ExecuteNonQuery();
+                myConnection.Close();
+                dataGridView1.Rows.Clear();
+                updateDateTable();
+                getCount();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            updateCount(-1);
         }
     }
 }
