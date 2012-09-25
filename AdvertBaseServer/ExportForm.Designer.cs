@@ -78,7 +78,6 @@
             this.monthCalendar1.MaxSelectionCount = 365;
             this.monthCalendar1.Name = "monthCalendar1";
             this.monthCalendar1.TabIndex = 3;
-            this.monthCalendar1.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateSelected);
             // 
             // catalogsComboBox
             // 

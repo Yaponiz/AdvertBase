@@ -18,7 +18,7 @@ namespace AdvertBaseServer
     public partial class ExportForm : Form
     {
         public object Missing;
-        public int col=0;
+        public int col = 0;
         public int rubNum = 0;
         private string dbname, server, dbuser, dbpass, dbPort;
         public string idRub;
@@ -137,12 +137,12 @@ namespace AdvertBaseServer
         {
             try
             {
-                string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOL_P` > '0' " ;
+                string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOL_P` > '0' ";
                 if (catalogNum[2] != 0)
                 {
-                    CommandText = CommandText + " AND `KOD_PR` = '" + catalogNum[2]+"'";
+                    CommandText = CommandText + " AND `KOD_PR` = '" + catalogNum[2] + "'";
                 }
-                
+
                 if (catalogNum[3] != 0)
                 {
                     CommandText = CommandText + " and `KOD_PPR` = '" + catalogNum[3] + "'";
@@ -153,7 +153,7 @@ namespace AdvertBaseServer
                     CommandText = CommandText + " AND `KOD_PPPR` = '" + catalogNum[4] + "'";
                 }
 
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
                 bool result = false;
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
@@ -183,15 +183,15 @@ namespace AdvertBaseServer
         {
             try
             {
-               /* if (catalogsComboBox.SelectedIndex == 1)
-                 {*/
+                /* if (catalogsComboBox.SelectedIndex == 1)
+                  {*/
                 col = 0;
                 if (DialogResult.OK == saveFileDialog1.ShowDialog())
                 {
                     Microsoft.Office.Interop.Word.Application wdApp = new Microsoft.Office.Interop.Word.Application();
                     Microsoft.Office.Interop.Word.Document wdDoc = new Microsoft.Office.Interop.Word.Document();
                     wdDoc = wdApp.Documents.Add();
-                                        
+
                     wdDoc.SpellingChecked = false;
 
                     wdDoc.ShowSpellingErrors = false;
@@ -272,7 +272,7 @@ namespace AdvertBaseServer
                     MyDataReader.Close();
                     myConnection.Close();
                     ReplaceTextWord(ref wdApp, "  ", " ");
-                    wdApp.ActiveDocument.SaveAs(saveFileDialog1.FileName+".doc");
+                    wdApp.ActiveDocument.SaveAs(saveFileDialog1.FileName + ".doc");
                     wdDoc.Close();
                     //wdApp.Documents.Close();
                     wdApp.Quit();
@@ -292,22 +292,22 @@ namespace AdvertBaseServer
             try
             {
                 wdApp.Selection.TypeText("@@ 1");
-                wdApp.Selection.TypeParagraph();wdApp.Selection.TypeParagraph();
+                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
                 wdApp.Selection.TypeText("НЕДВИЖИМОСТЬ");
-    wdApp.Selection.TypeParagraph();wdApp.Selection.TypeParagraph();
- wdApp.Selection.TypeText("ПРОДАЮ");
-    wdApp.Selection.TypeParagraph();wdApp.Selection.TypeParagraph();
- wdApp.Selection.TypeText("ВНЕ РСО-АЛАНИЯ");
-    wdApp.Selection.TypeParagraph();wdApp.Selection.TypeParagraph();
+                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
+                wdApp.Selection.TypeText("ПРОДАЮ");
+                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
+                wdApp.Selection.TypeText("ВНЕ РСО-АЛАНИЯ");
+                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
                 string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '1' AND `KOD_PR` = '1' and `KOD_PPR` = '1' AND `KOL_P` > '0' ORDER BY K_WORD";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
-            //Переменная Connect - это строка подключения в которой:
-            //БАЗА - Имя базы в MySQL
-            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-            
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
@@ -355,58 +355,50 @@ namespace AdvertBaseServer
                         costStr = MyDataReader.GetString(22);//Получаем строку
                     }
                     else
-                    { 
-                        costStr="";
+                    {
+                        costStr = "";
                     }
                     //toshow = MyDataReader.GetUInt16(9); //Получаем строку
                     //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-                        wdApp.Selection.ClearFormatting();
-                        wdApp.Selection.Select();
-                        wdApp.Selection.Characters.Last.Select();
-                        wdApp.Selection.Font.Bold = 1;
-                        wdApp.Selection.TypeText(header);
-                        if (cost != 0)
-                        {
-                            wdApp.Selection.TypeText(" "+cost.ToString("N", nfi));
-                            wdApp.Selection.TypeText(" ");
-                            wdApp.Selection.TypeText(" руб." + costStr);
-                        }
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.Font.Bold = 0;
-                        wdApp.Selection.ClearFormatting();
-                        wdApp.Selection.Select();
-                        wdApp.Selection.Characters.Last.Select();
-                        wdApp.Selection.Font.Bold = 0;
-                        wdApp.Selection.TypeText("- " + text + " ");                        
-                        wdApp.Selection.TypeText(" " + phone);
-                        wdApp.Selection.Font.Bold = 0;
-                        wdApp.Selection.TypeParagraph();
-                        //wdApp.Selection.TypeParagraph();
-                        CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                        //MessageBox.Show(CommandText);
-                        updateCommand.CommandText = CommandText;
-                        int res = updateCommand.ExecuteNonQuery();
-                        col++;
-                        if (checkBox2.Checked)
-                        {
-                            //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                            //MessageBox.Show(CommandText);
-
-                            //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                            //int res = updateCommand.ExecuteNonQuery();
-                        }
-                   
-                }
                 
+                    wdApp.Selection.Font.Bold = 1;
+                    wdApp.Selection.TypeText(header);
+                    if (cost != 0)
+                    {
+                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
+                        wdApp.Selection.TypeText(" ");
+                        wdApp.Selection.TypeText(" руб." + costStr);
+                    }
+                    wdApp.Selection.TypeText(" ");
+                    wdApp.Selection.Font.Bold = 0;                   
+                    wdApp.Selection.TypeText("- " + text + " ");
+                    wdApp.Selection.TypeText(" " + phone);
+                    wdApp.Selection.Font.Bold = 0;
+                    wdApp.Selection.TypeParagraph();
+                    //wdApp.Selection.TypeParagraph();
+                    CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
+                    //MessageBox.Show(CommandText);
+                    updateCommand.CommandText = CommandText;
+                    int res = updateCommand.ExecuteNonQuery();
+                    col++;
+                    if (checkBox2.Checked)
+                    {
+                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
+                        //MessageBox.Show(CommandText);
+
+                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
+                        //int res = updateCommand.ExecuteNonQuery();
+                    }
+
+                }
+
                 MyDataReader.Close();
                 myConnection2.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
                 wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
                 wdApp.Selection.TypeText("ПО РЕСПУБЛИКЕ");
                 wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-               
+
                 CommandText = "select * from " + dbname + ".ob where `KOD_R` = '1' AND `KOD_PR` = '2' and `KOD_PPR` = '1' AND `KOL_P` > '0' ORDER BY K_WORD";
                 Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
@@ -430,7 +422,7 @@ namespace AdvertBaseServer
                 nfi.NumberGroupSeparator = " ";
 
                 nfi.PositiveSign = "";
-              
+
                 MyDataReader = myCommand.ExecuteReader();
 
                 while (MyDataReader.Read())
@@ -461,12 +453,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -476,9 +468,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -563,12 +555,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -578,9 +570,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -665,12 +657,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -680,9 +672,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -767,12 +759,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -782,9 +774,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -868,12 +860,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -883,9 +875,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -970,12 +962,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -985,9 +977,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1072,12 +1064,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1087,9 +1079,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1174,12 +1166,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1189,9 +1181,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1276,12 +1268,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1291,9 +1283,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1378,12 +1370,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1393,9 +1385,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1480,12 +1472,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1495,9 +1487,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1583,12 +1575,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1598,9 +1590,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1684,12 +1676,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1699,9 +1691,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1785,12 +1777,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1800,9 +1792,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1886,12 +1878,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -1901,9 +1893,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -1988,12 +1980,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -2003,9 +1995,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -2091,12 +2083,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -2106,9 +2098,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -2192,12 +2184,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -2207,9 +2199,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -2294,12 +2286,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -2309,9 +2301,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -2401,12 +2393,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -2416,9 +2408,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -2502,12 +2494,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -2517,9 +2509,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -2603,12 +2595,12 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.ClearFormatting();
+                   
                     wdApp.Selection.TypeText(header);
                     if (cost != 0)
                     {
@@ -2618,9 +2610,9 @@ namespace AdvertBaseServer
                     }
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Select();
-                    wdApp.Selection.Characters.Last.Select();
+                   
+                    
+                    
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText("- " + text + " ");
                     wdApp.Selection.TypeText(" " + phone);
@@ -2647,7 +2639,7 @@ namespace AdvertBaseServer
                 myConnection2.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
 
-             }
+            }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
@@ -2660,20 +2652,20 @@ namespace AdvertBaseServer
         {
             try
             {
-                bool aut=false;
+                bool aut = false;
                 if (catalogNum[1] == 2)
                 {
-                  if (catalogNum[2] == 1)
-                  {
-                      if (catalogNum[3] == 1)
-                      {
-                          aut = true;
-                          PrintAuto(catalogNum, ref wdApp);
-                      }
-                  }
+                    if (catalogNum[2] == 1)
+                    {
+                        if (catalogNum[3] == 1)
+                        {
+                            aut = true;
+                            PrintAuto(catalogNum, ref wdApp);
+                        }
+                    }
                 }
 
-                if(!aut)
+                if (!aut)
                 {
                     string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' and `KOD_PPR` = '" + catalogNum[3] + "' AND `KOD_PPPR` = '" + catalogNum[4] + "' AND `KOL_P` > '0' and DATEPOST='2012-01-01' ORDER BY K_WORD";
                     string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
@@ -2787,7 +2779,7 @@ namespace AdvertBaseServer
 
                     }
                     MyDataReader.Close();
-                    
+
                     myConnection2.Close();
                     myConnection.Close(); //Обязательно закрываем соединение!
                 }
@@ -2802,9 +2794,9 @@ namespace AdvertBaseServer
 
         private void PrintAuto(int[] catalogNum, ref Microsoft.Office.Interop.Word.Application wdApp)
         {
-        try
+            try
             {
-            string[] listOfAuto = {
+                string[] listOfAuto = {
             "ВАЗ",
             "ГАЗ", 
             "Москвич",
@@ -2857,107 +2849,107 @@ namespace AdvertBaseServer
             "Volkswagen",
             "Volvo"
         };
-            foreach (string auto in listOfAuto)
-            {
-
-                
-                string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' and `KOD_PPR` = '" + catalogNum[3] + "' AND `KOD_PPPR` = '" + catalogNum[4] + "' AND `KOL_P` > '0' AND K_WORD like '%%"+auto+"%%' ORDER BY K_WORD";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-                //todo: Проверить по выписаным ошибкам
-                //Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                MySqlConnection myConnection2 = new MySqlConnection(Connect);
-                MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-                MySqlDataReader MyDataReader;
-                //string date; //Получаем дату
-                string phone; //Получаем строку
-                string header; //Получаем строку
-                string text; //Получаем строку
-                //int cost; //Получаем строку
-                //string catalog; //Получаем строку
-                //int toshow; //Получаем строку
-                string id;
-                //string costStr;
-                MyDataReader = myCommand.ExecuteReader();
-                if (MyDataReader.HasRows)
-                { 
-                //wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph();
-                wdApp.Selection.Font.Bold = 1; 
-                wdApp.Selection.TypeText(auto);
-                wdApp.Selection.Font.Bold = 0;
-                wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph();
-
-                while (MyDataReader.Read())
+                foreach (string auto in listOfAuto)
                 {
 
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
 
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
+                    string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' and `KOD_PPR` = '" + catalogNum[3] + "' AND `KOD_PPPR` = '" + catalogNum[4] + "' AND `KOL_P` > '0' AND K_WORD like '%%" + auto + "%%' ORDER BY K_WORD";
+                    string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                    //todo: Проверить по выписаным ошибкам
+                    //Переменная Connect - это строка подключения в которой:
+                    //БАЗА - Имя базы в MySQL
+                    //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                    //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                    //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
 
+                    MySqlConnection myConnection = new MySqlConnection(Connect);
+                    MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                    myConnection.Open(); //Устанавливаем соединение с базой данных.
 
-                    wdApp.Selection.Font.Bold = 1;
+                    MySqlConnection myConnection2 = new MySqlConnection(Connect);
+                    MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
+                    myConnection2.Open();
+                    // Gets a NumberFormatInfo associated with the en-US culture.
+                    NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
-                    wdApp.Selection.TypeText(header);
-                    //wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-                    if (text != " ")
+                    nfi.NumberDecimalDigits = 0;
+                    nfi.NumberGroupSeparator = " ";
+
+                    nfi.PositiveSign = "";
+                    MySqlDataReader MyDataReader;
+                    //string date; //Получаем дату
+                    string phone; //Получаем строку
+                    string header; //Получаем строку
+                    string text; //Получаем строку
+                    //int cost; //Получаем строку
+                    //string catalog; //Получаем строку
+                    //int toshow; //Получаем строку
+                    string id;
+                    //string costStr;
+                    MyDataReader = myCommand.ExecuteReader();
+                    if (MyDataReader.HasRows)
                     {
-                        wdApp.Selection.TypeText(" " + text);
+                        //wdApp.Selection.TypeParagraph();
+                        wdApp.Selection.TypeParagraph();
+                        wdApp.Selection.Font.Bold = 1;
+                        wdApp.Selection.TypeText(auto);
+                        wdApp.Selection.Font.Bold = 0;
+                        wdApp.Selection.TypeParagraph();
+                        wdApp.Selection.TypeParagraph();
+
+                        while (MyDataReader.Read())
+                        {
+
+                            header = MyDataReader.GetString(12); //Получаем строку
+                            text = MyDataReader.GetString(13); //Получаем строку                    
+                            phone = MyDataReader.GetString(14); //Получаем строку
+                            id = MyDataReader.GetString(0); //Получаем id
+
+                            //toshow = MyDataReader.GetUInt16(9); //Получаем строку
+                            //catalog = MyDataReader.GetString(11); //Получаем строку
+
+
+                            wdApp.Selection.Font.Bold = 1;
+
+                            wdApp.Selection.TypeText(header);
+                            //wdApp.Selection.TypeText(" ");
+                            wdApp.Selection.Font.Bold = 0;
+                            if (text != " ")
+                            {
+                                wdApp.Selection.TypeText(" " + text);
+                            }
+                            wdApp.Selection.TypeText(" " + phone);
+                            wdApp.Selection.TypeParagraph();
+                            //wdApp.Selection.TypeParagraph();
+
+                            col++;
+                            if (checkBox2.Checked)
+                            {
+                                //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
+                                //MessageBox.Show(CommandText);
+
+                                //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
+                                //int res = updateCommand.ExecuteNonQuery();
+                            }
+                        }
+
                     }
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
+                    MyDataReader.Close();
+                    myConnection2.Close();
+                    myConnection.Close(); //Обязательно закрываем соединение!     
                 }
-
-                }
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!     
-            }
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
 
             }
-}
+        }
         private void PrintAds(int[] catalogNum, ref Microsoft.Office.Interop.Word.Application wdApp)
         {
 
             string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' and `KOD_PPR` = '" + catalogNum[3] + "' AND `KOD_PPPR` = '" + catalogNum[4] + "' AND `KOL_P` > '0' and cost > '0' ORDER BY cost";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
@@ -3000,23 +2992,23 @@ namespace AdvertBaseServer
                     id = MyDataReader.GetString(0); //Получаем id
                     cost = MyDataReader.GetInt32(20); //Получаем строку
                     costStr = MyDataReader.GetString(22); //Получаем строку
-                    
+
                     wdApp.Selection.Font.Bold = 1;
                     wdApp.Selection.TypeText("@@@" + cost.ToString("N", nfi));
                     wdApp.Selection.TypeText(" ");
-          
+
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText(" руб." + costStr);
                     //wdApp.Selection.Font.Bold = 1;
                     wdApp.Selection.TypeParagraph();
-                 
+
                     wdApp.Selection.TypeText(header);
-               
+
                     wdApp.Selection.TypeText(", " + text + " ");
-                  //  wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
+                    //  wdApp.Selection.Select();
+                    //  wdApp.Selection.Characters.Last.Select();
                     wdApp.Selection.TypeText(" " + phone);
-                 //   wdApp.Selection.Font.Bold = 0;
+                    //   wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeParagraph();
                     //wdApp.Selection.TypeParagraph();
                     CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
@@ -3024,7 +3016,7 @@ namespace AdvertBaseServer
                     updateCommand.CommandText = CommandText;
                     int res = updateCommand.ExecuteNonQuery();
                     col++;
-                    
+
                     if (checkBox2.Checked)
                     {
                         //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
@@ -3058,7 +3050,7 @@ namespace AdvertBaseServer
         {
 
             string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' AND `KOL_P` > '0' and cost > '0' ORDER BY cost";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
@@ -3104,37 +3096,37 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                   // wdApp.Selection.ClearFormatting();
+                    // wdApp.Selection.ClearFormatting();
                     //wdApp.Selection.Select();
                     //wdApp.Selection.Characters.Last.Select();
                     wdApp.Selection.Font.Bold = 1;
                     wdApp.Selection.TypeText("@@@" + cost.ToString("N", nfi));
                     wdApp.Selection.TypeText(" ");
                     wdApp.Selection.Font.Bold = 0;
-                   // wdApp.Selection.Select();
-                   // wdApp.Selection.Characters.Last.Select();
-                   // wdApp.Selection.ClearFormatting();
+                    // wdApp.Selection.Select();
+                    // wdApp.Selection.Characters.Last.Select();
+                    // wdApp.Selection.ClearFormatting();
                     //wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText(" руб.");
                     //wdApp.Selection.Font.Bold = 1;
                     wdApp.Selection.TypeParagraph();
-                   // wdApp.Selection.Select();
-                   // wdApp.Selection.Characters.Last.Select();
-                   // wdApp.Selection.Font.Bold = 0;
-                   // wdApp.Selection.ClearFormatting();
+                    // wdApp.Selection.Select();
+                    // wdApp.Selection.Characters.Last.Select();
+                    // wdApp.Selection.Font.Bold = 0;
+                    // wdApp.Selection.ClearFormatting();
                     wdApp.Selection.TypeText(header);
-                  //  wdApp.Selection.Font.Bold = 0;
-                  //  wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
-                  //  wdApp.Selection.Font.Bold = 0;
-                  //  wdApp.Selection.ClearFormatting();
+                    //  wdApp.Selection.Font.Bold = 0;
+                    //  wdApp.Selection.Select();
+                    //  wdApp.Selection.Characters.Last.Select();
+                    //  wdApp.Selection.Font.Bold = 0;
+                    //  wdApp.Selection.ClearFormatting();
                     wdApp.Selection.TypeText(" - " + text + " ");
-                  //  wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
+                    //  wdApp.Selection.Select();
+                    //  wdApp.Selection.Characters.Last.Select();
                     wdApp.Selection.TypeText(" " + phone);
-                  //  wdApp.Selection.Font.Bold = 0;
+                    //  wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeParagraph();
-                   // wdApp.Selection.TypeParagraph();
+                    // wdApp.Selection.TypeParagraph();
                     CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
                     //MessageBox.Show(CommandText);
                     updateCommand.CommandText = CommandText;
@@ -3173,7 +3165,7 @@ namespace AdvertBaseServer
         {
 
             string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + catalogNum[1] + "' AND `KOD_PR` = '" + catalogNum[2] + "' AND `KOL_P` > '0' and cost > '0' ORDER BY cost";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
@@ -3219,36 +3211,36 @@ namespace AdvertBaseServer
                     //catalog = MyDataReader.GetString(11); //Получаем строку
 
 
-                  // wdApp.Selection.ClearFormatting();
-                   // wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
+                    // wdApp.Selection.ClearFormatting();
+                    // wdApp.Selection.Select();
+                    //  wdApp.Selection.Characters.Last.Select();
                     wdApp.Selection.Font.Bold = 1;
                     wdApp.Selection.TypeText("@@@" + cost.ToString("N", nfi));
                     wdApp.Selection.TypeText(" ");
-                   // wdApp.Selection.Font.Bold = 0;
-                   // wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
-                  //  wdApp.Selection.ClearFormatting();
+                    // wdApp.Selection.Font.Bold = 0;
+                    // wdApp.Selection.Select();
+                    //  wdApp.Selection.Characters.Last.Select();
+                    //  wdApp.Selection.ClearFormatting();
                     wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText(" руб.");
                     //wdApp.Selection.Font.Bold = 1;
                     wdApp.Selection.TypeParagraph();
-                   // wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
-                    
-                  //  wdApp.Selection.ClearFormatting();
-                  //  wdApp.Selection.Font.Bold = 0;
+                    // wdApp.Selection.Select();
+                    //  wdApp.Selection.Characters.Last.Select();
+
+                    //  wdApp.Selection.ClearFormatting();
+                    //  wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText(header);
-                  //  wdApp.Selection.Font.Bold = 0;
-                  //  wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
-                  //  wdApp.Selection.Font.Bold = 0;
-                  //  wdApp.Selection.ClearFormatting();
+                    //  wdApp.Selection.Font.Bold = 0;
+                    //  wdApp.Selection.Select();
+                    //  wdApp.Selection.Characters.Last.Select();
+                    //  wdApp.Selection.Font.Bold = 0;
+                    //  wdApp.Selection.ClearFormatting();
                     wdApp.Selection.TypeText(" - " + text + " ");
-                  //  wdApp.Selection.Select();
-                  //  wdApp.Selection.Characters.Last.Select();
+                    //  wdApp.Selection.Select();
+                    //  wdApp.Selection.Characters.Last.Select();
                     wdApp.Selection.TypeText(" " + phone);
-                  //  wdApp.Selection.Font.Bold = 0;
+                    //  wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeParagraph();
                     //wdApp.Selection.TypeParagraph();
                     CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
@@ -3290,7 +3282,7 @@ namespace AdvertBaseServer
         {
 
             string CommandText = "select * from " + dbname + ".ob where `KOD_R` = '" + first + "' AND `KOD_PR` = '" + second + "'  AND `KOL_P` > '0' ORDER BY cost";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
@@ -3311,7 +3303,7 @@ namespace AdvertBaseServer
                 string phone; //Получаем строку
                 string header; //Получаем строку
                 string text; //Получаем строку
-               //string cost; //Получаем строку
+                //string cost; //Получаем строку
                 //string catalog; //Получаем строку
                 //int toshow; //Получаем строку
 
@@ -3326,20 +3318,20 @@ namespace AdvertBaseServer
                     header = MyDataReader.GetString(12); //Получаем строку
                     text = MyDataReader.GetString(13); //Получаем строку                    
                     phone = MyDataReader.GetString(14); //Получаем строку
-             
+
                     wdApp.Selection.Font.Bold = 1;
                     //wdApp.Selection.TypeParagraph();
-                    wdApp.Selection.TypeText(header+ " ");
-                 //   wdApp.Selection.Select();
-                 //   wdApp.Selection.Characters.Last.Select();
-                 //   wdApp.Selection.ClearFormatting();
-                    wdApp.Selection.Font.Bold = 0;                    
+                    wdApp.Selection.TypeText(header + " ");
+                    //   wdApp.Selection.Select();
+                    //   wdApp.Selection.Characters.Last.Select();
+                    //   wdApp.Selection.ClearFormatting();
+                    wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText(text + " ");
-                //    wdApp.Selection.Select();
-                 //   wdApp.Selection.Characters.Last.Select();
-                //    wdApp.Selection.Font.Bold = 0;
+                    //    wdApp.Selection.Select();
+                    //   wdApp.Selection.Characters.Last.Select();
+                    //    wdApp.Selection.Font.Bold = 0;
                     wdApp.Selection.TypeText(phone);
-                   
+
                     wdApp.Selection.TypeParagraph();
                     //wdApp.Selection.TypeParagraph();
 
@@ -3413,7 +3405,7 @@ namespace AdvertBaseServer
 
         private void button3_Click(object sender, EventArgs e)
         {
-            listBox1.Items.Add(monthCalendar1.SelectionRange.Start.ToShortDateString() + " - "+ monthCalendar1.SelectionRange.End.ToShortDateString());
+            listBox1.Items.Add(monthCalendar1.SelectionRange.Start.ToShortDateString() + " - " + monthCalendar1.SelectionRange.End.ToShortDateString());
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -3446,14 +3438,14 @@ namespace AdvertBaseServer
                     wdApp.Selection.Font.Size = 12;
                     wdApp.ActiveDocument.Select();
 
-                  
+
 
                     int[] catID = new int[5];
                     int parentID;
                     int real;
                     int sum;
                     PrintAdsRIO(catID, ref wdApp);
-                    
+
                     ReplaceTextWord(ref wdApp, "  ", " ");
                     wdApp.ActiveDocument.SaveAs(saveFileDialog1.FileName + ".doc");
                     wdDoc.Close();
@@ -3477,7 +3469,7 @@ namespace AdvertBaseServer
                 getCount();
 
 
-        }
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -3506,7 +3498,7 @@ namespace AdvertBaseServer
 
         private void button7_Click(object sender, EventArgs e)
         {
-            
+
             //todo: Расписать сколько повторов у скольки объявлений за каждый день. Добавлять повторы к выбранным объявлениям.
         }
 
