@@ -44,11 +44,11 @@
             this.button7 = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -195,21 +195,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(540, 211);
             this.dataGridView1.TabIndex = 15;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Дата";
-            this.Column1.Name = "Column1";
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Количество объявлений";
-            this.Column2.Name = "Column2";
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Количество показов";
-            this.Column3.Name = "Column3";
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // button8
             // 
@@ -230,6 +216,21 @@
             this.button9.Text = "+1";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Дата";
+            this.Column1.Name = "Column1";
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Количество объявлений";
+            this.Column2.Name = "Column2";
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Количество повторов";
+            this.Column3.Name = "Column3";
             // 
             // ExportForm
             // 
@@ -280,10 +281,10 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button9;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button9;
     }
 }

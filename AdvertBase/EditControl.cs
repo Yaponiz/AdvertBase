@@ -130,6 +130,7 @@ namespace AdvertBase
 
         private void kod_r_TextChanged(object sender, EventArgs e)
         {
+            // todo: брать из базы данных
             if (kod_r.Text == "2")
             {
                 automobilesList.Show();
