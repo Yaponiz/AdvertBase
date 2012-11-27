@@ -12,6 +12,7 @@ using AdvertBase;
 using System.IO;
 using System.Xml;
 using System.Globalization;
+using System.Web;
 
 namespace AdvertBaseServer
 {
@@ -28,7 +29,7 @@ namespace AdvertBaseServer
             try
             {
                 FileStream f = new FileStream("properties.xml", FileMode.OpenOrCreate);
-
+                
                 XmlTextReader settings = new XmlTextReader(f);
                 while (settings.Read())
                 {
@@ -46,9 +47,41 @@ namespace AdvertBaseServer
                     }
                 }
                 f.Close();
+                string CommandText = "select * from `ads_paper`.`catalogitems` order by R1,R2,R3,R4";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
 
+
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                MySqlDataReader MyDataReader;
+
+
+                MyDataReader = myCommand.ExecuteReader();
+
+                while (MyDataReader.Read())
+                {
+
+                    int id = MyDataReader.GetInt32(0); //Получаем строку
+                    string R1 = MyDataReader.GetString(2); //Получаем строку
+                    string R2 = MyDataReader.GetString(3); //Получаем строку
+                    string R3 = MyDataReader.GetString(4); //Получаем строку
+                    string R4 = MyDataReader.GetString(5); //Получаем строку
+                    string name = MyDataReader.GetString(1); //Получаем строку
+
+                    mainCatalog.Rows.Add(id, name, R1, R2, R3, R4);                   
+
+                }
+                MyDataReader.Close();
+                myConnection.Close(); //Обязательно закрываем соединение!
 
                 updateDateTable();
+                loadCatalogs();
 
             }
             catch (Exception e)
@@ -96,7 +129,7 @@ namespace AdvertBaseServer
             MyDataReader.Close();
             myConnection.Close(); //Обязательно закрываем соединение!
 
-            CommandText = "select distinct datepost, kol_p from ria_rim.ob order by datepost desc";
+            CommandText = "select datepost, count(*), kol_p from ria_rim.ob group by datepost, kol_p order by datepost desc";
             myCommand.CommandText = CommandText;
 
             myConnection.Open(); //Устанавливаем соединение с базой данных.
@@ -105,15 +138,15 @@ namespace AdvertBaseServer
             DateTime date;
             while (MyDataReader.Read())
             {
-                date = MyDataReader.GetDateTime(0);
-                    CommandText = "select count(*) from ria_rim.ob where DATEPOST = '" + date.ToString("yyyy-MM-dd") + "' and KOL_P ='" + MyDataReader.GetString(1) + "'";
-                    myCommand3.CommandText = CommandText;
-                    MyDataReader3 = myCommand3.ExecuteReader();
-                    while (MyDataReader3.Read())
-                    {
-                        dataGridView1.Rows.Add(date, MyDataReader3.GetString(0), MyDataReader.GetString(1));           
-                    }
-                    MyDataReader3.Close();
+                //date = MyDataReader.GetDateTime(0);
+                //    CommandText = "select count(*) from ria_rim.ob where DATEPOST = '" + date.ToString("yyyy-MM-dd") + "' and KOL_P ='" + MyDataReader.GetString(1) + "'";
+                //    myCommand3.CommandText = CommandText;
+                //    MyDataReader3 = myCommand3.ExecuteReader();
+                //    while (MyDataReader3.Read())
+                //    {
+                dataGridView1.Rows.Add(MyDataReader.GetDateTime(0).ToString("yyyy-MM-dd"), MyDataReader.GetString(1), MyDataReader.GetString(2));           
+                    //}
+                    //MyDataReader3.Close();
               
             }
             MyDataReader.Close();
@@ -121,6 +154,56 @@ namespace AdvertBaseServer
 
             myConnection3.Close();
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Descending);
+        }
+
+        private void updateStatistics()
+        {
+            string datePart;
+            if (dateTimePicker1.Value.Date.ToString("yyyy-MM-dd") != dateTimePicker2.Value.Date.ToString("yyyy-MM-dd"))
+            {
+                datePart = "(date(datepost) between '" + dateTimePicker1.Value.Date.ToString("yyyy-MM-dd") + "' and '" + dateTimePicker2.Value.Date.ToString("yyyy-MM-dd") + "') and";
+            }
+            else
+            {
+                datePart = "datepost ='" + dateTimePicker1.Value.Date.ToString("yyyy-MM-dd") + "' and ";
+            }
+
+
+            string CommandText = "select NUM_PK, count(*) from `ria_rim`.`ob` where " + datePart + " (time(timepost) between '" + dateTimePicker1.Value.ToString("HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("HH:mm:ss") + "') group by num_PK";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+
+            MySqlConnection myConnection2 = new MySqlConnection(Connect);
+            MySqlCommand myCommand2 = new MySqlCommand(CommandText, myConnection2);
+            myConnection2.Open(); //Устанавливаем соединение с базой данных.
+            MySqlConnection myConnection3 = new MySqlConnection(Connect);
+            MySqlCommand myCommand3 = new MySqlCommand(CommandText, myConnection3);
+            myConnection3.Open(); //Устанавливаем соединение с базой данных.
+            MySqlConnection myConnection = new MySqlConnection(Connect);
+            MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+            myConnection.Open(); //Устанавливаем соединение с базой данных.
+            MySqlDataReader MyDataReader;
+            MySqlDataReader MyDataReader2;
+            MySqlDataReader MyDataReader3;
+
+
+            MyDataReader = myCommand.ExecuteReader();
+            
+            while (MyDataReader.Read())
+            {
+
+                int kom_num = MyDataReader.GetInt32(0); //Получаем строку
+                int kol = MyDataReader.GetInt32(1); //Получаем строку
+                statisticsByPC.Rows.Add(kom_num.ToString(),kol.ToString(),"","");
+                
+
+            }
+            MyDataReader.Close();
+            myConnection.Close(); //Обязательно закрываем соединение!
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -188,13 +271,13 @@ namespace AdvertBaseServer
                     wdDoc = wdApp.Documents.Add();
                     Microsoft.Office.Interop.Word.Range rang = wdDoc.Range();
                     wdDoc.SpellingChecked = false;
-
+                    
                     wdDoc.ShowSpellingErrors = false;
                     wdApp.Selection.Font.Name = "Times New Roman";
                     wdApp.Selection.Font.Size = 12;
                     wdApp.ActiveDocument.Select();
 
-                    string CommandText = "select * from `ads_paper`.`" + catalogsComboBox.Text + "` order by r1,r2,r3,r4";
+                    string CommandText = "select * from `ads_paper`.`catalogitems` order by idcatalogItems";
                     string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
                     MySqlConnection myConnection = new MySqlConnection(Connect);
@@ -218,9 +301,9 @@ namespace AdvertBaseServer
                         catID[3] = MyDataReader.GetInt32(4);
                         catID[4] = MyDataReader.GetInt32(5);
                         string name = MyDataReader.GetString(1); //Получаем строку
-                        parentID = MyDataReader.GetInt32(6);
-                        real = MyDataReader.GetInt32(7);
-                        sum = MyDataReader.GetInt32(8);
+                        //parentID = MyDataReader.GetInt32(6);
+                        //real = MyDataReader.GetInt32(7);
+                        //sum = MyDataReader.GetInt32(8);
                         if (checkCount(catID))
                         {
                             wdApp.Selection.TypeParagraph();
@@ -286,32 +369,24 @@ namespace AdvertBaseServer
         {
             try
             {
-                StreamWriter f = new StreamWriter("log.txt");
+               // StreamWriter f = new StreamWriter("log.txt");
 
-                wdApp.Selection.TypeText("@@ 1");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("НЕДВИЖИМОСТЬ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПРОДАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ВНЕ РСО-АЛАНИЯ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                string CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '1' AND `KOD_PR` = '1' and `KOD_PPR` = '1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-                
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
+                string CommandText = "select * from `ads_paper`.`" + catalogsComboBox.Text + "` order by id";
+                string CommandText2 = "";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+                //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
 
                 MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlConnection myConnection2 = new MySqlConnection(Connect);
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                MySqlCommand myCommand2 = new MySqlCommand(CommandText2, myConnection2);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
 
-                MySqlConnection myConnection2 = new MySqlConnection(Connect);
-                MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
                 // Gets a NumberFormatInfo associated with the en-US culture.
                 NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
@@ -320,6 +395,7 @@ namespace AdvertBaseServer
 
                 nfi.PositiveSign = "";
                 MySqlDataReader MyDataReader;
+                MySqlDataReader MyDataReader2;
                 //string date; //Получаем дату
                 string phone; //Получаем строку
                 string header; //Получаем строку
@@ -333,5106 +409,57 @@ namespace AdvertBaseServer
 
                 while (MyDataReader.Read())
                 {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
+                    if (MyDataReader.GetString(3) != "")
                     {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
+                        wdApp.Selection.TypeText(MyDataReader.GetString(3));
+                        wdApp.Selection.TypeParagraph();
                     }
 
-                    if (!MyDataReader.IsDBNull(21))
+                    if (MyDataReader.GetString(4)!="")
                     {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
+                        myConnection2.Open(); //Устанавливаем соединение с базой данных для получения объявлений.
+                        CommandText2 = "select * from ria_rim.ob where kol_p>0 and (KOD_R='" + MyDataReader.GetString(4) + "' and KOD_PR='" + MyDataReader.GetString(5) + "' and kod_ppr='" + MyDataReader.GetString(6) + "' and kod_pppr='" + MyDataReader.GetString(7) + "') order by k_word";
+                        myCommand2.CommandText = CommandText2;
+                        MyDataReader2 = myCommand2.ExecuteReader();
+                        while (MyDataReader2.Read())
+                        {
+                            header = MyDataReader2.GetString(12); //Получаем строку
+                            text = MyDataReader2.GetString(13); //Получаем строку                    
+                            phone = MyDataReader2.GetString(14); //Получаем строку
+                            id = MyDataReader2.GetString(0); //Получаем id
 
-                    wdApp.Selection.Font.Bold = 1;
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                   // wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
+                            //toshow = MyDataReader.GetUInt16(9); //Получаем строку
+                            //catalog = MyDataReader.GetString(11); //Получаем строку
 
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
 
+                            wdApp.Selection.Font.Bold = 1;
+
+                            wdApp.Selection.TypeText(header);
+                            //wdApp.Selection.TypeText(" ");
+                            wdApp.Selection.Font.Bold = 0;
+                            if (text != " ")
+                            {
+                                wdApp.Selection.TypeText(" " + text);
+                            }
+                            wdApp.Selection.TypeText(" " + phone);
+                            wdApp.Selection.TypeParagraph();
+                            col++;
+                            if (checkBox2.Checked)
+                            {
+                                //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
+                                //MessageBox.Show(CommandText);
+
+                                //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
+                                //int res = updateCommand.ExecuteNonQuery();
+                            }
+                        }
+                        MyDataReader2.Close();
+                        myConnection2.Close();
+                    }
                 }
 
                 MyDataReader.Close();
-                myConnection2.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПО РЕСПУБЛИКЕ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '1' AND `KOD_PR` = '2' and `KOD_PPR` = '1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("В САДОВОДЧЕСКИХ ТОВАРИЩЕСТВАХ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '1' AND `KOD_PR` = '3' and `KOD_PPR` = '1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-                
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("1-КОМНАТНЫЕ КВАРТИРЫ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '1' AND `KOD_PR` = '6' and `KOD_PPR` = '1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-                
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("1,5-КОМНАТНЫЕ КВАРТИРЫ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '1' AND `KOD_PR` = '6' and `KOD_PPR` = '2')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-                
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("2-КОМНАТНЫЕ КВАРТИРЫ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '6' and `KOD_PPR` = '3') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("2,5-КОМНАТНЫЕ КВАРТИРЫ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '6' and `KOD_PPR` = '4') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("3-КОМНАТНЫЕ КВАРТИРЫ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '6' and `KOD_PPR` = '5') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("4-КОМНАТНЫЕ КВАРТИРЫ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '6' and `KOD_PPR` = '6') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("КВАРТИРЫ ИЗ 5 И БОЛЕЕ КОМНАТ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '6' and `KOD_PPR` = '7') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ДОМА");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND (`KOD_PR` = '4' OR `KOD_PR` = '5')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ДРУГАЯ НЕДВИЖИМОСТЬ ВО ВЛАДИКАВКАЗЕ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND (`KOD_PR` = '12' OR `KOD_PR` = '13' OR `KOD_PR` = '14')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("МЕНЯЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ВНЕ РСО-АЛАНИЯ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '1' AND `KOD_PPR` = '2' ) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ВНЕ РСО-АЛАНИЯ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '2' AND `KOD_PPR` = '2') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ВО ВЛАДИКАВКАЗЕ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND (`KOD_PR` = '7' OR `KOD_PR` = '8')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("СДАМ В АРЕНДУ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '1' AND (`KOD_PR` = '1' OR `KOD_PR` = '2' OR `KOD_PR` = '3' OR `KOD_PR` = '13') AND `KOD_PPR` = '3') OR (`KOD_R` = '1' OR `KOD_PR` = '9')) AND `KOL_P` > '0' ORDER BY K_WORD, KOD_PR";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ДРУГАЯ НЕДВИЖИМОСТЬ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '14' AND `KOD_PPR` = '3') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ВОЗЬМУ В АРЕНДУ (СНИМУ)");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ЖИЛЬЕ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '1' AND (`KOD_PR` = '1' OR `KOD_PR` = '2' OR `KOD_PR` = '3' OR `KOD_PR` = '13') AND `KOD_PPR` = '4') OR (`KOD_R` = '1' OR `KOD_PR` = '10')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ДРУГАЯ НЕДВИЖИМОСТЬ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '1' AND `KOD_PR` = '14' AND `KOD_PPR` = '4') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПОКУПАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '1' AND (`KOD_PR` = '1' OR `KOD_PR` = '2' OR `KOD_PR` = '3' OR `KOD_PR` = '13'  OR `KOD_PR` = '14') AND `KOD_PPR` = '5') OR (`KOD_R` = '1' OR `KOD_PR` = '11') OR (`KOD_R` = '1' OR `KOD_PR` = '12' AND `KOD_PPR` = '3')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("@@ 2");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("АВТОРЫНОК");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПРОДАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ЛЕГКОВЫЕ А/М И ВНЕДОРОЖНИКИ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where (`KOD_R` = '2' AND `KOD_PR` = '1' AND `KOD_PPR` = '1') AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ДРУГИЕ ТРАНСПОРТНЫЕ СРЕДСТВА");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '2' AND `KOD_PR` = '2' AND `KOD_PPR` = '1') OR (`KOD_R` = '2' AND `KOD_PR` = '3' AND `KOD_PPR` = '1') OR (`KOD_R` = '2' AND `KOD_PR` = '4' AND `KOD_PPR` = '1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ЗАПЧАСТИ И ПРИНАДЛЕЖНОСТИ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '2' AND `KOD_PR` = '5' AND `KOD_PPR` = '1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-                    //toshow = MyDataReader.GetUInt16(9); //Получаем строку
-                    //catalog = MyDataReader.GetString(11); //Получаем строку
-
-
-
-
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("МЕНЯЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '2' AND `KOD_PPR` = '2')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-                f.WriteLine(CommandText);
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("СДАМ В АРЕНДУ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '2' AND `KOD_PPR` = '3')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ВОЗЬМУ В АРЕНДУ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '2' AND `KOD_PPR` = '4')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПОКУПАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '2' AND `KOD_PPR` = '4')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("@@ 3");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("СТРОЙКОМПЛЕКТ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПРОДАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '3' OR `KOD_R` = '4' AND `KOD_PR` = '1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПОКУПАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '3' OR `KOD_R` = '4' AND `KOD_PR` = '3')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("МЕНЯЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '3' OR `KOD_R` = '4' AND `KOD_PR` = '3')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("@@ 4");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ОБОРУДОВАНИЕ, ИНВЕНТАРЬ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПРОДАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '5' AND (`KOD_PR`='1' OR `KOD_PR`='3') AND  `KOD_PPR` = '1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("МЕНЯЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '5' AND (`KOD_PR`='1' OR `KOD_PR`='3') AND  `KOD_PPR` = '2')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("СДАМ В АРЕНДУ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '5' AND (`KOD_PR`='1' OR `KOD_PR`='3') AND  `KOD_PPR` = '3')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ВОЗЬМУ В АРЕНДУ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '5' AND (`KOD_PR`='1' OR `KOD_PR`='3') AND  `KOD_PPR` = '4')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПОКУПАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '5' AND (`KOD_PR`='1' OR `KOD_PR`='4') AND  `KOD_PPR` = '5')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("@@ 5");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПРЕДМЕТЫ ПОТРЕБЛЕНИЯ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПРОДАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("МЕБЕЛЬ, ИНТЕРЬЕР");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '6' OR `KOD_R` ='7' AND `KOD_PR`='1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("БЫТОВАЯ ТЕХНИКА, АППАРАТУРА");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '8' OR `KOD_R` ='9' AND `KOD_PR`='1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("БЫТОВАЯ ТЕХНИКА, АППАРАТУРА");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '8' OR `KOD_R` ='9' AND `KOD_PR`='1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ОРГТЕХНИКА, СРЕДСТВА СВЯЗИ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '10'  AND `KOD_PR`='1') OR (`KOD_R` ='11' AND `KOD_PPR`='1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ОДЕЖДА, ОБУВЬ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '13'  AND `KOD_PR`='1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПРОЧИЕ ТОВАРЫ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '5' AND `KOD_PR`='2' AND `KOD_PPR`='1') OR (`KOD_R` = '12' AND `KOD_PR`='1') OR (`KOD_R` = '14' AND `KOD_PR`='1') OR (`KOD_R` = '15' AND `KOD_PR`='1') OR (`KOD_R` = '16' AND `KOD_PR`='1') OR (`KOD_R` = '17' AND `KOD_PR`='1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("МЕНЯЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '5' AND `KOD_PR`='2' AND `KOD_PPR`='2') OR (`KOD_R` = '6' AND `KOD_PR`='2') OR (`KOD_R` = '7' AND `KOD_PR`='2') OR (`KOD_R` = '8' AND `KOD_PR`='2') OR (`KOD_R` = '9' AND `KOD_PR`='2') OR (`KOD_R` = '10' AND `KOD_PR`='2') OR (`KOD_R` = '11' AND `KOD_PR`='1' AND `KOD_PR`='2') OR (`KOD_R` = '11' AND `KOD_PR`='2' AND `KOD_PR`='2') OR (`KOD_R` = '12' AND `KOD_PR`='2') OR (`KOD_R` = '13' AND `KOD_PR`='2') OR (`KOD_R` = '14' AND `KOD_PR`='2') OR (`KOD_R` = '15' AND `KOD_PR`='2') OR (`KOD_R` = '16' AND `KOD_PR`='2') OR (`KOD_R` = '17' AND `KOD_PR`='2')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПОКУПАЮ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '5' AND `KOD_PR`='2' AND `KOD_PPR`='2') OR (`KOD_R` = '6' AND `KOD_PR`='2') OR (`KOD_R` = '7' AND `KOD_PR`='2') OR (`KOD_R` = '8' AND `KOD_PR`='2') OR (`KOD_R` = '9' AND `KOD_PR`='2') OR (`KOD_R` = '10' AND `KOD_PR`='2') OR (`KOD_R` = '11' AND `KOD_PR`='1' AND `KOD_PR`='2') OR (`KOD_R` = '11' AND `KOD_PR`='2' AND `KOD_PR`='2') OR (`KOD_R` = '12' AND `KOD_PR`='2') OR (`KOD_R` = '13' AND `KOD_PR`='2') OR (`KOD_R` = '14' AND `KOD_PR`='2') OR (`KOD_R` = '15' AND `KOD_PR`='2') OR (`KOD_R` = '16' AND `KOD_PR`='2') OR (`KOD_R` = '17' AND `KOD_PR`='2')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("@@ 6");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("РАБОТА");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ИЩУ РАБОТУ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '18' AND `KOD_PR`='1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПРЕДЛАГАЮ РАБОТУ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '18' AND `KOD_PR`='2')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("@@ 7");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("УСЛУГИ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '19' AND `KOD_PR`='1')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '19' AND `KOD_PR`='2')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '19' AND `KOD_PR`='3')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-                wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '19' AND `KOD_PR`='4')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph();
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '19' AND `KOD_PR`='5')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("@@ 8");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ДЕЛА ЖИТЕЙСКИЕ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ПОТЕРИ, НАХОДКИ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '20')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ЖИВОТНЫЕ, РАСТЕНИЯ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '21')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("ЗНАКОМСТВА");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '22')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-                wdApp.Selection.TypeText("РАЗНОЕ");
-                wdApp.Selection.TypeParagraph(); wdApp.Selection.TypeParagraph();
-
-                CommandText = "select * from " + dbname + ".ob where ((`KOD_R` = '23' OR `KOD_R` = '24')) AND `KOL_P` > '0' ORDER BY K_WORD";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort; f.WriteLine(CommandText);//Переменная Connect - это строка подключения в которой
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myConnection2 = new MySqlConnection(Connect);
-                updateCommand = new MySqlCommand(CommandText, myConnection2);
-                myConnection2.Open();
-                // Gets a NumberFormatInfo associated with the en-US culture.
-                nfi = new CultureInfo("en-US", false).NumberFormat;
-
-                nfi.NumberDecimalDigits = 0;
-                nfi.NumberGroupSeparator = " ";
-
-                nfi.PositiveSign = "";
-
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-
-                    header = MyDataReader.GetString(12); //Получаем строку
-                    text = MyDataReader.GetString(13); //Получаем строку                    
-                    phone = MyDataReader.GetString(14); //Получаем строку
-                    id = MyDataReader.GetString(0); //Получаем id
-                    if (!MyDataReader.IsDBNull(20))
-                    {
-                        cost = MyDataReader.GetInt32(20); //Получаем строку
-                    }
-                    else
-                    {
-                        cost = 0;
-                    }
-
-                    if (!MyDataReader.IsDBNull(21))
-                    {
-                        costStr = MyDataReader.GetString(22);//Получаем строку
-                    }
-                    else
-                    {
-                        costStr = "";
-                    }
-
-                    wdApp.Selection.Font.Bold = 1;
-                    //wdApp.Selection.Font.Bold = 1;
-
-                    wdApp.Selection.TypeText(header);
-                    if (cost != 0)
-                    {
-                        wdApp.Selection.TypeText(" " + cost.ToString("N", nfi));
-                        wdApp.Selection.TypeText(" ");
-                        wdApp.Selection.TypeText(" руб." + costStr);
-                    }
-                    wdApp.Selection.TypeText(" ");
-                    wdApp.Selection.Font.Bold = 0;
-
-
-
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeText("- " + text + " ");
-                    wdApp.Selection.TypeText(" " + phone);
-                    wdApp.Selection.Font.Bold = 0;
-                    wdApp.Selection.TypeParagraph();
-                    //wdApp.Selection.TypeParagraph();
-                    //CommandText = "UPDATE `" + dbname + "`.`ob` SET `secondRub`='" + idRub + "' WHERE `ID_OB`='" + id + "'";
-                    //MessageBox.Show(CommandText);
-                    //updateCommand.CommandText = CommandText;
-                   // int res = updateCommand.ExecuteNonQuery();
-                    col++;
-                    if (checkBox2.Checked)
-                    {
-                        //CommandText = "UPDATE `ads_paper`.`cards` SET `toshow`=" + (toshow - 1).ToString() + " WHERE `date`='" + date + "'";                        
-                        //MessageBox.Show(CommandText);
-
-                        //MySqlCommand updateCommand = new MySqlCommand(CommandText, myConnection2);
-                        //int res = updateCommand.ExecuteNonQuery();
-                    }
-
-                }
-
-                MyDataReader.Close();
-                myConnection2.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-
             }
             catch (Exception e)
             {
@@ -6380,5 +1407,419 @@ namespace AdvertBaseServer
         {
 
         }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void button7_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button6_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void monthCalendar1_DateChanged(object sender, DateRangeEventArgs e)
+        {
+
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void addCard_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string CommandText = "TRUNCATE TABLE `ads_paper`.`" + catalogSelector.Text + "`";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+
+                myConnection = new MySqlConnection(Connect);
+                myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                myCommand.ExecuteNonQuery();
+
+                int count = dataGridView1.Rows.Count - 1;
+                DataGridViewRow row;
+                int bold = -1;
+                for (int i = 0; i < count; i++)
+                {
+                    if (dataGridView1.Rows[i].Cells[1].Value != null)
+                    {
+                        if ((bool)dataGridView1.Rows[i].Cells[1].Value == true)
+                            bold = 1;
+                        else
+                            bold = -1;
+                    }
+
+                    CommandText = "INSERT INTO `ads_paper`.`" + catalogSelector.Text + "` (`bold`, `prefix`, `name`, `KOD_R`, `KOD_PR`, `KOD_PPR`, `KOD_PPPR`) VALUES ('" + bold.ToString() + "', '" + dataGridView1.Rows[i].Cells[2].Value + "', '" + dataGridView1.Rows[i].Cells[3].Value + "', '" + dataGridView1.Rows[i].Cells[4].Value + "', '" + dataGridView1.Rows[i].Cells[5].Value + "', '" + dataGridView1.Rows[i].Cells[6].Value + "', '" + dataGridView1.Rows[i].Cells[7].Value + "');";
+                    //myCommand.CommandText = CommandText;
+                    //myCommand.ExecuteNonQuery();
+                    myCommand.CommandText = CommandText;
+                    myCommand.ExecuteNonQuery();
+
+
+                }
+                myConnection.Close(); //Обязательно закрываем соединение! 
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            saveMainCatalog();
+        }
+
+        private void saveMainCatalog()
+        {
+            try
+            {
+                string CommandText = "drop table if exists `ads_paper`.`catalogItems`";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+
+
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+
+
+
+                myCommand.ExecuteNonQuery();
+                myConnection.Close();
+
+                CommandText = "CREATE TABLE `ads_paper`.`catalogitems` (" +
+  "`idcatalogItems` int(10) unsigned NOT NULL AUTO_INCREMENT," +
+  "`name` varchar(100) NOT NULL," +
+  "`R1` int(10) unsigned NOT NULL," +
+  "`R2` int(10) unsigned NOT NULL," +
+  "`R3` int(10) unsigned NOT NULL," +
+  "`R4` int(10) unsigned NOT NULL," +
+  "PRIMARY KEY (`idcatalogItems`)," +
+   "UNIQUE KEY `idcatalogItems_UNIQUE` (`idcatalogItems`)" +
+") ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='Список рубрик'";
+                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+
+
+                myConnection = new MySqlConnection(Connect);
+                myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                myCommand.ExecuteNonQuery();
+                myConnection.Close();
+                saveMainCatalogItem();
+
+
+
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
+
+        private void saveMainCatalogItem()
+        {
+            try
+            {
+                string CommandText = "";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+
+                myConnection = new MySqlConnection(Connect);
+                myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                int count = mainCatalog.Rows.Count - 1;
+                DataGridViewRow row;
+                for (int i = 0; i < count; i++)
+                {
+                    row = mainCatalog.Rows[i];
+
+
+                    CommandText = "INSERT INTO `ads_paper`.`catalogitems` (`name`, `R1`, `R2`, `R3`, `R4`) VALUES ('" + mainCatalog.Rows[i].Cells[1].Value + "', " + mainCatalog.Rows[i].Cells[2].Value + ", " + mainCatalog.Rows[i].Cells[3].Value + ", " + mainCatalog.Rows[i].Cells[4].Value + ", " + mainCatalog.Rows[i].Cells[5].Value + ");";
+                    //myCommand.CommandText = CommandText;
+                    //myCommand.ExecuteNonQuery();
+                    myCommand.CommandText = CommandText;
+                    myCommand.ExecuteNonQuery();
+
+
+                }
+                myConnection.Close(); //Обязательно закрываем соединение! 
+
+                //wdApp.Selection.TypeText("l");
+                // Print each node recursively.
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+
+        }
+
+        private void updateQuerry(MySqlCommand myCommand, string setItems)
+        {
+            try
+            {
+                string CommandText = "update ria_rim.ob set " + setItems;
+                myCommand.CommandText = CommandText;
+                myCommand.ExecuteNonQuery();
+            }
+            catch (MySqlException except)
+            {
+                MessageBox.Show(except.Message + setItems);
+
+            }
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            DataGridViewSelectedCellCollection cells = mainCatalog.SelectedCells;
+            foreach (DataGridViewCell cell in cells)
+            {
+                mainCatalog.Rows[cell.RowIndex].Selected = true;
+            }
+
+            DataGridViewSelectedRowCollection rows = mainCatalog.SelectedRows;
+            foreach (DataGridViewRow row in rows)
+            {
+                dataGridView2.Rows.Add("", true, "", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString(), row.Cells[3].Value.ToString(), row.Cells[4].Value.ToString(), row.Cells[5].Value.ToString());
+            }
+        }
+
+        private void catalogSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string CommandText = "select * from ads_paper.cataloglist";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+            //sortedTree.Nodes.Add(catalogSelector.Text);
+
+            MySqlConnection myConnection = new MySqlConnection(Connect);
+            MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+            MySqlDataReader MyDataReader;
+
+            CommandText = "select * from ads_paper." + catalogSelector.Text + "";
+            myCommand = new MySqlCommand(CommandText, myConnection);
+            myConnection.Open(); //Устанавливаем соединение с базой данных.
+
+            dataGridView2.Rows.Clear();
+            MyDataReader = myCommand.ExecuteReader();
+
+            while (MyDataReader.Read())
+            {
+                dataGridView2.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetBoolean(1), MyDataReader.GetString(2), MyDataReader.GetString(3),
+                    MyDataReader.GetString(4), MyDataReader.GetString(5), MyDataReader.GetString(6), MyDataReader.GetString(7));
+            }
+            MyDataReader.Close();
+            myConnection.Close(); //Обязательно закрываем соединение!
+            // sortedTree.ExpandAll();
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string CommandText = "drop table if exists `ads_paper`.`" + catalogSelector.Text + "`";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+
+
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+
+
+
+                myCommand.ExecuteNonQuery();
+
+                myCommand.CommandText = "delete from ads_paper.cataloglist where catalogName = '" + catalogSelector.Text + "'";
+                myCommand.ExecuteNonQuery();
+                myConnection.Close();
+                loadCatalogs();
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            string CommandText = "";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+            try
+            {
+                CommandText = "insert into `ads_paper`.`cataloglist` (`catalogName`) VALUES ('" + catalogName.Text + "');";
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                myCommand.ExecuteNonQuery();
+                CommandText = "CREATE TABLE ads_paper." + catalogName.Text + " (`id` INT NOT NULL AUTO_INCREMENT,  `bold` TINYINT(1)  NULL ,  `Prefix` VARCHAR(45) NULL ,  `Name` VARCHAR(45) NULL ,  `KOD_R` VARCHAR(45) NULL ,  `KOD_PR` VARCHAR(45) NULL ,  `KOD_PPR` VARCHAR(45) NULL ,  `KOD_PPPR` VARCHAR(45) NULL ,  `reserved` VARCHAR(45) NULL ,  PRIMARY KEY (`id`) );";
+                myCommand.CommandText = CommandText;
+                myCommand.ExecuteNonQuery();
+                myConnection.Close(); //Обязательно закрываем соединение!
+                loadCatalogs();
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
+
+        private void loadCatalogs()
+        {
+            string CommandText = "select * from `ads_paper`.`cataloglist`";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+            try
+            {
+                catalogSelector.Items.Clear();
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                MySqlDataReader MyDataReader;
+                MyDataReader = myCommand.ExecuteReader();
+
+                while (MyDataReader.Read())
+                {
+
+                    catalogSelector.Items.Add(MyDataReader.GetValue(1).ToString());
+                }
+                MyDataReader.Close();
+                myConnection.Close(); //Обязательно закрываем соединение!
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
+
+        private void tabPage2_DoubleClick(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button6_Click_2(object sender, EventArgs e)
+        {
+            updateStatistics();
+        }
+
+
     }
 }

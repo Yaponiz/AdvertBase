@@ -64,8 +64,6 @@ namespace AdvertBase
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cardsView = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.addCard = new System.Windows.Forms.Button();
@@ -73,7 +71,18 @@ namespace AdvertBase
             this.catalogTab = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.sortedTree = new System.Windows.Forms.TreeView();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column13 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
             this.catalogName = new System.Windows.Forms.TextBox();
             this.button6 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -91,8 +100,6 @@ namespace AdvertBase
             this.button1 = new System.Windows.Forms.Button();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -100,6 +107,7 @@ namespace AdvertBase
             this.catalogTab.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainCatalog)).BeginInit();
             this.SuspendLayout();
@@ -258,14 +266,13 @@ namespace AdvertBase
             this.tabPage1.AutoScroll = true;
             this.tabPage1.ContextMenuStrip = this.contextMenuStrip1;
             this.tabPage1.Controls.Add(this.groupBox3);
-            this.tabPage1.Controls.Add(this.cardsView);
             this.tabPage1.Controls.Add(this.button4);
             this.tabPage1.Controls.Add(this.button3);
             this.tabPage1.Controls.Add(this.addCard);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1044, 568);
+            this.tabPage1.Size = new System.Drawing.Size(1222, 568);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Ввод карточек";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -309,6 +316,7 @@ namespace AdvertBase
             this.catalogList.StandardTab = true;
             this.catalogList.TabIndex = 29;
             this.catalogList.TabStop = false;
+            this.catalogList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.catalogList_CellClick);
             this.catalogList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.catalogList_CellContentClick);
             // 
             // dataGridViewTextBoxColumn6
@@ -352,18 +360,6 @@ namespace AdvertBase
             this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
             this.dataGridViewTextBoxColumn12.ReadOnly = true;
             this.dataGridViewTextBoxColumn12.Width = 20;
-            // 
-            // cardsView
-            // 
-            this.cardsView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.cardsView.Location = new System.Drawing.Point(368, 57);
-            this.cardsView.Name = "cardsView";
-            this.cardsView.Size = new System.Drawing.Size(595, 10);
-            this.cardsView.TabIndex = 27;
-            this.cardsView.UseCompatibleStateImageBehavior = false;
-            this.cardsView.ItemActivate += new System.EventHandler(this.cardsView_ItemActivate);
-            this.cardsView.Click += new System.EventHandler(this.cardsView_Click);
             // 
             // button4
             // 
@@ -432,9 +428,9 @@ namespace AdvertBase
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.dataGridView1);
             this.groupBox2.Controls.Add(this.button8);
             this.groupBox2.Controls.Add(this.button7);
-            this.groupBox2.Controls.Add(this.sortedTree);
             this.groupBox2.Controls.Add(this.catalogName);
             this.groupBox2.Controls.Add(this.button6);
             this.groupBox2.Controls.Add(this.button2);
@@ -448,12 +444,108 @@ namespace AdvertBase
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Каталоги";
             // 
-            // sortedTree
+            // dataGridView1
             // 
-            this.sortedTree.Location = new System.Drawing.Point(26, 82);
-            this.sortedTree.Name = "sortedTree";
-            this.sortedTree.Size = new System.Drawing.Size(556, 480);
-            this.sortedTree.TabIndex = 31;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column6,
+            this.Column7,
+            this.Column14,
+            this.Column8,
+            this.Column9,
+            this.Column10,
+            this.Column11,
+            this.Column12,
+            this.Column13});
+            this.dataGridView1.Location = new System.Drawing.Point(6, 82);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(611, 480);
+            this.dataGridView1.TabIndex = 34;
+            // 
+            // Column6
+            // 
+            this.Column6.HeaderText = "id";
+            this.Column6.Name = "Column6";
+            this.Column6.Visible = false;
+            // 
+            // Column7
+            // 
+            this.Column7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column7.HeaderText = "Bold";
+            this.Column7.Name = "Column7";
+            this.Column7.Width = 34;
+            // 
+            // Column14
+            // 
+            this.Column14.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column14.HeaderText = "Префикс";
+            this.Column14.Name = "Column14";
+            this.Column14.Width = 78;
+            // 
+            // Column8
+            // 
+            this.Column8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column8.HeaderText = "Название";
+            this.Column8.Name = "Column8";
+            this.Column8.Width = 82;
+            // 
+            // Column9
+            // 
+            this.Column9.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column9.HeaderText = "KOD_R";
+            this.Column9.Name = "Column9";
+            this.Column9.Width = 69;
+            // 
+            // Column10
+            // 
+            this.Column10.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column10.HeaderText = "KOD_PR";
+            this.Column10.Name = "Column10";
+            this.Column10.Width = 76;
+            // 
+            // Column11
+            // 
+            this.Column11.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column11.HeaderText = "KOD_PPR";
+            this.Column11.Name = "Column11";
+            this.Column11.Width = 83;
+            // 
+            // Column12
+            // 
+            this.Column12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column12.HeaderText = "KOD_PPPR";
+            this.Column12.Name = "Column12";
+            this.Column12.Width = 90;
+            // 
+            // Column13
+            // 
+            this.Column13.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Column13.HeaderText = "Связаные рубрики";
+            this.Column13.Name = "Column13";
+            this.Column13.Width = 97;
+            // 
+            // button8
+            // 
+            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
+            this.button8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button8.Location = new System.Drawing.Point(270, 37);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(102, 39);
+            this.button8.TabIndex = 33;
+            this.button8.Text = "Сохранить";
+            this.button8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(271, 10);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(101, 23);
+            this.button7.TabIndex = 32;
+            this.button7.Text = "Удалить";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // catalogName
             // 
@@ -539,6 +631,7 @@ namespace AdvertBase
             this.mainCatalog.Name = "mainCatalog";
             this.mainCatalog.Size = new System.Drawing.Size(401, 549);
             this.mainCatalog.TabIndex = 28;
+            this.mainCatalog.DoubleClick += new System.EventHandler(this.button5_Click);
             // 
             // dataGridViewTextBoxColumn11
             // 
@@ -594,29 +687,6 @@ namespace AdvertBase
             this.serviceController1.MachineName = "hp-ПК";
             this.serviceController1.ServiceName = "MySQL51";
             // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(271, 10);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(101, 23);
-            this.button7.TabIndex = 32;
-            this.button7.Text = "Удалить";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // button8
-            // 
-            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
-            this.button8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button8.Location = new System.Drawing.Point(270, 37);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(102, 39);
-            this.button8.TabIndex = 33;
-            this.button8.Text = "Сохранить";
-            this.button8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -641,6 +711,7 @@ namespace AdvertBase
             this.tabPage3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainCatalog)).EndInit();
             this.ResumeLayout(false);
@@ -675,8 +746,6 @@ namespace AdvertBase
         private ToolStripButton toolStripButton11;
         private Button button4;
         private Button button3;
-        private ListView cardsView;
-        private ColumnHeader columnHeader1;
         private ToolTip toolTip1;
         private GroupBox groupBox2;
         private ComboBox catalogSelector;
@@ -700,9 +769,18 @@ namespace AdvertBase
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
-        private TreeView sortedTree;
         private Button button7;
         private Button button8;
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn Column6;
+        private DataGridViewCheckBoxColumn Column7;
+        private DataGridViewTextBoxColumn Column14;
+        private DataGridViewTextBoxColumn Column8;
+        private DataGridViewTextBoxColumn Column9;
+        private DataGridViewTextBoxColumn Column10;
+        private DataGridViewTextBoxColumn Column11;
+        private DataGridViewTextBoxColumn Column12;
+        private DataGridViewComboBoxColumn Column13;
     }
 }
 

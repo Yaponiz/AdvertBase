@@ -17,11 +17,14 @@ namespace AdvertBase
     public partial class mainForm : Form
     {
         public EditControl cards;
+        
         public int level = 100;
         public int userID;
         public string selectedCard;
         public int cardsCount = 0;
         private string dbname, server, dbuser, dbpass, dbPort;
+        public int startHeight = 100;
+        public int startWidth = 400;
         public mainForm()
         {
             try
@@ -82,17 +85,17 @@ namespace AdvertBase
                 myConnection.Close(); //Обязательно закрываем соединение!
 
                 //добавляем первую карточку
-                EditControl card = new EditControl();
+                //EditControl card = new EditControl();
 
-                card.Name = "cardPane" + cardsCount.ToString();
-                //cardsList = new List<string>();
-                selectedCard = card.Name;
-                card.Top = cardsView.Height;
-                card.BackColor = Color.DarkGray;
-                cardsCount++;
-                cardsView.Controls.Add(card);
-                cardsView.Width = 615;
-                cardsView.Height += card.Height;
+                //card.Name = "cardPane" + cardsCount.ToString();
+                ////cardsList = new List<string>();
+                //selectedCard = card.Name;
+                //card.Top = cardsView.Height;
+                //card.BackColor = Color.DarkGray;
+                //cardsCount++;
+                //cardsView.Controls.Add(card);
+                //cardsView.Width = 615;
+                //cardsView.Height += card.Height;
 
                 loadCatalogs();
             }
@@ -123,13 +126,13 @@ namespace AdvertBase
             //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
             try
             {
-                count = cardsView.Controls.Count;
+                count = tabPage1.Controls.Count;
                 for (int i = 0; i < count; i++)
                 {
-                    Type t = cardsView.Controls[i].GetType();
+                    Type t = tabPage1.Controls[i].GetType();
                     if (t.Name == "EditControl")
                     {
-                        EditControl cont = cardsView.Controls[i] as EditControl;
+                        EditControl cont = tabPage1.Controls[i] as EditControl;
                         CommandText = "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cont.k_word.Text + "', '" + cont.string_ob.Text + "', '" + cont.phone.Text + "', '" + cont.comment.Text + "', '" + cont.kol_p.Value.ToString() + "', '" + cont.kod_r.Text + "', '" + cont.kod_pr.Text + "', '" + cont.kod_ppr.Text + "', '" + cont.kod_pppr.Text + "')";
                         MySqlConnection myConnection = new MySqlConnection(Connect);
                         MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
@@ -164,43 +167,27 @@ namespace AdvertBase
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
             //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
             //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-            sortedTree.Nodes.Add(catalogSelector.Text);
+            //sortedTree.Nodes.Add(catalogSelector.Text);
 
             MySqlConnection myConnection = new MySqlConnection(Connect);
             MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
             MySqlDataReader MyDataReader;
 
-
-
             CommandText = "select * from ads_paper." + catalogSelector.Text + "";
             myCommand = new MySqlCommand(CommandText, myConnection);
             myConnection.Open(); //Устанавливаем соединение с базой данных.
 
-
+            dataGridView1.Rows.Clear();
             MyDataReader = myCommand.ExecuteReader();
 
             while (MyDataReader.Read())
             {
-
-                string id = MyDataReader.GetString(0); //Получаем строку
-                string name = MyDataReader.GetString(1); //Получаем строку
-                string parentID;
-                TreeNode[] nodes;
-
-                if (MyDataReader.IsDBNull(1))
-                {
-                    sortedTree.Nodes.Add(id, name);
-                }
-                else
-                {
-                    parentID = MyDataReader.GetString(6);
-                    nodes = sortedTree.Nodes.Find(parentID, true);
-                    nodes[0].Nodes.Add(id, name);
-                }
+                dataGridView1.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetBoolean(1), MyDataReader.GetString(2), MyDataReader.GetString(3),
+                    MyDataReader.GetString(4), MyDataReader.GetString(5), MyDataReader.GetString(6), MyDataReader.GetString(7));
             }
             MyDataReader.Close();
             myConnection.Close(); //Обязательно закрываем соединение!
-            sortedTree.ExpandAll();
+           // sortedTree.ExpandAll();
         }
 
         private void mainForm_Load(object sender, EventArgs e)
@@ -230,6 +217,7 @@ namespace AdvertBase
         private void button1_Click(object sender, EventArgs e)
         {
             saveMainCatalog();
+
         }
 
         private void saveMainCatalog()
@@ -837,25 +825,29 @@ namespace AdvertBase
                 {
                     EditControl card = new EditControl();
                     card.Name = "cardPane" + cardsCount.ToString();
-                    card.Top = cardsView.Height;
+                    selectedCard = card.Name;
+                    card.Top = startHeight;
+                    card.Left = startWidth;
                     card.BackColor = Color.DarkGray;
                     cardsCount++;
+                    card.Show();
+                    card.Enter += this.cardName;
                     selectedCard = card.Name;
-                    cardsView.Controls.Add(card);
-                    cardsView.Width = 615;
-                    cardsView.Height += card.Height;
+                    catalogTab.TabPages[0].Controls.Add(card);
+                    
+                    startHeight += card.Height+10;
                 }
                 else
                 {
-                    EditControlJob card = new EditControlJob();
-                    card.Name = "cardPane" + cardsCount.ToString();
-                    card.Top = cardsView.Height;
-                    card.BackColor = Color.DarkGray;
-                    cardsCount++;
-                    selectedCard = card.Name;
-                    cardsView.Controls.Add(card);
-                    cardsView.Width = 615;
-                    cardsView.Height += card.Height;
+                    //EditControlJob card = new EditControlJob();
+                    //card.Name = "cardPane" + cardsCount.ToString();
+                    //card.Top = cardsView.Height;
+                    //card.BackColor = Color.DarkGray;
+                    //cardsCount++;
+                    //selectedCard = card.Name;
+                    //cardsView.Controls.Add(card);
+                    //cardsView.Width = 615;
+                    //cardsView.Height += card.Height;
                 }
             }
             catch (Exception except)
@@ -866,10 +858,14 @@ namespace AdvertBase
 
         private void button4_Click(object sender, EventArgs e)
         {
-            cardsView.Height -= cardsView.Controls[0].Height;
+            
+        }
 
-            cardsView.Controls.RemoveByKey("cardPane" + cardsCount.ToString());
-            cardsCount--;
+        private void cardName(object sender, EventArgs e)
+        {
+            EditControl card = sender as EditControl;
+            if (card.Name.Contains("cardPane"))
+                selectedCard = card.Name;
         }
 
         private void cardComment_TextChanged(object sender, EventArgs e)
@@ -950,7 +946,7 @@ namespace AdvertBase
             DataGridViewSelectedRowCollection rows = mainCatalog.SelectedRows;
             foreach (DataGridViewRow row in rows)
             {
-                sortedTree.SelectedNode.Nodes.Add(row.Cells[0].Value.ToString(), row.Cells[1].Value.ToString());
+                dataGridView1.Rows.Add("", true, "", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString(), row.Cells[3].Value.ToString(), row.Cells[4].Value.ToString(), row.Cells[5].Value.ToString());
             }
         }
 
@@ -975,7 +971,7 @@ namespace AdvertBase
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
                 myCommand.ExecuteNonQuery();
-                CommandText = "CREATE TABLE ads_paper." + catalogName.Text + " (  `idcatalogItems` int(10) unsigned NOT NULL AUTO_INCREMENT,  `name` varchar(100) NOT NULL,  `R1` int(10) unsigned NOT NULL,  `R2` int(10) unsigned NOT NULL,  `R3` int(10) unsigned NOT NULL,  `R4` int(10) unsigned NOT NULL,  `parentID` int(10) unsigned NOT NULL, `real` int(10) unsigned NOT NULL,  PRIMARY KEY (`idcatalogItems`),`sum` int(10) unsigned NOT NULL,  UNIQUE KEY `idcatalogItems_UNIQUE` (`idcatalogItems`)) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8 COMMENT='Список рубрик'";
+                CommandText = "CREATE TABLE ads_paper." + catalogName.Text + " (`id` INT NOT NULL AUTO_INCREMENT,  `bold` TINYINT(1)  NULL ,  `Prefix` VARCHAR(45) NULL ,  `Name` VARCHAR(45) NULL ,  `KOD_R` VARCHAR(45) NULL ,  `KOD_PR` VARCHAR(45) NULL ,  `KOD_PPR` VARCHAR(45) NULL ,  `KOD_PPPR` VARCHAR(45) NULL ,  `reserved` VARCHAR(45) NULL ,  PRIMARY KEY (`id`) );";
                 myCommand.CommandText = CommandText;
                 myCommand.ExecuteNonQuery();
                 myConnection.Close(); //Обязательно закрываем соединение!
@@ -1024,12 +1020,12 @@ namespace AdvertBase
 
             if (catalogList.CurrentRow.Cells[2].Value.ToString() != "18")
             {
-                Control[] cont = cardsView.Controls.Find("cardPane" + cardsCount.ToString(), false);
+                //Control[] cont = cardsView.Controls.Find("cardPane" + cardsCount.ToString(), false);
                 //cont[0].t
             }
             else
             {
-                Control[] cont = cardsView.Controls.Find("cardPane" + cardsCount.ToString(), false);
+                //Control[] cont = cardsView.Controls.Find("cardPane" + cardsCount.ToString(), false);
             }
         }
 
@@ -1342,13 +1338,17 @@ namespace AdvertBase
             try
             {
                 //todo: Сделать добавление информации о рубрике в карточку    
-                EditControl[] cont = cardsView.Controls.Find("cardPane" + cardsCount.ToString(), true) as EditControl[];
+                EditControl cont = catalogTab.TabPages[0].Controls[selectedCard] as EditControl;
+                DataGridViewRow row = catalogList.Rows[catalogList.SelectedCells[0].RowIndex];
 
-                cont[0].catName.Text = catalogList.SelectedCells[1].Value.ToString();
-                cont[0].kod_r.Text = catalogList.SelectedCells[2].Value.ToString();
-                cont[0].kod_pr.Text = catalogList.SelectedCells[3].Value.ToString();
-                cont[0].kod_ppr.Text = catalogList.SelectedCells[4].Value.ToString();
-                cont[0].kod_pppr.Text = catalogList.SelectedCells[5].Value.ToString();
+                if (row != null)
+                {
+                    cont.catName.Text = row.Cells[1].Value.ToString();
+                    cont.kod_r.Text = row.Cells[2].Value.ToString();
+                    cont.kod_pr.Text = row.Cells[3].Value.ToString();
+                    cont.kod_ppr.Text = row.Cells[4].Value.ToString();
+                    cont.kod_pppr.Text = row.Cells[5].Value.ToString();
+                }
 
             }
             catch (Exception except)
@@ -1364,16 +1364,16 @@ namespace AdvertBase
 
         private void cardsView_ItemActivate(object sender, EventArgs e)
         {
-            int count;
-            count = cardsView.Controls.Count;
-            for (int i = 0; i < count; i++)
-            {
-                EditControl cont = cardsView.Controls[i] as EditControl;
-                if (cont.selected == 1)
-                {
-                    selectedCard = cont.Name;
-                }
-            }
+            //int count;
+            //count = cardsView.Controls.Count;
+            //for (int i = 0; i < count; i++)
+            //{
+            //    EditControl cont = cardsView.Controls[i] as EditControl;
+            //    if (cont.selected == 1)
+            //    {
+            //        selectedCard = cont.Name;
+            //    }
+            //}
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -1412,7 +1412,7 @@ namespace AdvertBase
         {
             try
             {
-                string CommandText = "";
+                string CommandText = "TRUNCATE TABLE `ads_paper`.`" + catalogSelector.Text+"`";
                 string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
@@ -1425,14 +1425,22 @@ namespace AdvertBase
                 myConnection = new MySqlConnection(Connect);
                 myCommand = new MySqlCommand(CommandText, myConnection);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
-                int count = mainCatalog.Rows.Count - 1;
+                myCommand.ExecuteNonQuery();
+
+                int count = dataGridView1.Rows.Count - 1;
                 DataGridViewRow row;
+                int bold=-1;
                 for (int i = 0; i < count; i++)
                 {
-                    row = mainCatalog.Rows[i];
-
-
-                    CommandText = "INSERT INTO `ads_paper`.`" + catalogSelector.Text + "` (`name`, `R1`, `R2`, `R3`, `R4`) VALUES ('" + mainCatalog.Rows[i].Cells[1].Value + "', " + mainCatalog.Rows[i].Cells[2].Value + ", " + mainCatalog.Rows[i].Cells[3].Value + ", " + mainCatalog.Rows[i].Cells[4].Value + ", " + mainCatalog.Rows[i].Cells[5].Value + ");";
+                    if (dataGridView1.Rows[i].Cells[1].Value!=null)
+                    {
+                        if ((bool)dataGridView1.Rows[i].Cells[1].Value == true)
+                            bold = 1;
+                        else
+                            bold = -1;
+                    }
+                    
+                    CommandText = "INSERT INTO `ads_paper`.`" + catalogSelector.Text + "` (`bold`, `prefix`, `name`, `KOD_R`, `KOD_PR`, `KOD_PPR`, `KOD_PPPR`) VALUES ('" + bold.ToString() + "', '" + dataGridView1.Rows[i].Cells[2].Value + "', '" + dataGridView1.Rows[i].Cells[3].Value + "', '" + dataGridView1.Rows[i].Cells[4].Value + "', '" + dataGridView1.Rows[i].Cells[5].Value + "', '" + dataGridView1.Rows[i].Cells[6].Value + "', '" + dataGridView1.Rows[i].Cells[7].Value + "');";
                     //myCommand.CommandText = CommandText;
                     //myCommand.ExecuteNonQuery();
                     myCommand.CommandText = CommandText;
@@ -1451,6 +1459,36 @@ namespace AdvertBase
         {
             //node.
             return false;
+        }
+
+        private void catalogList_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //int count;
+            DateTime now = DateTime.Now;
+            //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
+            //string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+            try
+            {
+                //todo: Сделать добавление информации о рубрике в карточку    
+                EditControl cont = catalogTab.TabPages[0].Controls[selectedCard] as EditControl;
+                DataGridViewRow row = catalogList.Rows[catalogList.SelectedCells[0].RowIndex];
+
+                if (row != null)
+                {
+                    cont.catName.Text = row.Cells[1].Value.ToString();
+                    cont.kod_r.Text = row.Cells[2].Value.ToString();
+                    cont.kod_pr.Text = row.Cells[3].Value.ToString();
+                    cont.kod_ppr.Text = row.Cells[4].Value.ToString();
+                    cont.kod_pppr.Text = row.Cells[5].Value.ToString();
+                }
+
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
         }
 
     }

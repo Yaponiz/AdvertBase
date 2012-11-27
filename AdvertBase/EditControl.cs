@@ -10,6 +10,7 @@ using AdvertBase;
 using System.IO;
 using System.Xml;
 using System.Collections;
+
 namespace AdvertBase
 {
     public partial class EditControl : UserControl
@@ -144,6 +145,11 @@ namespace AdvertBase
         private void automobilesList_SelectedIndexChanged(object sender, EventArgs e)
         {
             k_word.Text = automobilesList.Text;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Dispose();
         }
     }
 }
