@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using AdvertBase;
+
 namespace AdvertBase
 {
     public partial class EditControlJob : UserControl
@@ -15,11 +11,13 @@ namespace AdvertBase
         public int userID;
         public int selected = 0;
         private string dbname, server, dbuser, dbpass, dbPort;
+
         public EditControlJob(string id)
         {
             InitializeComponent();
-            string CommandText = "select * from ria_rim.ob where ID_OB='"+id+"'";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+            string CommandText = "select * from ria_rim.ob where ID_OB='" + id + "'";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -33,6 +31,7 @@ namespace AdvertBase
                 myCommand.ExecuteNonQuery();
                 MySqlDataReader MyDataReader;
                 MyDataReader = myCommand.ExecuteReader();
+
                 //SearcResults f = new SearcResults();
                 while (MyDataReader.Read())
                 {
@@ -43,15 +42,16 @@ namespace AdvertBase
                     richTextBox1.Text = MyDataReader.GetString(7);
                     //KOD_R-KOD_PPPR
 
-
                     richTextBox5.Text = MyDataReader.GetString(12);
                     richTextBox11.Text = MyDataReader.GetString(13);
                     richTextBox10.Text = MyDataReader.GetString(15);
                     richTextBox9.Text = MyDataReader.GetString(14);
                     richTextBox8.Text = MyDataReader.GetString(20);
                     numericUpDown1.Value = MyDataReader.GetDecimal(16);
-                   // richTextBox9.Text = MyDataReader.GetString(14);
+
+                    // richTextBox9.Text = MyDataReader.GetString(14);
                 }
+
                 //f.Show();
                 MyDataReader.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
@@ -93,7 +93,6 @@ namespace AdvertBase
 
         private void label3_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

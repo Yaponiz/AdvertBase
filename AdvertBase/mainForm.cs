@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.IO;
+
 //using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using AdvertBase;
-using System.IO;
 using System.Xml;
-using System.Collections;
+using MySql.Data.MySqlClient;
 
 namespace AdvertBase
 {
@@ -25,6 +21,7 @@ namespace AdvertBase
         private string dbname, server, dbuser, dbpass, dbPort;
         public int startHeight = 100;
         public int startWidth = 400;
+
         public mainForm()
         {
             try
@@ -32,11 +29,10 @@ namespace AdvertBase
                 //Microsoft.
                 InitializeComponent();
                 FileStream f = new FileStream("properties.xml", FileMode.OpenOrCreate);
-
+                tabPage3.Hide();
                 XmlTextReader settings = new XmlTextReader(f);
                 while (settings.Read())
                 {
-
                     if (settings.NodeType == XmlNodeType.Element)
                     {
                         if (settings.Name.Equals("server"))
@@ -52,24 +48,22 @@ namespace AdvertBase
                 f.Close();
                 string CommandText = "select * from `ads_paper`.`catalogitems` order by R1,R2,R3,R4";
                 string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
 
-
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
                 MySqlDataReader MyDataReader;
 
-
                 MyDataReader = myCommand.ExecuteReader();
 
                 while (MyDataReader.Read())
                 {
-
                     int id = MyDataReader.GetInt32(0); //Получаем строку
                     string R1 = MyDataReader.GetString(2); //Получаем строку
                     string R2 = MyDataReader.GetString(3); //Получаем строку
@@ -79,7 +73,6 @@ namespace AdvertBase
 
                     mainCatalog.Rows.Add(id, name, R1, R2, R3, R4);
                     catalogList.Rows.Add(id, name, R1, R2, R3, R4);
-
                 }
                 MyDataReader.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
@@ -107,18 +100,17 @@ namespace AdvertBase
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-
         }
-
-
 
         private void addCard_Click(object sender, EventArgs e)
         {
             int count;
             DateTime now = DateTime.Now;
+
             //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
             string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -149,19 +141,17 @@ namespace AdvertBase
             }
         }
 
-
-
         private void toolStripButton6_Click(object sender, EventArgs e)
         {
             templateEditor tempForm = new templateEditor();
             tempForm.Show();
         }
 
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string CommandText = "select * from ads_paper.cataloglist";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -187,13 +177,12 @@ namespace AdvertBase
             }
             MyDataReader.Close();
             myConnection.Close(); //Обязательно закрываем соединение!
-           // sortedTree.ExpandAll();
+
+            // sortedTree.ExpandAll();
         }
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-
-
         }
 
         private void mainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -209,15 +198,11 @@ namespace AdvertBase
 
         private void mainCatalogTree_Click(object sender, EventArgs e)
         {
-
         }
-
-
 
         private void button1_Click(object sender, EventArgs e)
         {
             saveMainCatalog();
-
         }
 
         private void saveMainCatalog()
@@ -226,18 +211,16 @@ namespace AdvertBase
             {
                 string CommandText = "drop table if exists `ads_paper`.`catalogItems`";
                 string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
 
-
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-
 
                 myCommand.ExecuteNonQuery();
                 myConnection.Close();
@@ -253,12 +236,12 @@ namespace AdvertBase
    "UNIQUE KEY `idcatalogItems_UNIQUE` (`idcatalogItems`)" +
 ") ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='Список рубрик'";
                 Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
 
                 myConnection = new MySqlConnection(Connect);
                 myCommand = new MySqlCommand(CommandText, myConnection);
@@ -266,9 +249,6 @@ namespace AdvertBase
                 myCommand.ExecuteNonQuery();
                 myConnection.Close();
                 saveMainCatalogItem();
-
-
-
             }
             catch (Exception except)
             {
@@ -282,6 +262,7 @@ namespace AdvertBase
             {
                 string CommandText = "";
                 string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -299,16 +280,14 @@ namespace AdvertBase
                 {
                     row = mainCatalog.Rows[i];
 
-
                     CommandText = "INSERT INTO `ads_paper`.`catalogitems` (`name`, `R1`, `R2`, `R3`, `R4`) VALUES ('" + mainCatalog.Rows[i].Cells[1].Value + "', " + mainCatalog.Rows[i].Cells[2].Value + ", " + mainCatalog.Rows[i].Cells[3].Value + ", " + mainCatalog.Rows[i].Cells[4].Value + ", " + mainCatalog.Rows[i].Cells[5].Value + ");";
+
                     //myCommand.CommandText = CommandText;
                     //myCommand.ExecuteNonQuery();
                     myCommand.CommandText = CommandText;
                     myCommand.ExecuteNonQuery();
-
-
                 }
-                myConnection.Close(); //Обязательно закрываем соединение! 
+                myConnection.Close(); //Обязательно закрываем соединение!
 
                 //wdApp.Selection.TypeText("l");
                 // Print each node recursively.
@@ -317,7 +296,6 @@ namespace AdvertBase
             {
                 MessageBox.Show(exp.Message);
             }
-
         }
 
         private void updateQuerry(MySqlCommand myCommand, string setItems)
@@ -331,13 +309,14 @@ namespace AdvertBase
             catch (MySqlException except)
             {
                 MessageBox.Show(except.Message + setItems);
-
             }
         }
+
         private void button2_Click(object sender, EventArgs e)
         {
             string CommandText = "insert into ads_paper.catalogList (catalogName) values ('" + rubName.Text + "')";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -391,15 +370,12 @@ namespace AdvertBase
                     f.Close();
                 }
 
-
                 dlg.Dispose();
             }
             catch (Exception except)
             {
-
                 MessageBox.Show(except.Message);
             }
-
         }
 
         public void addAtributeToXml(XmlTextWriter t, string name, string text)
@@ -415,10 +391,7 @@ namespace AdvertBase
 
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
-
         }
-
-
 
         private void toolStripButton9_Click(object sender, EventArgs e)
         {
@@ -427,12 +400,12 @@ namespace AdvertBase
                 string CommandText = "select ID_OB,cost,costStr from `ria_rim`.`ob` where KOD_R = 1 and KOL_P>0 and cost <1 and not costStr=''";
                 string CommandText2 = "";
                 string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
 
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlConnection myConnection2 = new MySqlConnection(Connect);
@@ -442,7 +415,6 @@ namespace AdvertBase
                 myConnection2.Open(); //Устанавливаем соединение с базой данных.
                 MySqlDataReader MyDataReader;
 
-
                 MyDataReader = myCommand.ExecuteReader();
                 string id;
                 string cost = "";
@@ -450,6 +422,7 @@ namespace AdvertBase
                 string costStr = "";
                 string tempCost2 = "";
                 double costD = 0;
+
                 //string torg = "(торг)";
                 while (MyDataReader.Read())
                 {
@@ -476,10 +449,12 @@ namespace AdvertBase
                         tempCost = tempCost.Replace("/", "");
                         tempCost = tempCost.Replace("+", "");
                         tempCost = tempCost.Replace(".", "");
+
                         //tempCost = tempCost.Replace(",", "");
                         tempCost = tempCost.Replace(" ", "");
                         tempCost = tempCost.Replace("-", "");
                         tempCost = tempCost.Replace("(торг)", "");
+
                         //tempCost = tempCost.Replace(",", ".");
                         tempCost = tempCost.Trim('а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я');
                         tempCost = tempCost.TrimEnd(',');
@@ -535,10 +510,12 @@ namespace AdvertBase
                         tempCost = tempCost.Replace("/", "");
                         tempCost = tempCost.Replace("+", "");
                         tempCost = tempCost.Replace(".", "");
+
                         //tempCost = tempCost.Replace(",", "");
                         tempCost = tempCost.Replace("(торг)", "");
                         tempCost = tempCost.Replace(" ", "");
                         tempCost = tempCost.Replace("-", "");
+
                         //tempCost = tempCost.Replace(",", ".");
                         tempCost = tempCost.Trim('а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я');
                         tempCost = tempCost.TrimEnd(',');
@@ -595,9 +572,11 @@ namespace AdvertBase
                         tempCost = tempCost.Replace("+", "");
                         tempCost = tempCost.Replace(".", "");
                         tempCost = tempCost.Replace("(торг)", "");
+
                         //tempCost = tempCost.Replace(",", "");
                         tempCost = tempCost.Replace(" ", "");
                         tempCost = tempCost.Replace("-", "");
+
                         //tempCost = tempCost.Replace(",", ".");
                         tempCost = tempCost.Trim('а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я');
                         tempCost = tempCost.TrimEnd(',');
@@ -620,7 +599,6 @@ namespace AdvertBase
                         if (double.TryParse(tempCost, out costD))
                         {
                             costD = costD * 1;
-
                         }
                         if (costD != 0)
                         {
@@ -634,8 +612,6 @@ namespace AdvertBase
                         myCommand2.CommandText = CommandText2;
                         myCommand2.ExecuteNonQuery();
                     }
-
-
                 }
                 MyDataReader.Close();
                 myConnection2.Close(); //Обязательно закрываем соединение!
@@ -656,12 +632,12 @@ namespace AdvertBase
                 string CommandText2 = "";
                 string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
                 int k1 = 0, k2 = 0, k3 = 0;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
 
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlConnection myConnection2 = new MySqlConnection(Connect);
@@ -731,12 +707,12 @@ namespace AdvertBase
                 string CommandText2 = "";
                 string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
                 int k1 = 0, k2 = 0;//, k3 = 0;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
 
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlConnection myConnection2 = new MySqlConnection(Connect);
@@ -790,6 +766,7 @@ namespace AdvertBase
         {
             string CommandText = "select * from ria_rim.ob where ID_OB = " + id;
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -806,7 +783,7 @@ namespace AdvertBase
 
                 while (MyDataReader.Read())
                 {
-                    //cardAddress.Text = 
+                    //cardAddress.Text =
                 }
                 MyDataReader.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
@@ -833,9 +810,9 @@ namespace AdvertBase
                     card.Show();
                     card.Enter += this.cardName;
                     selectedCard = card.Name;
-                    catalogTab.TabPages[0].Controls.Add(card);
-                    
-                    startHeight += card.Height+10;
+                    listOfCards.Controls.Add(card);
+
+                    listOfCards.Height += card.Height + 10;
                 }
                 else
                 {
@@ -858,7 +835,7 @@ namespace AdvertBase
 
         private void button4_Click(object sender, EventArgs e)
         {
-            
+            //listOfCards.Controls[selectedCard].;
         }
 
         private void cardName(object sender, EventArgs e)
@@ -872,7 +849,6 @@ namespace AdvertBase
         {
         }
 
-
         /// <summary>
 
         /// Returns a string with backslashes before characters that need to be quoted
@@ -883,7 +859,6 @@ namespace AdvertBase
 
         public string AddSlashes(string InputTxt)
         {
-
             // List of characters handled:
 
             // \000 null
@@ -908,31 +883,23 @@ namespace AdvertBase
 
             string Result = InputTxt;
 
-
-
             try
             {
-
                 Result = System.Text.RegularExpressions.Regex.Replace(InputTxt, @"[\000\010\011\012\015\032\042\047\134\140]", "\\$0");
-
             }
 
             catch (Exception Ex)
             {
-
                 // handle any exception here
 
                 Console.WriteLine(Ex.Message);
-
             }
 
             return Result;
-
         }
 
         private void cardList_Click(object sender, EventArgs e)
         {
-
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -952,13 +919,13 @@ namespace AdvertBase
 
         private void tabPage1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
             string CommandText = "";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -987,6 +954,7 @@ namespace AdvertBase
         {
             string CommandText = "select * from `ads_paper`.`cataloglist`";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -1003,7 +971,6 @@ namespace AdvertBase
 
                 while (MyDataReader.Read())
                 {
-
                     catalogSelector.Items.Add(MyDataReader.GetValue(1).ToString());
                 }
                 MyDataReader.Close();
@@ -1017,7 +984,6 @@ namespace AdvertBase
 
         private void catalogList_Click(object sender, EventArgs e)
         {
-
             if (catalogList.CurrentRow.Cells[2].Value.ToString() != "18")
             {
                 //Control[] cont = cardsView.Controls.Find("cardPane" + cardsCount.ToString(), false);
@@ -1037,12 +1003,12 @@ namespace AdvertBase
                 string CommandText2 = "";
                 string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
                 int k1 = 0, k2 = 0, k3 = 0;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
 
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlConnection myConnection2 = new MySqlConnection(Connect);
@@ -1105,12 +1071,12 @@ namespace AdvertBase
                 string CommandText = "select ID_OB,cost,costStr from `ria_rim`.`ob` where KOD_R = 1 and KOL_P>0 and cost <1 and not costStr=''";
                 string CommandText2 = "";
                 string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
 
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlConnection myConnection2 = new MySqlConnection(Connect);
@@ -1120,7 +1086,6 @@ namespace AdvertBase
                 myConnection2.Open(); //Устанавливаем соединение с базой данных.
                 MySqlDataReader MyDataReader;
 
-
                 MyDataReader = myCommand.ExecuteReader();
                 string id;
                 string cost = "";
@@ -1128,6 +1093,7 @@ namespace AdvertBase
                 string costStr = "";
                 string tempCost2 = "";
                 double costD = 0;
+
                 //string torg = "(торг)";
                 while (MyDataReader.Read())
                 {
@@ -1154,10 +1120,12 @@ namespace AdvertBase
                         tempCost = tempCost.Replace("/", "");
                         tempCost = tempCost.Replace("+", "");
                         tempCost = tempCost.Replace(".", "");
+
                         //tempCost = tempCost.Replace(",", "");
                         tempCost = tempCost.Replace(" ", "");
                         tempCost = tempCost.Replace("-", "");
                         tempCost = tempCost.Replace("(торг)", "");
+
                         //tempCost = tempCost.Replace(",", ".");
                         tempCost = tempCost.Trim('а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я');
                         tempCost = tempCost.TrimEnd(',');
@@ -1213,10 +1181,12 @@ namespace AdvertBase
                         tempCost = tempCost.Replace("/", "");
                         tempCost = tempCost.Replace("+", "");
                         tempCost = tempCost.Replace(".", "");
+
                         //tempCost = tempCost.Replace(",", "");
                         tempCost = tempCost.Replace("(торг)", "");
                         tempCost = tempCost.Replace(" ", "");
                         tempCost = tempCost.Replace("-", "");
+
                         //tempCost = tempCost.Replace(",", ".");
                         tempCost = tempCost.Trim('а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я');
                         tempCost = tempCost.TrimEnd(',');
@@ -1273,9 +1243,11 @@ namespace AdvertBase
                         tempCost = tempCost.Replace("+", "");
                         tempCost = tempCost.Replace(".", "");
                         tempCost = tempCost.Replace("(торг)", "");
+
                         //tempCost = tempCost.Replace(",", "");
                         tempCost = tempCost.Replace(" ", "");
                         tempCost = tempCost.Replace("-", "");
+
                         //tempCost = tempCost.Replace(",", ".");
                         tempCost = tempCost.Trim('а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ы', 'ъ', 'э', 'ю', 'я');
                         tempCost = tempCost.TrimEnd(',');
@@ -1298,7 +1270,6 @@ namespace AdvertBase
                         if (double.TryParse(tempCost, out costD))
                         {
                             costD = costD * 1;
-
                         }
                         if (costD != 0)
                         {
@@ -1312,8 +1283,6 @@ namespace AdvertBase
                         myCommand2.CommandText = CommandText2;
                         myCommand2.ExecuteNonQuery();
                     }
-
-
                 }
                 MyDataReader.Close();
                 myConnection2.Close(); //Обязательно закрываем соединение!
@@ -1328,17 +1297,17 @@ namespace AdvertBase
 
         private void catalogList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
             //int count;
             DateTime now = DateTime.Now;
+
             //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
             //string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
             try
             {
-                //todo: Сделать добавление информации о рубрике в карточку    
-                EditControl cont = catalogTab.TabPages[0].Controls[selectedCard] as EditControl;
+                //todo: Сделать добавление информации о рубрике в карточку
+                EditControl cont = listOfCards.Controls[selectedCard] as EditControl;
                 DataGridViewRow row = catalogList.Rows[catalogList.SelectedCells[0].RowIndex];
 
                 if (row != null)
@@ -1349,7 +1318,6 @@ namespace AdvertBase
                     cont.kod_ppr.Text = row.Cells[4].Value.ToString();
                     cont.kod_pppr.Text = row.Cells[5].Value.ToString();
                 }
-
             }
             catch (Exception except)
             {
@@ -1359,7 +1327,6 @@ namespace AdvertBase
 
         private void cardsView_Click(object sender, EventArgs e)
         {
-
         }
 
         private void cardsView_ItemActivate(object sender, EventArgs e)
@@ -1382,18 +1349,16 @@ namespace AdvertBase
             {
                 string CommandText = "drop table if exists `ads_paper`.`" + catalogSelector.Text + "`";
                 string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
                 //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
 
-
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-
 
                 myCommand.ExecuteNonQuery();
 
@@ -1412,8 +1377,9 @@ namespace AdvertBase
         {
             try
             {
-                string CommandText = "TRUNCATE TABLE `ads_paper`.`" + catalogSelector.Text+"`";
+                string CommandText = "TRUNCATE TABLE `ads_paper`.`" + catalogSelector.Text + "`";
                 string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -1429,32 +1395,32 @@ namespace AdvertBase
 
                 int count = dataGridView1.Rows.Count - 1;
                 DataGridViewRow row;
-                int bold=-1;
+                int bold = -1;
                 for (int i = 0; i < count; i++)
                 {
-                    if (dataGridView1.Rows[i].Cells[1].Value!=null)
+                    if (dataGridView1.Rows[i].Cells[1].Value != null)
                     {
                         if ((bool)dataGridView1.Rows[i].Cells[1].Value == true)
                             bold = 1;
                         else
                             bold = -1;
                     }
-                    
+
                     CommandText = "INSERT INTO `ads_paper`.`" + catalogSelector.Text + "` (`bold`, `prefix`, `name`, `KOD_R`, `KOD_PR`, `KOD_PPR`, `KOD_PPPR`) VALUES ('" + bold.ToString() + "', '" + dataGridView1.Rows[i].Cells[2].Value + "', '" + dataGridView1.Rows[i].Cells[3].Value + "', '" + dataGridView1.Rows[i].Cells[4].Value + "', '" + dataGridView1.Rows[i].Cells[5].Value + "', '" + dataGridView1.Rows[i].Cells[6].Value + "', '" + dataGridView1.Rows[i].Cells[7].Value + "');";
+
                     //myCommand.CommandText = CommandText;
                     //myCommand.ExecuteNonQuery();
                     myCommand.CommandText = CommandText;
                     myCommand.ExecuteNonQuery();
-
-
                 }
-                myConnection.Close(); //Обязательно закрываем соединение! 
+                myConnection.Close(); //Обязательно закрываем соединение!
             }
             catch (Exception except)
             {
                 MessageBox.Show(except.Message);
             }
         }
+
         private bool AddNode(TreeNode node)
         {
             //node.
@@ -1465,14 +1431,15 @@ namespace AdvertBase
         {
             //int count;
             DateTime now = DateTime.Now;
+
             //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
             //string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
             try
             {
-                //todo: Сделать добавление информации о рубрике в карточку    
-                EditControl cont = catalogTab.TabPages[0].Controls[selectedCard] as EditControl;
+                //todo: Сделать добавление информации о рубрике в карточку
+                EditControl cont = listOfCards.Controls[selectedCard] as EditControl;
                 DataGridViewRow row = catalogList.Rows[catalogList.SelectedCells[0].RowIndex];
 
                 if (row != null)
@@ -1483,13 +1450,11 @@ namespace AdvertBase
                     cont.kod_ppr.Text = row.Cells[4].Value.ToString();
                     cont.kod_pppr.Text = row.Cells[5].Value.ToString();
                 }
-
             }
             catch (Exception except)
             {
                 MessageBox.Show(except.Message);
             }
         }
-
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+
 //using System.Linq;
-using System.Text;
 
 namespace AdvertBase
 {
-    [Serializable] class Card
-                   {
+    [Serializable]
+    internal class Card
+    {
         private string cardComment;
         private string cardPhone;
         private string cardGroup;
@@ -17,158 +17,157 @@ namespace AdvertBase
         private string cardCost;
         private string cardAddress;
         private string cardUser;
-        private string cardTime; 
+        private string cardTime;
 
-            public string CardAddress
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string CardCost
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string CardName
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string CardText
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string ClientAddress
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string ClientPhone
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string CardGroup
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string CardPhone
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string CardComment
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string CardUser
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public string CardTime
-            {
-                get
-                {
-                    throw new System.NotImplementedException();
-                }
-                set
-                {
-                }
-            }
-
-            public bool addToBase()
+        public string CardAddress
+        {
+            get
             {
                 throw new System.NotImplementedException();
             }
+            set
+            {
+            }
+        }
 
-            public bool checkCard()
+        public string CardCost
+        {
+            get
             {
                 throw new System.NotImplementedException();
             }
+            set
+            {
+            }
+        }
 
-            public bool exportCard()
+        public string CardName
+        {
+            get
             {
                 throw new System.NotImplementedException();
             }
+            set
+            {
+            }
+        }
 
-            public bool setViewsCount()
+        public string CardText
+        {
+            get
             {
                 throw new System.NotImplementedException();
             }
+            set
+            {
+            }
+        }
 
-            public bool getCard()
+        public string ClientAddress
+        {
+            get
             {
                 throw new System.NotImplementedException();
             }
+            set
+            {
+            }
+        }
 
-            public bool editCard()
+        public string ClientPhone
+        {
+            get
             {
                 throw new System.NotImplementedException();
             }
+            set
+            {
+            }
+        }
 
+        public string CardGroup
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
+        public string CardPhone
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
+        public string CardComment
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
+        public string CardUser
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
+        public string CardTime
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
+        public bool addToBase()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool checkCard()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool exportCard()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool setViewsCount()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool getCard()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool editCard()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -46,7 +46,6 @@ namespace AdvertBase
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.usersButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
@@ -56,6 +55,7 @@ namespace AdvertBase
             this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.listOfCards = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.catalogList = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -100,6 +100,7 @@ namespace AdvertBase
             this.button1 = new System.Windows.Forms.Button();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -175,15 +176,7 @@ namespace AdvertBase
             this.toolStripButton5.Name = "toolStripButton5";
             this.toolStripButton5.Size = new System.Drawing.Size(138, 22);
             this.toolStripButton5.Text = "Сохранить карточку";
-            // 
-            // toolStripButton6
-            // 
-            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
-            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton6.Name = "toolStripButton6";
-            this.toolStripButton6.Size = new System.Drawing.Size(81, 22);
-            this.toolStripButton6.Text = "Шаблоны";
-            this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
+            this.toolStripButton5.Visible = false;
             // 
             // usersButton
             // 
@@ -192,6 +185,7 @@ namespace AdvertBase
             this.usersButton.Name = "usersButton";
             this.usersButton.Size = new System.Drawing.Size(105, 22);
             this.usersButton.Text = "Пользователи";
+            this.usersButton.Visible = false;
             this.usersButton.Click += new System.EventHandler(this.usersButton_Click);
             // 
             // toolStripButton7
@@ -265,6 +259,7 @@ namespace AdvertBase
             // 
             this.tabPage1.AutoScroll = true;
             this.tabPage1.ContextMenuStrip = this.contextMenuStrip1;
+            this.tabPage1.Controls.Add(this.listOfCards);
             this.tabPage1.Controls.Add(this.groupBox3);
             this.tabPage1.Controls.Add(this.button4);
             this.tabPage1.Controls.Add(this.button3);
@@ -277,6 +272,13 @@ namespace AdvertBase
             this.tabPage1.Text = "Ввод карточек";
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
+            // 
+            // listOfCards
+            // 
+            this.listOfCards.Location = new System.Drawing.Point(368, 98);
+            this.listOfCards.Name = "listOfCards";
+            this.listOfCards.Size = new System.Drawing.Size(595, 100);
+            this.listOfCards.TabIndex = 29;
             // 
             // groupBox3
             // 
@@ -687,6 +689,16 @@ namespace AdvertBase
             this.serviceController1.MachineName = "hp-ПК";
             this.serviceController1.ServiceName = "MySQL51";
             // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
+            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.Size = new System.Drawing.Size(81, 22);
+            this.toolStripButton6.Text = "Шаблоны";
+            this.toolStripButton6.Visible = false;
+            this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -733,7 +745,6 @@ namespace AdvertBase
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ToolStripButton toolStripButton5;
-        private System.Windows.Forms.ToolStripButton toolStripButton6;
         private TabPage tabPage3;
         private ToolStripButton usersButton;
         private Button button1;
@@ -781,6 +792,8 @@ namespace AdvertBase
         private DataGridViewTextBoxColumn Column11;
         private DataGridViewTextBoxColumn Column12;
         private DataGridViewComboBoxColumn Column13;
+        private FlowLayoutPanel listOfCards;
+        private ToolStripButton toolStripButton6;
     }
 }
 

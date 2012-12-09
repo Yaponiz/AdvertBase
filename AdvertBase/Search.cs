@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using AdvertBase;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml;
-using System.Collections;
+using MySql.Data.MySqlClient;
 
 namespace AdvertBase
 {
@@ -18,6 +11,7 @@ namespace AdvertBase
         public int level;
         public int userID;
         private string dbname, server, dbuser, dbpass, dbPort;
+
         public Search()
         {
             InitializeComponent();
@@ -26,7 +20,6 @@ namespace AdvertBase
             XmlTextReader settings = new XmlTextReader(f);
             while (settings.Read())
             {
-
                 if (settings.NodeType == XmlNodeType.Element)
                 {
                     if (settings.Name.Equals("server"))
@@ -44,8 +37,9 @@ namespace AdvertBase
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string CommandText = "select * from ria_rim.ob where ADRES like '%%"+ searchstringPhone.Text+"%%'";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+            string CommandText = "select * from ria_rim.ob where ADRES like '%%" + searchstringPhone.Text + "%%'";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -62,26 +56,24 @@ namespace AdvertBase
                 SearcResults f = new SearcResults();
                 while (MyDataReader.Read())
                 {
-                    
-                    f.cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));                  
-
+                    f.cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));
                 }
                 f.Show();
-                
+
                 MyDataReader.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
             }
             catch (MySqlException ex)
             {
                 MessageBox.Show(ex.ErrorCode.ToString());
-                
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             string CommandText = "select * from ria_rim.ob where K_WORD like '%%" + searchstringText + "%%' or STRING_OB like '%%" + searchstringText.Text + "%%'";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port="+dbPort;
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -98,9 +90,7 @@ namespace AdvertBase
                 SearcResults f = new SearcResults();
                 while (MyDataReader.Read())
                 {
-
                     f.cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));
-
                 }
                 f.Show();
                 MyDataReader.Close();
