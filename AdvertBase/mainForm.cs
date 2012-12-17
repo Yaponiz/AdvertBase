@@ -29,7 +29,7 @@ namespace AdvertBase
                 //Microsoft.
                 InitializeComponent();
                 FileStream f = new FileStream("properties.xml", FileMode.OpenOrCreate);
-                tabPage3.Hide();
+                
                 XmlTextReader settings = new XmlTextReader(f);
                 while (settings.Read())
                 {
@@ -71,7 +71,7 @@ namespace AdvertBase
                     string R4 = MyDataReader.GetString(5); //Получаем строку
                     string name = MyDataReader.GetString(1); //Получаем строку
 
-                    mainCatalog.Rows.Add(id, name, R1, R2, R3, R4);
+                    
                     catalogList.Rows.Add(id, name, R1, R2, R3, R4);
                 }
                 MyDataReader.Close();
@@ -90,7 +90,6 @@ namespace AdvertBase
                 //cardsView.Width = 615;
                 //cardsView.Height += card.Height;
 
-                loadCatalogs();
             }
             catch (Exception e)
             {
@@ -104,34 +103,24 @@ namespace AdvertBase
 
         private void addCard_Click(object sender, EventArgs e)
         {
-            int count;
-            DateTime now = DateTime.Now;
-
-            //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
-            string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-            //Переменная Connect - это строка подключения в которой:
-            //БАЗА - Имя базы в MySQL
-            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+            
             try
             {
-                count = tabPage1.Controls.Count;
+                int count;
+                bool res=false;
+                count = listOfCards.Controls.Count;
                 for (int i = 0; i < count; i++)
                 {
-                    Type t = tabPage1.Controls[i].GetType();
+                    Type t = listOfCards.Controls[i].GetType();
                     if (t.Name == "EditControl")
                     {
-                        EditControl cont = tabPage1.Controls[i] as EditControl;
-                        CommandText = "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cont.k_word.Text + "', '" + cont.string_ob.Text + "', '" + cont.phone.Text + "', '" + cont.comment.Text + "', '" + cont.kol_p.Value.ToString() + "', '" + cont.kod_r.Text + "', '" + cont.kod_pr.Text + "', '" + cont.kod_ppr.Text + "', '" + cont.kod_pppr.Text + "')";
-                        MySqlConnection myConnection = new MySqlConnection(Connect);
-                        MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                        myConnection.Open(); //Устанавливаем соединение с базой данных.
-                        myCommand.ExecuteNonQuery();
-
-                        myConnection.Close(); //Обязательно закрываем соединение!
+                        EditControl cont = listOfCards.Controls[i] as EditControl;
+                        res = cont.SaveAndClose();
+                        if (res)
+                        {
+                            i = 0;
+                            count = listOfCards.Controls.Count;
+                        }
                     }
                 }
             }
@@ -147,39 +136,6 @@ namespace AdvertBase
             tempForm.Show();
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string CommandText = "select * from ads_paper.cataloglist";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-            //Переменная Connect - это строка подключения в которой:
-            //БАЗА - Имя базы в MySQL
-            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-            //sortedTree.Nodes.Add(catalogSelector.Text);
-
-            MySqlConnection myConnection = new MySqlConnection(Connect);
-            MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-            MySqlDataReader MyDataReader;
-
-            CommandText = "select * from ads_paper." + catalogSelector.Text + "";
-            myCommand = new MySqlCommand(CommandText, myConnection);
-            myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-            dataGridView1.Rows.Clear();
-            MyDataReader = myCommand.ExecuteReader();
-
-            while (MyDataReader.Read())
-            {
-                dataGridView1.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetBoolean(1), MyDataReader.GetString(2), MyDataReader.GetString(3),
-                    MyDataReader.GetString(4), MyDataReader.GetString(5), MyDataReader.GetString(6), MyDataReader.GetString(7));
-            }
-            MyDataReader.Close();
-            myConnection.Close(); //Обязательно закрываем соединение!
-
-            // sortedTree.ExpandAll();
-        }
 
         private void mainForm_Load(object sender, EventArgs e)
         {
@@ -200,105 +156,10 @@ namespace AdvertBase
         {
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            saveMainCatalog();
-        }
+   
 
-        private void saveMainCatalog()
-        {
-            try
-            {
-                string CommandText = "drop table if exists `ads_paper`.`catalogItems`";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
-                //Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myCommand.ExecuteNonQuery();
-                myConnection.Close();
-
-                CommandText = "CREATE TABLE `ads_paper`.`catalogitems` (" +
-  "`idcatalogItems` int(10) unsigned NOT NULL AUTO_INCREMENT," +
-  "`name` varchar(100) NOT NULL," +
-  "`R1` int(10) unsigned NOT NULL," +
-  "`R2` int(10) unsigned NOT NULL," +
-  "`R3` int(10) unsigned NOT NULL," +
-  "`R4` int(10) unsigned NOT NULL," +
-  "PRIMARY KEY (`idcatalogItems`)," +
-   "UNIQUE KEY `idcatalogItems_UNIQUE` (`idcatalogItems`)" +
-") ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='Список рубрик'";
-                Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-                //Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                myCommand.ExecuteNonQuery();
-                myConnection.Close();
-                saveMainCatalogItem();
-            }
-            catch (Exception except)
-            {
-                MessageBox.Show(except.Message);
-            }
-        }
-
-        private void saveMainCatalogItem()
-        {
-            try
-            {
-                string CommandText = "";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-                //Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                int count = mainCatalog.Rows.Count - 1;
-                DataGridViewRow row;
-                for (int i = 0; i < count; i++)
-                {
-                    row = mainCatalog.Rows[i];
-
-                    CommandText = "INSERT INTO `ads_paper`.`catalogitems` (`name`, `R1`, `R2`, `R3`, `R4`) VALUES ('" + mainCatalog.Rows[i].Cells[1].Value + "', " + mainCatalog.Rows[i].Cells[2].Value + ", " + mainCatalog.Rows[i].Cells[3].Value + ", " + mainCatalog.Rows[i].Cells[4].Value + ", " + mainCatalog.Rows[i].Cells[5].Value + ");";
-
-                    //myCommand.CommandText = CommandText;
-                    //myCommand.ExecuteNonQuery();
-                    myCommand.CommandText = CommandText;
-                    myCommand.ExecuteNonQuery();
-                }
-                myConnection.Close(); //Обязательно закрываем соединение!
-
-                //wdApp.Selection.TypeText("l");
-                // Print each node recursively.
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-            }
-        }
-
-        private void updateQuerry(MySqlCommand myCommand, string setItems)
+         private void updateQuerry(MySqlCommand myCommand, string setItems)
         {
             try
             {
@@ -312,31 +173,10 @@ namespace AdvertBase
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string CommandText = "insert into ads_paper.catalogList (catalogName) values ('" + rubName.Text + "')";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-            //Переменная Connect - это строка подключения в которой:
-            //БАЗА - Имя базы в MySQL
-            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-            MySqlConnection myConnection = new MySqlConnection(Connect);
-            MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-
-            myConnection = new MySqlConnection(Connect);
-            myCommand = new MySqlCommand(CommandText, myConnection);
-            myConnection.Open(); //Устанавливаем соединение с базой данных.
-            myCommand.ExecuteNonQuery();
-            myConnection.Close(); //Обязательно закрываем соединение!
-        }
-
-        private void mainForm_Shown(object sender, EventArgs e)
+         private void mainForm_Shown(object sender, EventArgs e)
         {
             if (level != 100)
-            {
-                tabPage3.Dispose();
+            {                
                 usersButton.Dispose();
             }
         }
@@ -805,7 +645,6 @@ namespace AdvertBase
                     selectedCard = card.Name;
                     card.Top = startHeight;
                     card.Left = startWidth;
-                    card.BackColor = Color.DarkGray;
                     cardsCount++;
                     card.Show();
                     card.Enter += this.cardName;
@@ -900,99 +739,6 @@ namespace AdvertBase
 
         private void cardList_Click(object sender, EventArgs e)
         {
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            DataGridViewSelectedCellCollection cells = mainCatalog.SelectedCells;
-            foreach (DataGridViewCell cell in cells)
-            {
-                mainCatalog.Rows[cell.RowIndex].Selected = true;
-            }
-
-            DataGridViewSelectedRowCollection rows = mainCatalog.SelectedRows;
-            foreach (DataGridViewRow row in rows)
-            {
-                dataGridView1.Rows.Add("", true, "", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString(), row.Cells[3].Value.ToString(), row.Cells[4].Value.ToString(), row.Cells[5].Value.ToString());
-            }
-        }
-
-        private void tabPage1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            string CommandText = "";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-            //Переменная Connect - это строка подключения в которой:
-            //БАЗА - Имя базы в MySQL
-            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-            try
-            {
-                CommandText = "insert into `ads_paper`.`cataloglist` (`catalogName`) VALUES ('" + catalogName.Text + "');";
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                myCommand.ExecuteNonQuery();
-                CommandText = "CREATE TABLE ads_paper." + catalogName.Text + " (`id` INT NOT NULL AUTO_INCREMENT,  `bold` TINYINT(1)  NULL ,  `Prefix` VARCHAR(45) NULL ,  `Name` VARCHAR(45) NULL ,  `KOD_R` VARCHAR(45) NULL ,  `KOD_PR` VARCHAR(45) NULL ,  `KOD_PPR` VARCHAR(45) NULL ,  `KOD_PPPR` VARCHAR(45) NULL ,  `reserved` VARCHAR(45) NULL ,  PRIMARY KEY (`id`) );";
-                myCommand.CommandText = CommandText;
-                myCommand.ExecuteNonQuery();
-                myConnection.Close(); //Обязательно закрываем соединение!
-                loadCatalogs();
-            }
-            catch (Exception except)
-            {
-                MessageBox.Show(except.Message);
-            }
-        }
-
-        private void loadCatalogs()
-        {
-            string CommandText = "select * from `ads_paper`.`cataloglist`";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-            //Переменная Connect - это строка подключения в которой:
-            //БАЗА - Имя базы в MySQL
-            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-            try
-            {
-                catalogSelector.Items.Clear();
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                MySqlDataReader MyDataReader;
-                MyDataReader = myCommand.ExecuteReader();
-
-                while (MyDataReader.Read())
-                {
-                    catalogSelector.Items.Add(MyDataReader.GetValue(1).ToString());
-                }
-                MyDataReader.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-            }
-            catch (Exception except)
-            {
-                MessageBox.Show(except.Message);
-            }
-        }
-
-        private void catalogList_Click(object sender, EventArgs e)
-        {
-            if (catalogList.CurrentRow.Cells[2].Value.ToString() != "18")
-            {
-                //Control[] cont = cardsView.Controls.Find("cardPane" + cardsCount.ToString(), false);
-                //cont[0].t
-            }
-            else
-            {
-                //Control[] cont = cardsView.Controls.Find("cardPane" + cardsCount.ToString(), false);
-            }
         }
 
         private void toolStripButton12_Click(object sender, EventArgs e)
@@ -1343,84 +1089,6 @@ namespace AdvertBase
             //}
         }
 
-        private void button7_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string CommandText = "drop table if exists `ads_paper`.`" + catalogSelector.Text + "`";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-                //Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-
-                myCommand.ExecuteNonQuery();
-
-                myCommand.CommandText = "delete from ads_paper.cataloglist where catalogName = '" + catalogSelector.Text + "'";
-                myCommand.ExecuteNonQuery();
-                myConnection.Close();
-                loadCatalogs();
-            }
-            catch (Exception except)
-            {
-                MessageBox.Show(except.Message);
-            }
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string CommandText = "TRUNCATE TABLE `ads_paper`.`" + catalogSelector.Text + "`";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-
-                //Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-
-                myConnection = new MySqlConnection(Connect);
-                myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                myCommand.ExecuteNonQuery();
-
-                int count = dataGridView1.Rows.Count - 1;
-                DataGridViewRow row;
-                int bold = -1;
-                for (int i = 0; i < count; i++)
-                {
-                    if (dataGridView1.Rows[i].Cells[1].Value != null)
-                    {
-                        if ((bool)dataGridView1.Rows[i].Cells[1].Value == true)
-                            bold = 1;
-                        else
-                            bold = -1;
-                    }
-
-                    CommandText = "INSERT INTO `ads_paper`.`" + catalogSelector.Text + "` (`bold`, `prefix`, `name`, `KOD_R`, `KOD_PR`, `KOD_PPR`, `KOD_PPPR`) VALUES ('" + bold.ToString() + "', '" + dataGridView1.Rows[i].Cells[2].Value + "', '" + dataGridView1.Rows[i].Cells[3].Value + "', '" + dataGridView1.Rows[i].Cells[4].Value + "', '" + dataGridView1.Rows[i].Cells[5].Value + "', '" + dataGridView1.Rows[i].Cells[6].Value + "', '" + dataGridView1.Rows[i].Cells[7].Value + "');";
-
-                    //myCommand.CommandText = CommandText;
-                    //myCommand.ExecuteNonQuery();
-                    myCommand.CommandText = CommandText;
-                    myCommand.ExecuteNonQuery();
-                }
-                myConnection.Close(); //Обязательно закрываем соединение!
-            }
-            catch (Exception except)
-            {
-                MessageBox.Show(except.Message);
-            }
-        }
-
         private bool AddNode(TreeNode node)
         {
             //node.
@@ -1437,8 +1105,7 @@ namespace AdvertBase
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
             try
-            {
-                //todo: Сделать добавление информации о рубрике в карточку
+            {            
                 EditControl cont = listOfCards.Controls[selectedCard] as EditControl;
                 DataGridViewRow row = catalogList.Rows[catalogList.SelectedCells[0].RowIndex];
 
@@ -1450,6 +1117,126 @@ namespace AdvertBase
                     cont.kod_ppr.Text = row.Cells[4].Value.ToString();
                     cont.kod_pppr.Text = row.Cells[5].Value.ToString();
                 }
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
+
+        private void listOfCards_Click(object sender, EventArgs e)
+        {
+            //listOfCards.Control
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            cardList.Rows.Clear();
+            string CommandText = "select * from ria_rim.ob where ADRES like '%%" + searchstringPhone.Text + "%%'";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                myCommand.ExecuteNonQuery();
+                MySqlDataReader MyDataReader;
+                MyDataReader = myCommand.ExecuteReader();
+                while (MyDataReader.Read())
+                {
+                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));
+                }
+
+
+                MyDataReader.Close();
+                myConnection.Close(); //Обязательно закрываем соединение!
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show(ex.ErrorCode.ToString());
+            }
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            cardList.Rows.Clear();
+            string CommandText = "select * from ria_rim.ob where K_WORD like '%%" + searchstringText + "%%'";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                myCommand.ExecuteNonQuery();
+                MySqlDataReader MyDataReader;
+                MyDataReader = myCommand.ExecuteReader();
+                while (MyDataReader.Read())
+                {
+                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));
+                }
+
+                MyDataReader.Close();
+                myConnection.Close(); //Обязательно закрываем соединение!
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
+
+        private void cardList_DoubleClick(object sender, EventArgs e)
+        {
+            EditForm f;
+            //MessageBox.Show("0");
+            f = new EditForm(cardList.CurrentRow.Cells[0].Value.ToString());
+
+            //MessageBox.Show("01");
+            f.Show();
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string CommandText = "select * from ria_rim.ob where TELEPHON like '%%" + secondPhone.Text + "%%'";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                myCommand.ExecuteNonQuery();
+                MySqlDataReader MyDataReader;
+                MyDataReader = myCommand.ExecuteReader();
+                cardList.Rows.Clear();
+                while (MyDataReader.Read())
+                {
+                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));
+                }
+
+                MyDataReader.Close();
+                myConnection.Close(); //Обязательно закрываем соединение!
             }
             catch (Exception except)
             {

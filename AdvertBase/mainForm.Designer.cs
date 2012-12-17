@@ -40,12 +40,15 @@ namespace AdvertBase
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.usersButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
@@ -69,48 +72,39 @@ namespace AdvertBase
             this.addCard = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.catalogTab = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column13 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.catalogName = new System.Windows.Forms.TextBox();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.rubName = new System.Windows.Forms.TextBox();
-            this.catalogSelector = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button5 = new System.Windows.Forms.Button();
-            this.mainCatalog = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cardList = new System.Windows.Forms.DataGridView();
+            this.button2 = new System.Windows.Forms.Button();
+            this.searchstringText = new System.Windows.Forms.TextBox();
+            this.searchstringPhone = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
+            this.button6 = new System.Windows.Forms.Button();
+            this.secondPhone = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.phone = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.head = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.author = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Del = new System.Windows.Forms.DataGridViewButtonColumn();
             this.toolStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.catalogList)).BeginInit();
             this.catalogTab.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mainCatalog)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cardList)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -177,6 +171,16 @@ namespace AdvertBase
             this.toolStripButton5.Size = new System.Drawing.Size(138, 22);
             this.toolStripButton5.Text = "Сохранить карточку";
             this.toolStripButton5.Visible = false;
+            // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
+            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.Size = new System.Drawing.Size(81, 22);
+            this.toolStripButton6.Text = "Шаблоны";
+            this.toolStripButton6.Visible = false;
+            this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
             // 
             // usersButton
             // 
@@ -271,14 +275,14 @@ namespace AdvertBase
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Ввод карточек";
             this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
             // listOfCards
             // 
-            this.listOfCards.Location = new System.Drawing.Point(368, 98);
+            this.listOfCards.Location = new System.Drawing.Point(368, 76);
             this.listOfCards.Name = "listOfCards";
             this.listOfCards.Size = new System.Drawing.Size(595, 100);
             this.listOfCards.TabIndex = 29;
+            this.listOfCards.Click += new System.EventHandler(this.listOfCards_Click);
             // 
             // groupBox3
             // 
@@ -299,6 +303,14 @@ namespace AdvertBase
             this.catalogList.AllowUserToResizeRows = false;
             this.catalogList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.catalogList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.catalogList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.catalogList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn6,
@@ -307,6 +319,14 @@ namespace AdvertBase
             this.dataGridViewTextBoxColumn9,
             this.dataGridViewTextBoxColumn10,
             this.dataGridViewTextBoxColumn12});
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.catalogList.DefaultCellStyle = dataGridViewCellStyle8;
             this.catalogList.Location = new System.Drawing.Point(3, 16);
             this.catalogList.MultiSelect = false;
             this.catalogList.Name = "catalogList";
@@ -409,7 +429,7 @@ namespace AdvertBase
             // catalogTab
             // 
             this.catalogTab.Controls.Add(this.tabPage1);
-            this.catalogTab.Controls.Add(this.tabPage3);
+            this.catalogTab.Controls.Add(this.tabPage2);
             this.catalogTab.Dock = System.Windows.Forms.DockStyle.Fill;
             this.catalogTab.Location = new System.Drawing.Point(0, 25);
             this.catalogTab.Name = "catalogTab";
@@ -417,287 +437,210 @@ namespace AdvertBase
             this.catalogTab.Size = new System.Drawing.Size(1230, 594);
             this.catalogTab.TabIndex = 3;
             // 
-            // tabPage3
+            // tabPage2
             // 
-            this.tabPage3.Controls.Add(this.groupBox2);
-            this.tabPage3.Controls.Add(this.groupBox1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1222, 568);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Редактор рубрик";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage2.Controls.Add(this.button6);
+            this.tabPage2.Controls.Add(this.secondPhone);
+            this.tabPage2.Controls.Add(this.label3);
+            this.tabPage2.Controls.Add(this.panel1);
+            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.searchstringText);
+            this.tabPage2.Controls.Add(this.searchstringPhone);
+            this.tabPage2.Controls.Add(this.label2);
+            this.tabPage2.Controls.Add(this.label1);
+            this.tabPage2.Controls.Add(this.button1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1222, 568);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Поиск";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
             // 
-            // groupBox2
+            // panel1
             // 
-            this.groupBox2.Controls.Add(this.dataGridView1);
-            this.groupBox2.Controls.Add(this.button8);
-            this.groupBox2.Controls.Add(this.button7);
-            this.groupBox2.Controls.Add(this.catalogName);
-            this.groupBox2.Controls.Add(this.button6);
-            this.groupBox2.Controls.Add(this.button2);
-            this.groupBox2.Controls.Add(this.rubName);
-            this.groupBox2.Controls.Add(this.catalogSelector);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox2.Location = new System.Drawing.Point(605, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(617, 568);
-            this.groupBox2.TabIndex = 27;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Каталоги";
+            this.panel1.Controls.Add(this.numericUpDown1);
+            this.panel1.Controls.Add(this.button5);
+            this.panel1.Controls.Add(this.cardList);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(3, 71);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1216, 494);
+            this.panel1.TabIndex = 12;
             // 
-            // dataGridView1
+            // numericUpDown1
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column6,
-            this.Column7,
-            this.Column14,
-            this.Column8,
-            this.Column9,
-            this.Column10,
-            this.Column11,
-            this.Column12,
-            this.Column13});
-            this.dataGridView1.Location = new System.Drawing.Point(6, 82);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(611, 480);
-            this.dataGridView1.TabIndex = 34;
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "id";
-            this.Column6.Name = "Column6";
-            this.Column6.Visible = false;
-            // 
-            // Column7
-            // 
-            this.Column7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column7.HeaderText = "Bold";
-            this.Column7.Name = "Column7";
-            this.Column7.Width = 34;
-            // 
-            // Column14
-            // 
-            this.Column14.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column14.HeaderText = "Префикс";
-            this.Column14.Name = "Column14";
-            this.Column14.Width = 78;
-            // 
-            // Column8
-            // 
-            this.Column8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Column8.HeaderText = "Название";
-            this.Column8.Name = "Column8";
-            this.Column8.Width = 82;
-            // 
-            // Column9
-            // 
-            this.Column9.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column9.HeaderText = "KOD_R";
-            this.Column9.Name = "Column9";
-            this.Column9.Width = 69;
-            // 
-            // Column10
-            // 
-            this.Column10.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column10.HeaderText = "KOD_PR";
-            this.Column10.Name = "Column10";
-            this.Column10.Width = 76;
-            // 
-            // Column11
-            // 
-            this.Column11.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column11.HeaderText = "KOD_PPR";
-            this.Column11.Name = "Column11";
-            this.Column11.Width = 83;
-            // 
-            // Column12
-            // 
-            this.Column12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column12.HeaderText = "KOD_PPPR";
-            this.Column12.Name = "Column12";
-            this.Column12.Width = 90;
-            // 
-            // Column13
-            // 
-            this.Column13.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Column13.HeaderText = "Связаные рубрики";
-            this.Column13.Name = "Column13";
-            this.Column13.Width = 97;
-            // 
-            // button8
-            // 
-            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
-            this.button8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button8.Location = new System.Drawing.Point(270, 37);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(102, 39);
-            this.button8.TabIndex = 33;
-            this.button8.Text = "Сохранить";
-            this.button8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(271, 10);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(101, 23);
-            this.button7.TabIndex = 32;
-            this.button7.Text = "Удалить";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // catalogName
-            // 
-            this.catalogName.Location = new System.Drawing.Point(408, 14);
-            this.catalogName.Name = "catalogName";
-            this.catalogName.Size = new System.Drawing.Size(142, 20);
-            this.catalogName.TabIndex = 30;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(556, 12);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 29;
-            this.button6.Text = "Новый каталог";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // button2
-            // 
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(692, 38);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(88, 39);
-            this.button2.TabIndex = 25;
-            this.button2.Text = "Добавить каталог";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // rubName
-            // 
-            this.rubName.Location = new System.Drawing.Point(633, 12);
-            this.rubName.Name = "rubName";
-            this.rubName.Size = new System.Drawing.Size(147, 20);
-            this.rubName.TabIndex = 24;
-            // 
-            // catalogSelector
-            // 
-            this.catalogSelector.FormattingEnabled = true;
-            this.catalogSelector.Location = new System.Drawing.Point(6, 18);
-            this.catalogSelector.Name = "catalogSelector";
-            this.catalogSelector.Size = new System.Drawing.Size(259, 21);
-            this.catalogSelector.TabIndex = 21;
-            this.catalogSelector.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.button5);
-            this.groupBox1.Controls.Add(this.mainCatalog);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(599, 568);
-            this.groupBox1.TabIndex = 26;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Главный каталог";
+            this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.numericUpDown1.Location = new System.Drawing.Point(273, 12);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDown1.TabIndex = 5;
             // 
             // button5
             // 
-            this.button5.Image = global::AdvertBase.Properties.Resources.finish;
-            this.button5.Location = new System.Drawing.Point(507, 82);
+            this.button5.Location = new System.Drawing.Point(408, 11);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 29;
+            this.button5.Size = new System.Drawing.Size(131, 23);
+            this.button5.TabIndex = 4;
+            this.button5.Text = "Количество повторов";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // mainCatalog
+            // cardList
             // 
-            this.mainCatalog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.mainCatalog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn11,
-            this.Column1,
-            this.Column2,
-            this.Column3,
-            this.Column4,
-            this.Column5});
-            this.mainCatalog.Dock = System.Windows.Forms.DockStyle.Left;
-            this.mainCatalog.Location = new System.Drawing.Point(3, 16);
-            this.mainCatalog.Name = "mainCatalog";
-            this.mainCatalog.Size = new System.Drawing.Size(401, 549);
-            this.mainCatalog.TabIndex = 28;
-            this.mainCatalog.DoubleClick += new System.EventHandler(this.button5_Click);
+            this.cardList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cardList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.cardList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.cardList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.num,
+            this.date,
+            this.phone,
+            this.address,
+            this.cost,
+            this.head,
+            this.author,
+            this.Del});
+            this.cardList.Location = new System.Drawing.Point(0, 83);
+            this.cardList.Name = "cardList";
+            this.cardList.Size = new System.Drawing.Size(711, 411);
+            this.cardList.TabIndex = 1;
+            this.cardList.DoubleClick += new System.EventHandler(this.cardList_DoubleClick);
             // 
-            // dataGridViewTextBoxColumn11
+            // button2
             // 
-            this.dataGridViewTextBoxColumn11.HeaderText = "id";
-            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
-            this.dataGridViewTextBoxColumn11.Visible = false;
+            this.button2.Location = new System.Drawing.Point(575, 12);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "Искать";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
-            // Column1
+            // searchstringText
             // 
-            this.Column1.HeaderText = "Название";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 200;
+            this.searchstringText.Location = new System.Drawing.Point(392, 14);
+            this.searchstringText.Name = "searchstringText";
+            this.searchstringText.Size = new System.Drawing.Size(177, 20);
+            this.searchstringText.TabIndex = 10;
             // 
-            // Column2
+            // searchstringPhone
             // 
-            this.Column2.HeaderText = "1";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 20;
+            this.searchstringPhone.Location = new System.Drawing.Point(68, 15);
+            this.searchstringPhone.Name = "searchstringPhone";
+            this.searchstringPhone.Size = new System.Drawing.Size(177, 20);
+            this.searchstringPhone.TabIndex = 9;
             // 
-            // Column3
+            // label2
             // 
-            this.Column3.HeaderText = "2";
-            this.Column3.Name = "Column3";
-            this.Column3.Width = 20;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(334, 14);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(37, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Текст";
             // 
-            // Column4
+            // label1
             // 
-            this.Column4.HeaderText = "3";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 20;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "4";
-            this.Column5.Name = "Column5";
-            this.Column5.Width = 20;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Телефон";
             // 
             // button1
             // 
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(497, 3);
+            this.button1.Location = new System.Drawing.Point(251, 13);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 39);
-            this.button1.TabIndex = 23;
-            this.button1.Text = "Сохранить";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Искать";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // serviceController1
             // 
             this.serviceController1.MachineName = "hp-ПК";
             this.serviceController1.ServiceName = "MySQL51";
             // 
-            // toolStripButton6
+            // button6
             // 
-            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
-            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton6.Name = "toolStripButton6";
-            this.toolStripButton6.Size = new System.Drawing.Size(81, 22);
-            this.toolStripButton6.Text = "Шаблоны";
-            this.toolStripButton6.Visible = false;
-            this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
+            this.button6.Location = new System.Drawing.Point(919, 12);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 15;
+            this.button6.Text = "Искать";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // secondPhone
+            // 
+            this.secondPhone.Location = new System.Drawing.Point(736, 16);
+            this.secondPhone.Name = "secondPhone";
+            this.secondPhone.Size = new System.Drawing.Size(177, 20);
+            this.secondPhone.TabIndex = 14;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(669, 14);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Для связи";
+            // 
+            // num
+            // 
+            this.num.FillWeight = 1F;
+            this.num.HeaderText = "#";
+            this.num.Name = "num";
+            this.num.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.num.Visible = false;
+            this.num.Width = 39;
+            // 
+            // date
+            // 
+            this.date.HeaderText = "Дата";
+            this.date.Name = "date";
+            this.date.Width = 58;
+            // 
+            // phone
+            // 
+            this.phone.HeaderText = "Заголовок";
+            this.phone.Name = "phone";
+            this.phone.Width = 86;
+            // 
+            // address
+            // 
+            this.address.HeaderText = "Текст";
+            this.address.Name = "address";
+            this.address.Width = 62;
+            // 
+            // cost
+            // 
+            this.cost.HeaderText = "Телефон";
+            this.cost.Name = "cost";
+            this.cost.Width = 77;
+            // 
+            // head
+            // 
+            this.head.HeaderText = "Цена";
+            this.head.Name = "head";
+            this.head.Width = 58;
+            // 
+            // author
+            // 
+            this.author.HeaderText = "Автор";
+            this.author.Name = "author";
+            this.author.Width = 62;
+            // 
+            // Del
+            // 
+            this.Del.HeaderText = "Удалить";
+            this.Del.Name = "Del";
+            this.Del.Width = 56;
             // 
             // mainForm
             // 
@@ -720,12 +663,11 @@ namespace AdvertBase
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.catalogList)).EndInit();
             this.catalogTab.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mainCatalog)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cardList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -745,12 +687,8 @@ namespace AdvertBase
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ToolStripButton toolStripButton5;
-        private TabPage tabPage3;
         private ToolStripButton usersButton;
-        private Button button1;
         private ToolStripButton toolStripButton7;
-        private Button button2;
-        private TextBox rubName;
         private ToolStripButton toolStripButton8;
         private ToolStripButton toolStripButton9;
         private ToolStripButton toolStripButton10;
@@ -758,20 +696,7 @@ namespace AdvertBase
         private Button button4;
         private Button button3;
         private ToolTip toolTip1;
-        private GroupBox groupBox2;
-        private ComboBox catalogSelector;
-        private GroupBox groupBox1;
-        private DataGridView mainCatalog;
         private GroupBox groupBox3;
-        private Button button5;
-        private TextBox catalogName;
-        private Button button6;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
-        private DataGridViewTextBoxColumn Column1;
-        private DataGridViewTextBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column3;
-        private DataGridViewTextBoxColumn Column4;
-        private DataGridViewTextBoxColumn Column5;
         private ToolStripButton toolStripButton12;
         private DataGridView catalogList;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
@@ -780,20 +705,30 @@ namespace AdvertBase
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
-        private Button button7;
-        private Button button8;
-        private DataGridView dataGridView1;
-        private DataGridViewTextBoxColumn Column6;
-        private DataGridViewCheckBoxColumn Column7;
-        private DataGridViewTextBoxColumn Column14;
-        private DataGridViewTextBoxColumn Column8;
-        private DataGridViewTextBoxColumn Column9;
-        private DataGridViewTextBoxColumn Column10;
-        private DataGridViewTextBoxColumn Column11;
-        private DataGridViewTextBoxColumn Column12;
-        private DataGridViewComboBoxColumn Column13;
         private FlowLayoutPanel listOfCards;
         private ToolStripButton toolStripButton6;
+        private TabPage tabPage2;
+        private Button button2;
+        private TextBox searchstringText;
+        private TextBox searchstringPhone;
+        private Label label2;
+        private Label label1;
+        private Button button1;
+        private Panel panel1;
+        private NumericUpDown numericUpDown1;
+        private Button button5;
+        public DataGridView cardList;
+        private Button button6;
+        private TextBox secondPhone;
+        private Label label3;
+        private DataGridViewTextBoxColumn num;
+        private DataGridViewTextBoxColumn date;
+        private DataGridViewTextBoxColumn phone;
+        private DataGridViewTextBoxColumn address;
+        private DataGridViewTextBoxColumn cost;
+        private DataGridViewTextBoxColumn head;
+        private DataGridViewTextBoxColumn author;
+        private DataGridViewButtonColumn Del;
     }
 }
 

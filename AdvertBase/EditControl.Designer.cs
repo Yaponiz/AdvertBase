@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditControl));
             this.cardPanel = new System.Windows.Forms.Panel();
             this.automobilesList = new System.Windows.Forms.ComboBox();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
@@ -407,6 +408,7 @@
             this.k_word.Size = new System.Drawing.Size(599, 33);
             this.k_word.TabIndex = 6;
             this.k_word.Text = "";
+            this.k_word.TextChanged += new System.EventHandler(this.k_word_TextChanged);
             // 
             // comment
             // 
@@ -576,11 +578,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(526, 4);
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(526, 0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(24, 23);
+            this.button1.Size = new System.Drawing.Size(30, 27);
             this.button1.TabIndex = 29;
-            this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -588,6 +590,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Gray;
             this.Controls.Add(this.button1);
             this.Controls.Add(this.cardPanel);
             this.Name = "EditControl";
