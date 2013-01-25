@@ -30,10 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditControl));
             this.cardPanel = new System.Windows.Forms.Panel();
+            this.kod_pppr = new System.Windows.Forms.NumericUpDown();
+            this.kod_ppr = new System.Windows.Forms.NumericUpDown();
+            this.kod_pr = new System.Windows.Forms.NumericUpDown();
+            this.kod_r = new System.Windows.Forms.NumericUpDown();
             this.automobilesList = new System.Windows.Forms.ComboBox();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.k_word = new System.Windows.Forms.RichTextBox();
@@ -55,30 +58,21 @@
             this.label18 = new System.Windows.Forms.Label();
             this.catName = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.kod_r = new System.Windows.Forms.NumericUpDown();
-            this.kod_pr = new System.Windows.Forms.NumericUpDown();
-            this.kod_ppr = new System.Windows.Forms.NumericUpDown();
-            this.kod_pppr = new System.Windows.Forms.NumericUpDown();
             this.cardPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kol_p)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kod_r)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kod_pr)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kod_ppr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_pppr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_ppr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_pr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_r)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kol_p)).BeginInit();
             this.SuspendLayout();
             // 
             // cardPanel
             // 
             this.cardPanel.AutoSize = true;
             this.cardPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cardPanel.Controls.Add(this.kod_pppr);
-            this.cardPanel.Controls.Add(this.kod_ppr);
-            this.cardPanel.Controls.Add(this.kod_pr);
-            this.cardPanel.Controls.Add(this.kod_r);
             this.cardPanel.Controls.Add(this.automobilesList);
             this.cardPanel.Controls.Add(this.checkBox5);
             this.cardPanel.Controls.Add(this.checkBox4);
-            this.cardPanel.Controls.Add(this.checkBox3);
             this.cardPanel.Controls.Add(this.checkBox1);
             this.cardPanel.Controls.Add(this.checkBox2);
             this.cardPanel.Controls.Add(this.k_word);
@@ -101,10 +95,42 @@
             this.cardPanel.Controls.Add(this.catName);
             this.cardPanel.Location = new System.Drawing.Point(0, 33);
             this.cardPanel.Name = "cardPanel";
-            this.cardPanel.Size = new System.Drawing.Size(609, 334);
+            this.cardPanel.Size = new System.Drawing.Size(610, 284);
             this.cardPanel.TabIndex = 28;
             this.cardPanel.Enter += new System.EventHandler(this.cardPanel_Enter);
             this.cardPanel.Leave += new System.EventHandler(this.cardPanel_Leave);
+            // 
+            // kod_pppr
+            // 
+            this.kod_pppr.Location = new System.Drawing.Point(163, 10);
+            this.kod_pppr.Name = "kod_pppr";
+            this.kod_pppr.Size = new System.Drawing.Size(47, 20);
+            this.kod_pppr.TabIndex = 4;
+            this.kod_pppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            // 
+            // kod_ppr
+            // 
+            this.kod_ppr.Location = new System.Drawing.Point(110, 10);
+            this.kod_ppr.Name = "kod_ppr";
+            this.kod_ppr.Size = new System.Drawing.Size(47, 20);
+            this.kod_ppr.TabIndex = 3;
+            this.kod_ppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            // 
+            // kod_pr
+            // 
+            this.kod_pr.Location = new System.Drawing.Point(57, 10);
+            this.kod_pr.Name = "kod_pr";
+            this.kod_pr.Size = new System.Drawing.Size(47, 20);
+            this.kod_pr.TabIndex = 2;
+            this.kod_pr.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            // 
+            // kod_r
+            // 
+            this.kod_r.Location = new System.Drawing.Point(4, 10);
+            this.kod_r.Name = "kod_r";
+            this.kod_r.Size = new System.Drawing.Size(47, 20);
+            this.kod_r.TabIndex = 1;
+            this.kod_r.Leave += new System.EventHandler(this.kod_r_TextChanged);
             // 
             // automobilesList
             // 
@@ -308,7 +334,7 @@
             this.automobilesList.Location = new System.Drawing.Point(299, 39);
             this.automobilesList.Name = "automobilesList";
             this.automobilesList.Size = new System.Drawing.Size(307, 21);
-            this.automobilesList.TabIndex = 35;
+            this.automobilesList.TabIndex = 5;
             this.automobilesList.Visible = false;
             this.automobilesList.SelectedIndexChanged += new System.EventHandler(this.automobilesList_SelectedIndexChanged);
             // 
@@ -316,7 +342,7 @@
             // 
             this.checkBox5.AutoSize = true;
             this.checkBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox5.Location = new System.Drawing.Point(435, 307);
+            this.checkBox5.Location = new System.Drawing.Point(348, 251);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(98, 24);
             this.checkBox5.TabIndex = 18;
@@ -327,29 +353,18 @@
             // 
             this.checkBox4.AutoSize = true;
             this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox4.Location = new System.Drawing.Point(336, 307);
+            this.checkBox4.Location = new System.Drawing.Point(249, 252);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(93, 24);
             this.checkBox4.TabIndex = 17;
             this.checkBox4.Text = "За сутки";
             this.checkBox4.UseVisualStyleBackColor = true;
             // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox3.Location = new System.Drawing.Point(252, 307);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(78, 24);
-            this.checkBox3.TabIndex = 16;
-            this.checkBox3.Text = "За час";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox1.Location = new System.Drawing.Point(110, 307);
+            this.checkBox1.Location = new System.Drawing.Point(109, 252);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(143, 24);
             this.checkBox1.TabIndex = 15;
@@ -360,7 +375,7 @@
             // 
             this.checkBox2.AutoSize = true;
             this.checkBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox2.Location = new System.Drawing.Point(5, 307);
+            this.checkBox2.Location = new System.Drawing.Point(4, 252);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(95, 24);
             this.checkBox2.TabIndex = 14;
@@ -380,25 +395,25 @@
             // comment
             // 
             this.comment.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.comment.Location = new System.Drawing.Point(110, 280);
+            this.comment.Location = new System.Drawing.Point(418, 222);
             this.comment.Name = "comment";
-            this.comment.Size = new System.Drawing.Size(404, 24);
+            this.comment.Size = new System.Drawing.Size(189, 24);
             this.comment.TabIndex = 12;
             this.comment.Text = "";
             // 
             // address
             // 
             this.address.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.address.Location = new System.Drawing.Point(85, 249);
+            this.address.Location = new System.Drawing.Point(59, 222);
             this.address.Name = "address";
-            this.address.Size = new System.Drawing.Size(521, 24);
+            this.address.Size = new System.Drawing.Size(238, 24);
             this.address.TabIndex = 11;
             this.address.Text = "";
             // 
             // cost
             // 
             this.cost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.cost.Location = new System.Drawing.Point(509, 219);
+            this.cost.Location = new System.Drawing.Point(508, 191);
             this.cost.Name = "cost";
             this.cost.Size = new System.Drawing.Size(97, 24);
             this.cost.TabIndex = 10;
@@ -407,7 +422,7 @@
             // secPhone
             // 
             this.secPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.secPhone.Location = new System.Drawing.Point(326, 220);
+            this.secPhone.Location = new System.Drawing.Point(325, 192);
             this.secPhone.Name = "secPhone";
             this.secPhone.Size = new System.Drawing.Size(140, 24);
             this.secPhone.TabIndex = 9;
@@ -417,7 +432,7 @@
             // phone
             // 
             this.phone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.phone.Location = new System.Drawing.Point(91, 220);
+            this.phone.Location = new System.Drawing.Point(90, 192);
             this.phone.Name = "phone";
             this.phone.Size = new System.Drawing.Size(152, 24);
             this.phone.TabIndex = 8;
@@ -426,7 +441,7 @@
             // kol_p
             // 
             this.kol_p.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.kol_p.Location = new System.Drawing.Point(539, 302);
+            this.kol_p.Location = new System.Drawing.Point(538, 252);
             this.kol_p.Name = "kol_p";
             this.kol_p.Size = new System.Drawing.Size(67, 29);
             this.kol_p.TabIndex = 13;
@@ -441,7 +456,7 @@
             this.string_ob.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.string_ob.Location = new System.Drawing.Point(7, 122);
             this.string_ob.Name = "string_ob";
-            this.string_ob.Size = new System.Drawing.Size(599, 91);
+            this.string_ob.Size = new System.Drawing.Size(599, 66);
             this.string_ob.TabIndex = 7;
             this.string_ob.Text = "";
             // 
@@ -449,7 +464,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.Location = new System.Drawing.Point(537, 280);
+            this.label10.Location = new System.Drawing.Point(452, 254);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(69, 18);
             this.label10.TabIndex = 34;
@@ -459,7 +474,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label11.Location = new System.Drawing.Point(0, 280);
+            this.label11.Location = new System.Drawing.Point(311, 222);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(104, 18);
             this.label11.TabIndex = 28;
@@ -469,7 +484,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label12.Location = new System.Drawing.Point(2, 249);
+            this.label12.Location = new System.Drawing.Point(3, 222);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(50, 18);
             this.label12.TabIndex = 33;
@@ -479,7 +494,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label13.Location = new System.Drawing.Point(466, 219);
+            this.label13.Location = new System.Drawing.Point(465, 191);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(43, 18);
             this.label13.TabIndex = 32;
@@ -489,7 +504,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label14.Location = new System.Drawing.Point(247, 219);
+            this.label14.Location = new System.Drawing.Point(246, 191);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(81, 18);
             this.label14.TabIndex = 31;
@@ -499,7 +514,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label15.Location = new System.Drawing.Point(2, 220);
+            this.label15.Location = new System.Drawing.Point(1, 192);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(83, 18);
             this.label15.TabIndex = 30;
@@ -540,7 +555,7 @@
             this.catName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.catName.Location = new System.Drawing.Point(90, 3);
             this.catName.Name = "catName";
-            this.catName.Size = new System.Drawing.Size(292, 29);
+            this.catName.Size = new System.Drawing.Size(516, 29);
             this.catName.TabIndex = 1;
             // 
             // button1
@@ -553,56 +568,28 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // kod_r
-            // 
-            this.kod_r.Location = new System.Drawing.Point(400, 3);
-            this.kod_r.Name = "kod_r";
-            this.kod_r.Size = new System.Drawing.Size(47, 20);
-            this.kod_r.TabIndex = 36;
-            this.kod_r.Leave += new System.EventHandler(this.kod_r_TextChanged);
-            // 
-            // kod_pr
-            // 
-            this.kod_pr.Location = new System.Drawing.Point(453, 3);
-            this.kod_pr.Name = "kod_pr";
-            this.kod_pr.Size = new System.Drawing.Size(47, 20);
-            this.kod_pr.TabIndex = 37;
-            this.kod_pr.Leave += new System.EventHandler(this.kod_r_TextChanged);
-            // 
-            // kod_ppr
-            // 
-            this.kod_ppr.Location = new System.Drawing.Point(506, 3);
-            this.kod_ppr.Name = "kod_ppr";
-            this.kod_ppr.Size = new System.Drawing.Size(47, 20);
-            this.kod_ppr.TabIndex = 38;
-            this.kod_ppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
-            // 
-            // kod_pppr
-            // 
-            this.kod_pppr.Location = new System.Drawing.Point(559, 3);
-            this.kod_pppr.Name = "kod_pppr";
-            this.kod_pppr.Size = new System.Drawing.Size(47, 20);
-            this.kod_pppr.TabIndex = 39;
-            this.kod_pppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
-            // 
             // EditControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
+            this.Controls.Add(this.kod_pppr);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.kod_ppr);
+            this.Controls.Add(this.kod_pr);
             this.Controls.Add(this.cardPanel);
+            this.Controls.Add(this.kod_r);
             this.Name = "EditControl";
-            this.Size = new System.Drawing.Size(611, 370);
+            this.Size = new System.Drawing.Size(612, 318);
             this.Enter += new System.EventHandler(this.EditControl_Enter);
             this.Leave += new System.EventHandler(this.EditControl_Leave);
             this.cardPanel.ResumeLayout(false);
             this.cardPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kol_p)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kod_r)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kod_pr)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kod_ppr)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_pppr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_ppr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_pr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_r)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kol_p)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -632,7 +619,6 @@
         public System.Windows.Forms.TextBox catName;
         public System.Windows.Forms.CheckBox checkBox5;
         public System.Windows.Forms.CheckBox checkBox4;
-        public System.Windows.Forms.CheckBox checkBox3;
         public System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ComboBox automobilesList;
         private System.Windows.Forms.Button button1;

@@ -269,7 +269,7 @@ namespace AdvertBase
             // 
             this.listOfCards.Location = new System.Drawing.Point(368, 76);
             this.listOfCards.Name = "listOfCards";
-            this.listOfCards.Size = new System.Drawing.Size(595, 100);
+            this.listOfCards.Size = new System.Drawing.Size(612, 100);
             this.listOfCards.TabIndex = 29;
             this.listOfCards.Click += new System.EventHandler(this.listOfCards_Click);
             // 
