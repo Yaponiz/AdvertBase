@@ -121,21 +121,15 @@ namespace AdvertBase
             try
             {
                 int count;
-                bool res=false;
+                bool res=false;                
                 count = listOfCards.Controls.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    //todo: не добавляет первую карточку!!!!
+                for (int i = 0; i < count; count--)
+                {                    
                     Type t = listOfCards.Controls[i].GetType();
                     if (t.Name == "EditControl")
                     {
                         EditControl cont = listOfCards.Controls[i] as EditControl;
                         res = cont.SaveAndClose();
-                        if (res)
-                        {
-                            i = 0;
-                            count = listOfCards.Controls.Count;
-                        }
                     }
                 }
             }
