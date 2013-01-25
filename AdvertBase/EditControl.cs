@@ -15,12 +15,12 @@ namespace AdvertBase
         public int selected = 0;
         public int lastSelected = 0;
         private string dbname, server, dbuser, dbpass, dbPort;
-
-        public EditControl(string id)
+        public mainForm mf;
+        public EditControl(mainForm f1, string id="0")
         {
             InitializeComponent();
             FileStream f = new FileStream("properties.xml", FileMode.OpenOrCreate);
-
+            mf = f1;
             XmlTextReader settings = new XmlTextReader(f);
             while (settings.Read())
             {
@@ -37,60 +37,140 @@ namespace AdvertBase
                 }
             }
             f.Close();
-            string CommandText = "select * from ria_rim.ob where ID_OB='" + id + "'";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
 
-            //Переменная Connect - это строка подключения в которой:
-            //БАЗА - Имя базы в MySQL
-            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-
-            try
+            if (id != "0")
             {
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                myCommand.ExecuteNonQuery();
-                MySqlDataReader MyDataReader;
-                MyDataReader = myCommand.ExecuteReader();
+                string CommandText = "select * from ria_rim.ob where ID_OB='" + id + "'";
+                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" +
+                                 dbpass + ";Port=" + dbPort;
 
-                MyDataReader.Read();
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
 
-                //KOD_R-KOD_PPPR
+                try
+                {
+                    MySqlConnection myConnection = new MySqlConnection(Connect);
+                    MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                    myConnection.Open(); //Устанавливаем соединение с базой данных.
+                    myCommand.ExecuteNonQuery();
+                    MySqlDataReader MyDataReader;
+                    MyDataReader = myCommand.ExecuteReader();
 
-                kod_r.Text = MyDataReader.GetInt32(4).ToString();
+                    MyDataReader.Read();
 
-                kod_pr.Text = MyDataReader.GetInt32(5).ToString();
+                    //KOD_R-KOD_PPPR
 
-                kod_ppr.Text = MyDataReader.GetInt32(6).ToString();
+                    kod_r.Text = MyDataReader.GetInt32(4).ToString();
 
-                kod_pppr.Text = MyDataReader.GetInt32(7).ToString();
+                    kod_pr.Text = MyDataReader.GetInt32(5).ToString();
 
-                //KOD_R-KOD_PPPR
+                    kod_ppr.Text = MyDataReader.GetInt32(6).ToString();
 
-                k_word.Text = MyDataReader.GetString(12);
+                    kod_pppr.Text = MyDataReader.GetInt32(7).ToString();
 
-                string_ob.Text = MyDataReader.GetString(13);
+                    //KOD_R-KOD_PPPR
 
-                phone.Text = MyDataReader.GetString(14);
+                    k_word.Text = MyDataReader.GetString(12);
 
-                secPhone.Text = MyDataReader.GetString(15);
-                cost.Text = MyDataReader.GetString(20);
+                    string_ob.Text = MyDataReader.GetString(13);
 
-                kol_p.Value = MyDataReader.GetDecimal(16);
+                    phone.Text = MyDataReader.GetString(14);
 
-                //richTextBox9.Text = MyDataReader.GetString(14);
+                    secPhone.Text = MyDataReader.GetString(15);
+                    cost.Text = MyDataReader.GetString(20);
 
-                //f.Show();
-                MyDataReader.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
-            }
-            catch (Exception except)
-            {
-                MessageBox.Show(except.Message);
+                    kol_p.Value = MyDataReader.GetDecimal(16);
+
+                    //richTextBox9.Text = MyDataReader.GetString(14);
+
+                    //f.Show();
+                    MyDataReader.Close();
+                    myConnection.Close(); //Обязательно закрываем соединение!
+                }
+                catch (Exception except)
+                {
+                    MessageBox.Show(except.Message);
+                }
             }
         }
+
+        //public EditControl(string id)
+        //{
+        //    InitializeComponent();
+        //    FileStream f = new FileStream("properties.xml", FileMode.OpenOrCreate);
+        //    XmlTextReader settings = new XmlTextReader(f);
+        //    while (settings.Read())
+        //    {
+        //        if (settings.NodeType == XmlNodeType.Element)
+        //        {
+        //            if (settings.Name.Equals("server"))
+        //            {
+        //                server = settings.GetAttribute("servername");
+        //                dbname = settings.GetAttribute("dbname");
+        //                dbuser = settings.GetAttribute("dbuser");
+        //                dbpass = settings.GetAttribute("dbpass");
+        //                dbPort = settings.GetAttribute("dbport");
+        //            }
+        //        }
+        //    }
+        //    f.Close();
+        //    string CommandText = "select * from ria_rim.ob where ID_OB='" + id + "'";
+        //    string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+        //    //Переменная Connect - это строка подключения в которой:
+        //    //БАЗА - Имя базы в MySQL
+        //    //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+        //    //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+        //    //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+
+        //    try
+        //    {
+        //        MySqlConnection myConnection = new MySqlConnection(Connect);
+        //        MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+        //        myConnection.Open(); //Устанавливаем соединение с базой данных.
+        //        myCommand.ExecuteNonQuery();
+        //        MySqlDataReader MyDataReader;
+        //        MyDataReader = myCommand.ExecuteReader();
+
+        //        MyDataReader.Read();
+
+        //        //KOD_R-KOD_PPPR
+
+        //        kod_r.Text = MyDataReader.GetInt32(4).ToString();
+
+        //        kod_pr.Text = MyDataReader.GetInt32(5).ToString();
+
+        //        kod_ppr.Text = MyDataReader.GetInt32(6).ToString();
+
+        //        kod_pppr.Text = MyDataReader.GetInt32(7).ToString();
+
+        //        //KOD_R-KOD_PPPR
+
+        //        k_word.Text = MyDataReader.GetString(12);
+
+        //        string_ob.Text = MyDataReader.GetString(13);
+
+        //        phone.Text = MyDataReader.GetString(14);
+
+        //        secPhone.Text = MyDataReader.GetString(15);
+        //        cost.Text = MyDataReader.GetString(20);
+
+        //        kol_p.Value = MyDataReader.GetDecimal(16);
+
+        //        //richTextBox9.Text = MyDataReader.GetString(14);
+
+        //        //f.Show();
+        //        MyDataReader.Close();
+        //        myConnection.Close(); //Обязательно закрываем соединение!
+        //    }
+        //    catch (Exception except)
+        //    {
+        //        MessageBox.Show(except.Message);
+        //    }
+        //}
 
         public EditControl()
         {
@@ -136,6 +216,22 @@ namespace AdvertBase
             {
                 automobilesList.Hide();
             }
+
+            DataGridView dg = mf.catalogList;
+
+            dg.ClearSelection();
+            int i = 0;
+            foreach (DataGridViewRow row in dg.Rows)
+            {
+                if (row.Cells[2].Value.ToString() == kod_r.Text && row.Cells[3].Value.ToString() == kod_pr.Text &&
+                    row.Cells[4].Value.ToString() == kod_ppr.Text && row.Cells[5].Value.ToString() == kod_pppr.Text)
+                {
+                    dg.Rows[i].Selected = true;
+                }
+
+                i++;
+            }
+
         }
 
         private void automobilesList_SelectedIndexChanged(object sender, EventArgs e)

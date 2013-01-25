@@ -33,7 +33,7 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.EditPanel = new AdvertBase.EditControl(id);
+            this.EditPanel = new AdvertBase.EditControl(this.ParentForm as mainForm, id);
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 

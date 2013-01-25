@@ -36,10 +36,6 @@
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.kod_pppr = new System.Windows.Forms.RichTextBox();
-            this.kod_ppr = new System.Windows.Forms.RichTextBox();
-            this.kod_pr = new System.Windows.Forms.RichTextBox();
-            this.kod_r = new System.Windows.Forms.RichTextBox();
             this.k_word = new System.Windows.Forms.RichTextBox();
             this.comment = new System.Windows.Forms.RichTextBox();
             this.address = new System.Windows.Forms.RichTextBox();
@@ -59,24 +55,32 @@
             this.label18 = new System.Windows.Forms.Label();
             this.catName = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.kod_r = new System.Windows.Forms.NumericUpDown();
+            this.kod_pr = new System.Windows.Forms.NumericUpDown();
+            this.kod_ppr = new System.Windows.Forms.NumericUpDown();
+            this.kod_pppr = new System.Windows.Forms.NumericUpDown();
             this.cardPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kol_p)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_r)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_pr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_ppr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_pppr)).BeginInit();
             this.SuspendLayout();
             // 
             // cardPanel
             // 
             this.cardPanel.AutoSize = true;
             this.cardPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.cardPanel.Controls.Add(this.kod_pppr);
+            this.cardPanel.Controls.Add(this.kod_ppr);
+            this.cardPanel.Controls.Add(this.kod_pr);
+            this.cardPanel.Controls.Add(this.kod_r);
             this.cardPanel.Controls.Add(this.automobilesList);
             this.cardPanel.Controls.Add(this.checkBox5);
             this.cardPanel.Controls.Add(this.checkBox4);
             this.cardPanel.Controls.Add(this.checkBox3);
             this.cardPanel.Controls.Add(this.checkBox1);
             this.cardPanel.Controls.Add(this.checkBox2);
-            this.cardPanel.Controls.Add(this.kod_pppr);
-            this.cardPanel.Controls.Add(this.kod_ppr);
-            this.cardPanel.Controls.Add(this.kod_pr);
-            this.cardPanel.Controls.Add(this.kod_r);
             this.cardPanel.Controls.Add(this.k_word);
             this.cardPanel.Controls.Add(this.comment);
             this.cardPanel.Controls.Add(this.address);
@@ -363,43 +367,6 @@
             this.checkBox2.Text = "Платное";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
-            // kod_pppr
-            // 
-            this.kod_pppr.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.kod_pppr.Location = new System.Drawing.Point(449, 3);
-            this.kod_pppr.Name = "kod_pppr";
-            this.kod_pppr.Size = new System.Drawing.Size(44, 24);
-            this.kod_pppr.TabIndex = 5;
-            this.kod_pppr.Text = "0";
-            // 
-            // kod_ppr
-            // 
-            this.kod_ppr.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.kod_ppr.Location = new System.Drawing.Point(399, 3);
-            this.kod_ppr.Name = "kod_ppr";
-            this.kod_ppr.Size = new System.Drawing.Size(44, 24);
-            this.kod_ppr.TabIndex = 4;
-            this.kod_ppr.Text = "0";
-            // 
-            // kod_pr
-            // 
-            this.kod_pr.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.kod_pr.Location = new System.Drawing.Point(349, 3);
-            this.kod_pr.Name = "kod_pr";
-            this.kod_pr.Size = new System.Drawing.Size(44, 24);
-            this.kod_pr.TabIndex = 3;
-            this.kod_pr.Text = "0";
-            // 
-            // kod_r
-            // 
-            this.kod_r.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.kod_r.Location = new System.Drawing.Point(299, 3);
-            this.kod_r.Name = "kod_r";
-            this.kod_r.Size = new System.Drawing.Size(44, 24);
-            this.kod_r.TabIndex = 2;
-            this.kod_r.Text = "0";
-            this.kod_r.TextChanged += new System.EventHandler(this.kod_r_TextChanged);
-            // 
             // k_word
             // 
             this.k_word.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -573,7 +540,7 @@
             this.catName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.catName.Location = new System.Drawing.Point(90, 3);
             this.catName.Name = "catName";
-            this.catName.Size = new System.Drawing.Size(208, 29);
+            this.catName.Size = new System.Drawing.Size(292, 29);
             this.catName.TabIndex = 1;
             // 
             // button1
@@ -585,6 +552,38 @@
             this.button1.TabIndex = 29;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // kod_r
+            // 
+            this.kod_r.Location = new System.Drawing.Point(400, 3);
+            this.kod_r.Name = "kod_r";
+            this.kod_r.Size = new System.Drawing.Size(47, 20);
+            this.kod_r.TabIndex = 36;
+            this.kod_r.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            // 
+            // kod_pr
+            // 
+            this.kod_pr.Location = new System.Drawing.Point(453, 3);
+            this.kod_pr.Name = "kod_pr";
+            this.kod_pr.Size = new System.Drawing.Size(47, 20);
+            this.kod_pr.TabIndex = 37;
+            this.kod_pr.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            // 
+            // kod_ppr
+            // 
+            this.kod_ppr.Location = new System.Drawing.Point(506, 3);
+            this.kod_ppr.Name = "kod_ppr";
+            this.kod_ppr.Size = new System.Drawing.Size(47, 20);
+            this.kod_ppr.TabIndex = 38;
+            this.kod_ppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            // 
+            // kod_pppr
+            // 
+            this.kod_pppr.Location = new System.Drawing.Point(559, 3);
+            this.kod_pppr.Name = "kod_pppr";
+            this.kod_pppr.Size = new System.Drawing.Size(47, 20);
+            this.kod_pppr.TabIndex = 39;
+            this.kod_pppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
             // 
             // EditControl
             // 
@@ -600,6 +599,10 @@
             this.cardPanel.ResumeLayout(false);
             this.cardPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kol_p)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_r)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_pr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_ppr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kod_pppr)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -631,12 +634,12 @@
         public System.Windows.Forms.CheckBox checkBox4;
         public System.Windows.Forms.CheckBox checkBox3;
         public System.Windows.Forms.CheckBox checkBox1;
-        public System.Windows.Forms.RichTextBox kod_pppr;
-        public System.Windows.Forms.RichTextBox kod_ppr;
-        public System.Windows.Forms.RichTextBox kod_pr;
-        public System.Windows.Forms.RichTextBox kod_r;
         private System.Windows.Forms.ComboBox automobilesList;
         private System.Windows.Forms.Button button1;
+        public System.Windows.Forms.NumericUpDown kod_pppr;
+        public System.Windows.Forms.NumericUpDown kod_ppr;
+        public System.Windows.Forms.NumericUpDown kod_pr;
+        public System.Windows.Forms.NumericUpDown kod_r;
 
     }
 }
