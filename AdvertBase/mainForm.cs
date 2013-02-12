@@ -1062,7 +1062,7 @@ namespace AdvertBase
                 MyDataReader = myCommand.ExecuteReader();
                 while (MyDataReader.Read())
                 {
-                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));
+                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(16), MyDataReader.GetString(1));
                 }
                 MyDataReader.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
@@ -1092,7 +1092,7 @@ namespace AdvertBase
                 MyDataReader = myCommand.ExecuteReader();
                 while (MyDataReader.Read())
                 {
-                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));
+                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(16), MyDataReader.GetString(1));
                 }
                 MyDataReader.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
@@ -1133,9 +1133,52 @@ namespace AdvertBase
                 cardList.Rows.Clear();
                 while (MyDataReader.Read())
                 {
-                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(1));
+                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(16), MyDataReader.GetString(1));
                 }
                 MyDataReader.Close();
+                myConnection.Close(); //Обязательно закрываем соединение!
+            }
+            catch (Exception except)
+            {
+                MessageBox.Show(except.Message);
+            }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void cardList_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
+            numericUpDown1.Value = Int16.Parse(cardList.SelectedCells[0].OwningRow.Cells[6].Value.ToString());
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //int count = cardList.Rows.Count;
+            DateTime now = DateTime.Now;
+
+            //EditControl[] cont = this.EditPanel
+
+            string CommandText = "update ria_rim.ob set DATEPOST='" + DateTime.Now.ToString("yyyy-MM-dd") + "', KOL_P='" + numericUpDown1.Value.ToString() + "' where ID_OB = '" + cardList.SelectedCells[0].OwningRow.Cells[0].Value.ToString() + "'";
+
+            //string CommandText = "";
+            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+
+            //Переменная Connect - это строка подключения в которой:
+            //БАЗА - Имя базы в MySQL
+            //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+            //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+            //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+            try
+            {
+                MySqlConnection myConnection = new MySqlConnection(Connect);
+                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                myCommand.ExecuteNonQuery();
+
                 myConnection.Close(); //Обязательно закрываем соединение!
             }
             catch (Exception except)

@@ -40,8 +40,8 @@ namespace AdvertBase
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -85,6 +85,7 @@ namespace AdvertBase
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.head = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Del = new System.Windows.Forms.DataGridViewButtonColumn();
             this.button2 = new System.Windows.Forms.Button();
@@ -292,14 +293,14 @@ namespace AdvertBase
             this.catalogList.AllowUserToResizeRows = false;
             this.catalogList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.catalogList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.catalogList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.catalogList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.catalogList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn6,
@@ -308,14 +309,14 @@ namespace AdvertBase
             this.dataGridViewTextBoxColumn9,
             this.dataGridViewTextBoxColumn10,
             this.dataGridViewTextBoxColumn12});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.catalogList.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.catalogList.DefaultCellStyle = dataGridViewCellStyle6;
             this.catalogList.Location = new System.Drawing.Point(3, 16);
             this.catalogList.MultiSelect = false;
             this.catalogList.Name = "catalogList";
@@ -428,7 +429,9 @@ namespace AdvertBase
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.numericUpDown1);
             this.tabPage2.Controls.Add(this.button6);
+            this.tabPage2.Controls.Add(this.button5);
             this.tabPage2.Controls.Add(this.secondPhone);
             this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Controls.Add(this.panel1);
@@ -475,37 +478,34 @@ namespace AdvertBase
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.numericUpDown1);
-            this.panel1.Controls.Add(this.button5);
             this.panel1.Controls.Add(this.cardList);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(3, 71);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1216, 494);
             this.panel1.TabIndex = 12;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // numericUpDown1
             // 
             this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numericUpDown1.Location = new System.Drawing.Point(273, 12);
+            this.numericUpDown1.Location = new System.Drawing.Point(68, 43);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
             this.numericUpDown1.TabIndex = 5;
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(408, 11);
+            this.button5.Location = new System.Drawing.Point(240, 42);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(131, 23);
             this.button5.TabIndex = 4;
             this.button5.Text = "Количество повторов";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // cardList
             // 
-            this.cardList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.cardList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.cardList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.cardList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -515,12 +515,15 @@ namespace AdvertBase
             this.address,
             this.cost,
             this.head,
+            this.Column1,
             this.author,
             this.Del});
-            this.cardList.Location = new System.Drawing.Point(0, 83);
+            this.cardList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cardList.Location = new System.Drawing.Point(0, 0);
             this.cardList.Name = "cardList";
-            this.cardList.Size = new System.Drawing.Size(711, 411);
+            this.cardList.Size = new System.Drawing.Size(1216, 494);
             this.cardList.TabIndex = 1;
+            this.cardList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.cardList_CellClick);
             this.cardList.DoubleClick += new System.EventHandler(this.cardList_DoubleClick);
             // 
             // num
@@ -561,6 +564,12 @@ namespace AdvertBase
             this.head.HeaderText = "Цена";
             this.head.Name = "head";
             this.head.Width = 58;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Повторов";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 81;
             // 
             // author
             // 
@@ -707,16 +716,17 @@ namespace AdvertBase
         private Button button6;
         private TextBox secondPhone;
         private Label label3;
+        public TabControl catalogTab;
+        public DataGridView catalogList;
         private DataGridViewTextBoxColumn num;
         private DataGridViewTextBoxColumn date;
         private DataGridViewTextBoxColumn phone;
         private DataGridViewTextBoxColumn address;
         private DataGridViewTextBoxColumn cost;
         private DataGridViewTextBoxColumn head;
+        private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn author;
         private DataGridViewButtonColumn Del;
-        public TabControl catalogTab;
-        public DataGridView catalogList;
     }
 }
 
