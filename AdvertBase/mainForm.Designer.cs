@@ -40,8 +40,9 @@ namespace AdvertBase
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -72,13 +73,21 @@ namespace AdvertBase
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.catalogTab = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             this.secondPhone = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.button5 = new System.Windows.Forms.Button();
             this.cardList = new System.Windows.Forms.DataGridView();
+            this.button2 = new System.Windows.Forms.Button();
+            this.searchstringText = new System.Windows.Forms.TextBox();
+            this.searchstringPhone = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.serviceController1 = new System.ServiceProcess.ServiceController();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.phone = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -88,22 +97,14 @@ namespace AdvertBase
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Del = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.button2 = new System.Windows.Forms.Button();
-            this.searchstringText = new System.Windows.Forms.TextBox();
-            this.searchstringPhone = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.serviceController1 = new System.ServiceProcess.ServiceController();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.toolStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.catalogList)).BeginInit();
             this.catalogTab.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cardList)).BeginInit();
             this.SuspendLayout();
             // 
@@ -293,14 +294,14 @@ namespace AdvertBase
             this.catalogList.AllowUserToResizeRows = false;
             this.catalogList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.catalogList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.catalogList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.catalogList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.catalogList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn6,
@@ -309,14 +310,14 @@ namespace AdvertBase
             this.dataGridViewTextBoxColumn9,
             this.dataGridViewTextBoxColumn10,
             this.dataGridViewTextBoxColumn12});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.catalogList.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.catalogList.DefaultCellStyle = dataGridViewCellStyle2;
             this.catalogList.Location = new System.Drawing.Point(3, 16);
             this.catalogList.MultiSelect = false;
             this.catalogList.Name = "catalogList";
@@ -450,6 +451,14 @@ namespace AdvertBase
             this.tabPage2.UseVisualStyleBackColor = true;
             this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
             // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.numericUpDown1.Location = new System.Drawing.Point(68, 43);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDown1.TabIndex = 5;
+            // 
             // button6
             // 
             this.button6.Location = new System.Drawing.Point(919, 12);
@@ -459,6 +468,16 @@ namespace AdvertBase
             this.button6.Text = "Искать";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(240, 42);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(131, 23);
+            this.button5.TabIndex = 4;
+            this.button5.Text = "Количество повторов";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // secondPhone
             // 
@@ -486,28 +505,10 @@ namespace AdvertBase
             this.panel1.TabIndex = 12;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numericUpDown1.Location = new System.Drawing.Point(68, 43);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
-            this.numericUpDown1.TabIndex = 5;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(240, 42);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(131, 23);
-            this.button5.TabIndex = 4;
-            this.button5.Text = "Количество повторов";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
             // cardList
             // 
-            this.cardList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.cardList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.cardList.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.cardList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.cardList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.num,
             this.date,
@@ -521,67 +522,15 @@ namespace AdvertBase
             this.cardList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cardList.Location = new System.Drawing.Point(0, 0);
             this.cardList.Name = "cardList";
+            this.cardList.RowHeadersWidth = 25;
+            this.cardList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.cardList.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            this.cardList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.cardList.Size = new System.Drawing.Size(1216, 494);
             this.cardList.TabIndex = 1;
             this.cardList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.cardList_CellClick);
             this.cardList.DoubleClick += new System.EventHandler(this.cardList_DoubleClick);
-            // 
-            // num
-            // 
-            this.num.FillWeight = 1F;
-            this.num.HeaderText = "#";
-            this.num.Name = "num";
-            this.num.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.num.Visible = false;
-            this.num.Width = 39;
-            // 
-            // date
-            // 
-            this.date.HeaderText = "Дата";
-            this.date.Name = "date";
-            this.date.Width = 58;
-            // 
-            // phone
-            // 
-            this.phone.HeaderText = "Заголовок";
-            this.phone.Name = "phone";
-            this.phone.Width = 86;
-            // 
-            // address
-            // 
-            this.address.HeaderText = "Текст";
-            this.address.Name = "address";
-            this.address.Width = 62;
-            // 
-            // cost
-            // 
-            this.cost.HeaderText = "Телефон";
-            this.cost.Name = "cost";
-            this.cost.Width = 77;
-            // 
-            // head
-            // 
-            this.head.HeaderText = "Цена";
-            this.head.Name = "head";
-            this.head.Width = 58;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Повторов";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 81;
-            // 
-            // author
-            // 
-            this.author.HeaderText = "Автор";
-            this.author.Name = "author";
-            this.author.Width = 62;
-            // 
-            // Del
-            // 
-            this.Del.HeaderText = "Удалить";
-            this.Del.Name = "Del";
-            this.Del.Width = 56;
             // 
             // button2
             // 
@@ -640,6 +589,63 @@ namespace AdvertBase
             this.serviceController1.MachineName = "hp-ПК";
             this.serviceController1.ServiceName = "MySQL51";
             // 
+            // num
+            // 
+            this.num.FillWeight = 1F;
+            this.num.HeaderText = "#";
+            this.num.Name = "num";
+            this.num.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.num.Visible = false;
+            this.num.Width = 39;
+            // 
+            // date
+            // 
+            this.date.HeaderText = "Дата";
+            this.date.Name = "date";
+            this.date.Width = 60;
+            // 
+            // phone
+            // 
+            this.phone.HeaderText = "Заголовок";
+            this.phone.Name = "phone";
+            this.phone.Width = 250;
+            // 
+            // address
+            // 
+            this.address.HeaderText = "Текст";
+            this.address.Name = "address";
+            this.address.Width = 447;
+            // 
+            // cost
+            // 
+            this.cost.HeaderText = "Телефон";
+            this.cost.Name = "cost";
+            this.cost.Width = 200;
+            // 
+            // head
+            // 
+            this.head.HeaderText = "Цена";
+            this.head.Name = "head";
+            this.head.Width = 146;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Повторов";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 40;
+            // 
+            // author
+            // 
+            this.author.HeaderText = "Автор";
+            this.author.Name = "author";
+            this.author.Width = 40;
+            // 
+            // Del
+            // 
+            this.Del.HeaderText = "Удалить";
+            this.Del.Name = "Del";
+            this.Del.Width = 40;
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -663,8 +669,8 @@ namespace AdvertBase
             this.catalogTab.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cardList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
