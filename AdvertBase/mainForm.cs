@@ -1044,7 +1044,7 @@ namespace AdvertBase
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
-            cardList.Rows.Clear();
+            
             string CommandText = "select * from ria_rim.ob where ADRES like '%%" + searchstringPhone.Text + "%%'";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
             //Переменная Connect - это строка подключения в которой:
@@ -1054,28 +1054,34 @@ namespace AdvertBase
             //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
             try
             {
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                myCommand.ExecuteNonQuery();
-                MySqlDataReader MyDataReader;
-                MyDataReader = myCommand.ExecuteReader();
-                while (MyDataReader.Read())
-                {
-                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(16), MyDataReader.GetString(1));
-                }
-                MyDataReader.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
+                AddSearchResult(CommandText, Connect);
             }
             catch (MySqlException ex)
             {
                 MessageBox.Show(ex.ErrorCode.ToString());
             }
         }
-        private void button2_Click_1(object sender, EventArgs e)
+
+        private void AddSearchResult(string CommandText, string Connect)
         {
             cardList.Rows.Clear();
-            string CommandText = "select * from ria_rim.ob where K_WORD like '%%" + searchstringText + "%%'";
+            MySqlConnection myConnection = new MySqlConnection(Connect);
+            MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
+            myConnection.Open(); //Устанавливаем соединение с базой данных.
+            myCommand.ExecuteNonQuery();
+            MySqlDataReader MyDataReader;
+            MyDataReader = myCommand.ExecuteReader();
+            while (MyDataReader.Read())
+            {
+                cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(16), MyDataReader.GetString(1));
+            }
+            MyDataReader.Close();
+            myConnection.Close(); //Обязательно закрываем соединение!
+        }
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            
+            string CommandText = "select * from ria_rim.ob where K_WORD like '%%" + searchstringText.Text + "%%'";
             string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
@@ -1084,18 +1090,7 @@ namespace AdvertBase
             //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
             try
             {
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                myCommand.ExecuteNonQuery();
-                MySqlDataReader MyDataReader;
-                MyDataReader = myCommand.ExecuteReader();
-                while (MyDataReader.Read())
-                {
-                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(16), MyDataReader.GetString(1));
-                }
-                MyDataReader.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
+                AddSearchResult(CommandText, Connect);
             }
             catch (Exception except)
             {
@@ -1124,19 +1119,7 @@ namespace AdvertBase
             //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
             try
             {
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                myCommand.ExecuteNonQuery();
-                MySqlDataReader MyDataReader;
-                MyDataReader = myCommand.ExecuteReader();
-                cardList.Rows.Clear();
-                while (MyDataReader.Read())
-                {
-                    cardList.Rows.Add(MyDataReader.GetString(0), MyDataReader.GetString(2), MyDataReader.GetString(12), MyDataReader.GetString(13), MyDataReader.GetString(14), MyDataReader.GetString(15), MyDataReader.GetString(16), MyDataReader.GetString(1));
-                }
-                MyDataReader.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
+                AddSearchResult(CommandText, Connect);
             }
             catch (Exception except)
             {
@@ -1185,6 +1168,11 @@ namespace AdvertBase
             {
                 MessageBox.Show(except.Message);
             }
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            new checkForm().Show();
         }
     }
 }

@@ -67,6 +67,18 @@
     <Compile Include="catalogNameDlg.Designer.cs">
       <DependentUpon>catalogNameDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="checkCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="checkCard.Designer.cs">
+      <DependentUpon>checkCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="checkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="checkForm.Designer.cs">
+      <DependentUpon>checkForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditControlJob.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -129,6 +141,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="catalogNameDlg.resx">
       <DependentUpon>catalogNameDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="checkCard.resx">
+      <DependentUpon>checkCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="checkForm.resx">
+      <DependentUpon>checkForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditControlJob.resx">
       <DependentUpon>EditControlJob.cs</DependentUpon>

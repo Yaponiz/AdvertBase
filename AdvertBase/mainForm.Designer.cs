@@ -80,14 +80,6 @@ namespace AdvertBase
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.cardList = new System.Windows.Forms.DataGridView();
-            this.button2 = new System.Windows.Forms.Button();
-            this.searchstringText = new System.Windows.Forms.TextBox();
-            this.searchstringPhone = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.serviceController1 = new System.ServiceProcess.ServiceController();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.phone = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -97,6 +89,14 @@ namespace AdvertBase
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Del = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.button2 = new System.Windows.Forms.Button();
+            this.searchstringText = new System.Windows.Forms.TextBox();
+            this.searchstringPhone = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.serviceController1 = new System.ServiceProcess.ServiceController();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.toolStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -153,6 +153,7 @@ namespace AdvertBase
             this.toolStripButton4.Name = "toolStripButton4";
             this.toolStripButton4.Size = new System.Drawing.Size(134, 22);
             this.toolStripButton4.Text = "Проверка карточек";
+            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
             // toolStripButton5
             // 
@@ -532,63 +533,6 @@ namespace AdvertBase
             this.cardList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.cardList_CellClick);
             this.cardList.DoubleClick += new System.EventHandler(this.cardList_DoubleClick);
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(575, 12);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "Искать";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
-            // 
-            // searchstringText
-            // 
-            this.searchstringText.Location = new System.Drawing.Point(392, 14);
-            this.searchstringText.Name = "searchstringText";
-            this.searchstringText.Size = new System.Drawing.Size(177, 20);
-            this.searchstringText.TabIndex = 10;
-            // 
-            // searchstringPhone
-            // 
-            this.searchstringPhone.Location = new System.Drawing.Point(68, 15);
-            this.searchstringPhone.Name = "searchstringPhone";
-            this.searchstringPhone.Size = new System.Drawing.Size(177, 20);
-            this.searchstringPhone.TabIndex = 9;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(334, 14);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(37, 13);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Текст";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Телефон";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(251, 13);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Искать";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // serviceController1
-            // 
-            this.serviceController1.MachineName = "hp-ПК";
-            this.serviceController1.ServiceName = "MySQL51";
-            // 
             // num
             // 
             this.num.FillWeight = 1F;
@@ -645,6 +589,63 @@ namespace AdvertBase
             this.Del.HeaderText = "Удалить";
             this.Del.Name = "Del";
             this.Del.Width = 40;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(575, 12);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "Искать";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
+            // searchstringText
+            // 
+            this.searchstringText.Location = new System.Drawing.Point(392, 14);
+            this.searchstringText.Name = "searchstringText";
+            this.searchstringText.Size = new System.Drawing.Size(177, 20);
+            this.searchstringText.TabIndex = 10;
+            // 
+            // searchstringPhone
+            // 
+            this.searchstringPhone.Location = new System.Drawing.Point(68, 15);
+            this.searchstringPhone.Name = "searchstringPhone";
+            this.searchstringPhone.Size = new System.Drawing.Size(177, 20);
+            this.searchstringPhone.TabIndex = 9;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(334, 14);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(37, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Текст";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Телефон";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(251, 13);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Искать";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // serviceController1
+            // 
+            this.serviceController1.MachineName = "hp-ПК";
+            this.serviceController1.ServiceName = "MySQL51";
             // 
             // mainForm
             // 
