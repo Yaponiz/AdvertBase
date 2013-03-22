@@ -11,12 +11,11 @@ namespace AdvertBase
     public partial class mainForm : Form
     {
         public EditControl cards;
-        
+        private settingsData settingsData;
         public int level = 100;
         public int userID;
         public string selectedCard;
         public int cardsCount = 0;
-        private string dbname, server, dbuser, dbpass, dbPort;
         public int startHeight = 100;
         public int startWidth = 400;
         public mainForm()
@@ -25,26 +24,11 @@ namespace AdvertBase
             {
                 //Microsoft.
                 InitializeComponent();
-                FileStream f = new FileStream("properties.xml", FileMode.OpenOrCreate);
-                
-                XmlTextReader settings = new XmlTextReader(f);
-                while (settings.Read())
-                {
-                    if (settings.NodeType == XmlNodeType.Element)
-                    {
-                        if (settings.Name.Equals("server"))
-                        {
-                            server = settings.GetAttribute("servername");
-                            dbname = settings.GetAttribute("dbname");
-                            dbuser = settings.GetAttribute("dbuser");
-                            dbpass = settings.GetAttribute("dbpass");
-                            dbPort = settings.GetAttribute("dbport");
-                        }
-                    }
-                }
-                f.Close();
+                settingsData = new settingsData();
+                settingsData.getSettings();
+
                 string CommandText = "select * from `ads_paper`.`catalogitems` order by R1,R2,R3,R4";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+                string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -94,7 +78,7 @@ namespace AdvertBase
                 MyDataReader.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
                 //добавляем первую карточку
-                EditControl card = new EditControl(this, "0");
+                EditControl card = new EditControl();
                 card.Name = "cardPane" + cardsCount.ToString();
                 selectedCard = card.Name;
                 card.Top = startHeight;
@@ -187,20 +171,20 @@ namespace AdvertBase
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
                     // Read the contents of testDialog's TextBox.
-                    server = dlg.serverName.Text;
-                    dbname = dlg.dbName.Text;
-                    dbuser = dlg.dbuser.Text;
-                    dbpass = dlg.dbpass.Text;
-                    dbPort = dlg.dbPort.Text;
+                    settingsData.server = dlg.serverName.Text;
+                    settingsData.dbname = dlg.dbName.Text;
+                    settingsData.dbuser = dlg.dbuser.Text;
+                    settingsData.dbpass = dlg.dbpass.Text;
+                    settingsData.dbPort = dlg.dbPort.Text;
                     FileStream f = new FileStream("properties.xml", FileMode.Create);
                     XmlTextWriter settings = new XmlTextWriter(f, Encoding.Default);
                     settings.WriteStartDocument();
                     settings.WriteStartElement("server");
-                    addAtributeToXml(settings, "servername", server);
-                    addAtributeToXml(settings, "dbname", dbname);
-                    addAtributeToXml(settings, "dbuser", dbuser);
-                    addAtributeToXml(settings, "dbpass", dbpass);
-                    addAtributeToXml(settings, "dbport", dbPort);
+                    addAtributeToXml(settings, "servername", settingsData.server);
+                    addAtributeToXml(settings, "dbname", settingsData.dbname);
+                    addAtributeToXml(settings, "dbuser", settingsData.dbuser);
+                    addAtributeToXml(settings, "dbpass", settingsData.dbpass);
+                    addAtributeToXml(settings, "dbPort", settingsData.dbPort);
                     settings.WriteEndElement();
                     settings.WriteEndDocument();
                     settings.Close();
@@ -232,7 +216,7 @@ namespace AdvertBase
             {
                 string CommandText = "select ID_OB,cost,costStr from `ria_rim`.`ob` where KOD_R = 1 and KOL_P>0 and cost <1 and not costStr=''";
                 string CommandText2 = "";
-                string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
+                string Connect = "server=" + settingsData.server + ";Database=ria_rim;User Id="+ settingsData.dbuser +";Password=" + settingsData.dbpass;
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -452,7 +436,7 @@ namespace AdvertBase
             {
                 string CommandText = "select * from ria_rim.ob";
                 string CommandText2 = "";
-                string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
+                string Connect = "server=" + settingsData.server + ";Database=ria_rim;User Id=" + settingsData.dbuser + ";Password=" + settingsData.dbpass;
                 int k1 = 0, k2 = 0, k3 = 0;
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
@@ -521,7 +505,7 @@ namespace AdvertBase
             {
                 string CommandText = "select * from ria_rim.ob";
                 string CommandText2 = "";
-                string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
+                string Connect = "server=" + settingsData.server + ";Database=ria_rim;User Id="+ settingsData.dbuser +";Password=" +settingsData.dbpass;
                 int k1 = 0, k2 = 0;//, k3 = 0;
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
@@ -575,7 +559,7 @@ namespace AdvertBase
         public void fillCard(string id)
         {
             string CommandText = "select * from ria_rim.ob where ID_OB = " + id;
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -586,7 +570,7 @@ namespace AdvertBase
                 MySqlConnection myConnection = new MySqlConnection(Connect);
                 MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
                 myConnection.Open(); //Устанавливаем соединение с базой данных.
-                myCommand.ExecuteNonQuery();
+                //myCommand.ExecuteNonQuery();
                 MySqlDataReader MyDataReader;
                 MyDataReader = myCommand.ExecuteReader();
                 while (MyDataReader.Read())
@@ -607,7 +591,7 @@ namespace AdvertBase
             {
                 if (catalogList.CurrentRow.Cells[2].Value.ToString() != "18")
                 {
-                    EditControl card = new EditControl(this, "0");
+                    EditControl card = new EditControl();
                     card.Name = "cardPane" + cardsCount.ToString();
                     selectedCard = card.Name;
                     card.Top = startHeight;
@@ -688,7 +672,7 @@ namespace AdvertBase
             {
                 string CommandText = "select * from ria_rim.ob";
                 string CommandText2 = "";
-                string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
+                string Connect = "server=" + settingsData.server + ";Database=ria_rim;User Id="+ settingsData.dbuser +";Password=" + settingsData.dbpass;
                 int k1 = 0, k2 = 0, k3 = 0;
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
@@ -752,7 +736,7 @@ namespace AdvertBase
             {
                 string CommandText = "select ID_OB,cost,costStr from `ria_rim`.`ob` where KOD_R = 1 and KOL_P>0 and cost <1 and not costStr=''";
                 string CommandText2 = "";
-                string Connect = "server=" + server + ";Database=ria_rim;User Id=" + dbuser + ";Password=" + dbpass;
+                string Connect = "server=" + settingsData.server + ";Database=ria_rim;User Id="+ settingsData.dbuser +";Password=" + settingsData.dbpass;
                 //Переменная Connect - это строка подключения в которой:
                 //БАЗА - Имя базы в MySQL
                 //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -972,7 +956,7 @@ namespace AdvertBase
             DateTime now = DateTime.Now;
             //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
             //string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             try
             {
                 //todo: Сделать добавление информации о рубрике в карточку
@@ -1019,7 +1003,7 @@ namespace AdvertBase
             DateTime now = DateTime.Now;
             //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
             //string CommandText = "";// "insert into ria_rim.ob (DATEPOST, K_WORD, STRING_OB, ADRES, TELEPHON, cost, costStr, KOL_P, KOD_R,KOD_PR,KOD_PPR,KOD_PPPR) Values ('" + DateTime.Now.ToString("yyyy-MM-dd") + "', '" + cardHeader.Text + "', '" + cardText.Text + "', '" + cardPhone.Text + "', '" + cardComment.Text + "', '" + cardCost.Text + "', '" + "" + "', '" + cardToShow.Value.ToString() + "', '" + KOD_R1.Text + "', '" + KOD_R2.Text + "', '" + KOD_R3.Text + "', '" + KOD_R4.Text + "')";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             try
             {            
                 EditControl cont = listOfCards.Controls[selectedCard] as EditControl;
@@ -1046,7 +1030,7 @@ namespace AdvertBase
         {
             
             string CommandText = "select * from ria_rim.ob where ADRES like '%%" + searchstringPhone.Text + "%%'";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -1082,7 +1066,7 @@ namespace AdvertBase
         {
             
             string CommandText = "select * from ria_rim.ob where K_WORD like '%%" + searchstringText.Text + "%%'";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -1111,7 +1095,7 @@ namespace AdvertBase
         private void button6_Click(object sender, EventArgs e)
         {
             string CommandText = "select * from ria_rim.ob where TELEPHON like '%%" + secondPhone.Text + "%%'";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
             //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
@@ -1148,7 +1132,7 @@ namespace AdvertBase
             string CommandText = "update ria_rim.ob set DATEPOST='" + DateTime.Now.ToString("yyyy-MM-dd") + "', KOL_P='" + numericUpDown1.Value.ToString() + "' where ID_OB = '" + cardList.SelectedCells[0].OwningRow.Cells[0].Value.ToString() + "'";
 
             //string CommandText = "";
-            string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
+            string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
 
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
@@ -1173,6 +1157,11 @@ namespace AdvertBase
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             new checkForm().Show();
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

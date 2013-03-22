@@ -33,7 +33,7 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.EditPanel = new AdvertBase.EditControl(this.ParentForm as mainForm, id);
+            this.EditPanel = new AdvertBase.EditControl();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,11 +81,13 @@
             // 
             // EditPanel
             // 
+            this.EditPanel.BackColor = System.Drawing.Color.Gray;
             this.EditPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EditPanel.Location = new System.Drawing.Point(0, 25);
             this.EditPanel.Name = "EditPanel";
             this.EditPanel.Size = new System.Drawing.Size(609, 366);
             this.EditPanel.TabIndex = 1;
+            this.EditPanel.Load += new System.EventHandler(this.EditPanel_Load);
             // 
             // EditForm
             // 

@@ -124,6 +124,7 @@
     <Compile Include="SearcResults.Designer.cs">
       <DependentUpon>SearcResults.cs</DependentUpon>
     </Compile>
+    <Compile Include="settings.cs" />
     <Compile Include="templateEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,6 +188,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
