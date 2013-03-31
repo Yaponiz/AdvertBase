@@ -1029,7 +1029,7 @@ namespace AdvertBase
         private void button1_Click_1(object sender, EventArgs e)
         {
             
-            string CommandText = "select * from ria_rim.ob where ADRES like '%%" + searchstringPhone.Text + "%%'";
+            string CommandText = "select * from ria_rim.ob where ADRES like '%%" + searchstringPhone.Text + "%%' order by KOD_R, KOD_PR, KOD_PPR, KOD_PPPR";
             string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
@@ -1064,8 +1064,8 @@ namespace AdvertBase
         }
         private void button2_Click_1(object sender, EventArgs e)
         {
-            
-            string CommandText = "select * from ria_rim.ob where K_WORD like '%%" + searchstringText.Text + "%%'";
+
+            string CommandText = "select * from ria_rim.ob where K_WORD like '%%" + searchstringText.Text + "%%' order by KOD_R, KOD_PR, KOD_PPR, KOD_PPPR";
             string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL
@@ -1094,7 +1094,7 @@ namespace AdvertBase
         }
         private void button6_Click(object sender, EventArgs e)
         {
-            string CommandText = "select * from ria_rim.ob where TELEPHON like '%%" + secondPhone.Text + "%%'";
+            string CommandText = "select * from ria_rim.ob where TELEPHON like '%%" + secondPhone.Text + "%%' order by KOD_R, KOD_PR, KOD_PPR, KOD_PPPR";
             string Connect = "Database=" + settingsData.dbname + ";Data Source=" + settingsData.server + ";User Id="+ settingsData.dbuser +";Password="+ settingsData.dbpass +";Port=" + settingsData.dbPort;
             //Переменная Connect - это строка подключения в которой:
             //БАЗА - Имя базы в MySQL

@@ -41,6 +41,7 @@ namespace AdvertBase
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -458,12 +459,20 @@ namespace AdvertBase
             this.Column1,
             this.author,
             this.Del});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.cardList.DefaultCellStyle = dataGridViewCellStyle1;
             this.cardList.Location = new System.Drawing.Point(0, 92);
             this.cardList.Name = "cardList";
             this.cardList.RowHeadersWidth = 25;
             this.cardList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.cardList.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.cardList.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.cardList.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.Silver;
             this.cardList.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cardList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -564,16 +573,18 @@ namespace AdvertBase
             // 
             // searchstringPhone
             // 
+            this.searchstringPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.searchstringPhone.Location = new System.Drawing.Point(90, 17);
             this.searchstringPhone.Name = "searchstringPhone";
-            this.searchstringPhone.Size = new System.Drawing.Size(177, 20);
+            this.searchstringPhone.Size = new System.Drawing.Size(177, 29);
             this.searchstringPhone.TabIndex = 9;
             // 
             // searchstringText
             // 
+            this.searchstringText.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.searchstringText.Location = new System.Drawing.Point(414, 16);
             this.searchstringText.Name = "searchstringText";
-            this.searchstringText.Size = new System.Drawing.Size(177, 20);
+            this.searchstringText.Size = new System.Drawing.Size(177, 29);
             this.searchstringText.TabIndex = 10;
             // 
             // button2
@@ -597,14 +608,15 @@ namespace AdvertBase
             // 
             // secondPhone
             // 
-            this.secondPhone.Location = new System.Drawing.Point(758, 18);
+            this.secondPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.secondPhone.Location = new System.Drawing.Point(758, 17);
             this.secondPhone.Name = "secondPhone";
-            this.secondPhone.Size = new System.Drawing.Size(177, 20);
+            this.secondPhone.Size = new System.Drawing.Size(177, 29);
             this.secondPhone.TabIndex = 14;
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(262, 44);
+            this.button5.Location = new System.Drawing.Point(245, 52);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(131, 23);
             this.button5.TabIndex = 4;
@@ -625,7 +637,7 @@ namespace AdvertBase
             // numericUpDown1
             // 
             this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numericUpDown1.Location = new System.Drawing.Point(90, 45);
+            this.numericUpDown1.Location = new System.Drawing.Point(90, 52);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
             this.numericUpDown1.TabIndex = 5;

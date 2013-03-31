@@ -39,24 +39,7 @@ namespace AdvertBase
                     }
                 }
                 f.Close();
-                string CommandText = "select * from ria_rim.ob where gram_prov ='0'";
-                string Connect = "Database=" + dbname + ";Data Source=" + server + ";User Id=" + dbuser + ";Password=" + dbpass + ";Port=" + dbPort;
-                //Переменная Connect - это строка подключения в которой:
-                //БАЗА - Имя базы в MySQL
-                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
-                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
-                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
-                MySqlConnection myConnection = new MySqlConnection(Connect);
-                MySqlCommand myCommand = new MySqlCommand(CommandText, myConnection);
-                myConnection.Open(); //Устанавливаем соединение с базой данных.
-                MySqlDataReader MyDataReader;
-                MyDataReader = myCommand.ExecuteReader();
-                while (MyDataReader.Read())
-                {
-                    int id = MyDataReader.GetInt32(0); //Получаем строку                    
-                }
-                MyDataReader.Close();
-                myConnection.Close(); //Обязательно закрываем соединение!
+                
             }
             catch (Exception e)
             {
@@ -115,6 +98,23 @@ namespace AdvertBase
                 MyDataReader.Close();
                 myConnection.Close(); //Обязательно закрываем соединение!
 
+                CommandText = "select count(*) from ria_rim.ob where gram_prov = '0'";
+                //Переменная Connect - это строка подключения в которой:
+                //БАЗА - Имя базы в MySQL
+                //ХОСТ - Имя или IP-адрес сервера (если локально то можно и localhost)
+                //ПОЛЬЗОВАТЕЛЬ - Имя пользователя MySQL
+                //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
+                myConnection = new MySqlConnection(Connect);
+                myCommand = new MySqlCommand(CommandText, myConnection);
+                myConnection.Open(); //Устанавливаем соединение с базой данных.
+                ;
+                MyDataReader = myCommand.ExecuteReader();
+                while (MyDataReader.Read())
+                {
+                    this.Text = "Проверка объявлений. Не проверено:" + MyDataReader.GetValue(0).ToString() + " объявлений";                    
+                }
+                MyDataReader.Close();
+                myConnection.Close(); //Обязательно закрываем соединение!
                 
             }
             catch (Exception exp)
