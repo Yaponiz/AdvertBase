@@ -118,7 +118,7 @@ namespace AdvertBase
 
         private void cardPanel_Enter(object sender, EventArgs e)
         {
-            this.BackColor = Color.White;
+            this.BackColor = Color.Silver;
             selected = 1;
         }
 
@@ -130,7 +130,7 @@ namespace AdvertBase
 
         private void EditControl_Enter(object sender, EventArgs e)
         {
-            this.BackColor = Color.White;
+            this.BackColor = Color.Silver;
             selected = 1;
         }
 

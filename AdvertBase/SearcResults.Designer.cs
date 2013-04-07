@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
@@ -78,6 +79,7 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.cardList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.cardList.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
             this.cardList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.cardList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.num,
@@ -89,6 +91,9 @@
             this.author});
             this.cardList.Location = new System.Drawing.Point(0, 51);
             this.cardList.Name = "cardList";
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(2);
+            this.cardList.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.cardList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.cardList.Size = new System.Drawing.Size(1025, 221);
             this.cardList.TabIndex = 1;
             this.cardList.DoubleClick += new System.EventHandler(this.cardList_DoubleClick);

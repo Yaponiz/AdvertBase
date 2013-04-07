@@ -50,7 +50,7 @@ namespace AdvertBase
                     string R4 = MyDataReader.GetString(5); //Получаем строку
                     string name = MyDataReader.GetString(1); //Получаем строку
                     
-                    catalogList.Rows.Add(id, name, R1, R2, R3, R4);
+                    catalogList.Rows.Add(id, R1, R2, R3, R4, name);
                     i++;
                     catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.DarkGray;
                     if (R1 == "0")
@@ -589,7 +589,7 @@ namespace AdvertBase
         {
             try
             {
-                if (catalogList.CurrentRow.Cells[2].Value.ToString() != "18")
+                if (catalogList.CurrentRow.Cells[1].Value.ToString() != "18")
                 {
                     EditControl card = new EditControl();
                     card.Name = "cardPane" + cardsCount.ToString();
@@ -964,11 +964,11 @@ namespace AdvertBase
                 DataGridViewRow row = catalogList.Rows[catalogList.SelectedCells[0].RowIndex];
                 if (row != null)
                 {
-                    cont.catName.Text = row.Cells[1].Value.ToString();
-                    cont.kod_r.Text = row.Cells[2].Value.ToString();
-                    cont.kod_pr.Text = row.Cells[3].Value.ToString();
-                    cont.kod_ppr.Text = row.Cells[4].Value.ToString();
-                    cont.kod_pppr.Text = row.Cells[5].Value.ToString();
+                    cont.catName.Text = row.Cells[5].Value.ToString();
+                    cont.kod_r.Text = row.Cells[1].Value.ToString();
+                    cont.kod_pr.Text = row.Cells[2].Value.ToString();
+                    cont.kod_ppr.Text = row.Cells[3].Value.ToString();
+                    cont.kod_pppr.Text = row.Cells[4].Value.ToString();
                 }
             }
             catch (Exception except)
@@ -1010,11 +1010,11 @@ namespace AdvertBase
                 DataGridViewRow row = catalogList.Rows[catalogList.SelectedCells[0].RowIndex];
                 if (row != null)
                 {
-                    cont.catName.Text = row.Cells[1].Value.ToString();
-                    cont.kod_r.Text = row.Cells[2].Value.ToString();
-                    cont.kod_pr.Text = row.Cells[3].Value.ToString();
-                    cont.kod_ppr.Text = row.Cells[4].Value.ToString();
-                    cont.kod_pppr.Text = row.Cells[5].Value.ToString();
+                    cont.catName.Text = row.Cells[5].Value.ToString();
+                    cont.kod_r.Text = row.Cells[1].Value.ToString();
+                    cont.kod_pr.Text = row.Cells[2].Value.ToString();
+                    cont.kod_ppr.Text = row.Cells[3].Value.ToString();
+                    cont.kod_pppr.Text = row.Cells[4].Value.ToString();
                 }
             }
             catch (Exception except)
