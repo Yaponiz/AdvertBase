@@ -970,6 +970,10 @@ namespace AdvertBase
                     cont.kod_ppr.Text = row.Cells[3].Value.ToString();
                     cont.kod_pppr.Text = row.Cells[4].Value.ToString();
                 }
+
+                cont.kod_pppr_ValueChanged(this, e);
+                cont.kod_r_ValueChanged(this, e);
+              
             }
             catch (Exception except)
             {
@@ -1118,8 +1122,10 @@ namespace AdvertBase
 
         private void cardList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            
-            numericUpDown1.Value = Int16.Parse(cardList.SelectedCells[0].OwningRow.Cells[6].Value.ToString());
+            if (cardList.SelectedCells[0].OwningRow.Cells[6].Value != null)
+            {
+                numericUpDown1.Value = Int16.Parse(cardList.SelectedCells[0].OwningRow.Cells[6].Value.ToString());
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)

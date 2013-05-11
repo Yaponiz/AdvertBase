@@ -30,15 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditControl));
             this.cardPanel = new System.Windows.Forms.Panel();
-            this.kod_pppr = new System.Windows.Forms.NumericUpDown();
-            this.kod_ppr = new System.Windows.Forms.NumericUpDown();
-            this.kod_pr = new System.Windows.Forms.NumericUpDown();
-            this.kod_r = new System.Windows.Forms.NumericUpDown();
-            this.automobilesList = new System.Windows.Forms.ComboBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.k_word = new System.Windows.Forms.RichTextBox();
             this.comment = new System.Windows.Forms.RichTextBox();
             this.address = new System.Windows.Forms.RichTextBox();
@@ -57,24 +48,25 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.catName = new System.Windows.Forms.TextBox();
+            this.townList = new System.Windows.Forms.ComboBox();
+            this.automobilesList = new System.Windows.Forms.ComboBox();
+            this.kod_pppr = new System.Windows.Forms.NumericUpDown();
+            this.kod_ppr = new System.Windows.Forms.NumericUpDown();
+            this.kod_pr = new System.Windows.Forms.NumericUpDown();
+            this.kod_r = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
             this.cardPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kol_p)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_pppr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_ppr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_pr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_r)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kol_p)).BeginInit();
             this.SuspendLayout();
             // 
             // cardPanel
             // 
             this.cardPanel.AutoSize = true;
             this.cardPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cardPanel.Controls.Add(this.automobilesList);
-            this.cardPanel.Controls.Add(this.checkBox5);
-            this.cardPanel.Controls.Add(this.checkBox4);
-            this.cardPanel.Controls.Add(this.checkBox1);
-            this.cardPanel.Controls.Add(this.checkBox2);
             this.cardPanel.Controls.Add(this.k_word);
             this.cardPanel.Controls.Add(this.comment);
             this.cardPanel.Controls.Add(this.address);
@@ -93,6 +85,8 @@
             this.cardPanel.Controls.Add(this.label17);
             this.cardPanel.Controls.Add(this.label18);
             this.cardPanel.Controls.Add(this.catName);
+            this.cardPanel.Controls.Add(this.townList);
+            this.cardPanel.Controls.Add(this.automobilesList);
             this.cardPanel.Location = new System.Drawing.Point(0, 33);
             this.cardPanel.Name = "cardPanel";
             this.cardPanel.Size = new System.Drawing.Size(610, 284);
@@ -100,37 +94,195 @@
             this.cardPanel.Enter += new System.EventHandler(this.cardPanel_Enter);
             this.cardPanel.Leave += new System.EventHandler(this.cardPanel_Leave);
             // 
-            // kod_pppr
+            // k_word
             // 
-            this.kod_pppr.Location = new System.Drawing.Point(163, 10);
-            this.kod_pppr.Name = "kod_pppr";
-            this.kod_pppr.Size = new System.Drawing.Size(47, 20);
-            this.kod_pppr.TabIndex = 4;
-            this.kod_pppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            this.k_word.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.k_word.ForeColor = System.Drawing.Color.Blue;
+            this.k_word.Location = new System.Drawing.Point(7, 62);
+            this.k_word.Name = "k_word";
+            this.k_word.Size = new System.Drawing.Size(599, 33);
+            this.k_word.TabIndex = 6;
+            this.k_word.Text = "";
+            this.k_word.TextChanged += new System.EventHandler(this.k_word_TextChanged);
             // 
-            // kod_ppr
+            // comment
             // 
-            this.kod_ppr.Location = new System.Drawing.Point(110, 10);
-            this.kod_ppr.Name = "kod_ppr";
-            this.kod_ppr.Size = new System.Drawing.Size(47, 20);
-            this.kod_ppr.TabIndex = 3;
-            this.kod_ppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            this.comment.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.comment.Location = new System.Drawing.Point(418, 222);
+            this.comment.Name = "comment";
+            this.comment.Size = new System.Drawing.Size(189, 24);
+            this.comment.TabIndex = 12;
+            this.comment.Text = "";
             // 
-            // kod_pr
+            // address
             // 
-            this.kod_pr.Location = new System.Drawing.Point(57, 10);
-            this.kod_pr.Name = "kod_pr";
-            this.kod_pr.Size = new System.Drawing.Size(47, 20);
-            this.kod_pr.TabIndex = 2;
-            this.kod_pr.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            this.address.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.address.Location = new System.Drawing.Point(59, 222);
+            this.address.Name = "address";
+            this.address.Size = new System.Drawing.Size(238, 24);
+            this.address.TabIndex = 11;
+            this.address.Text = "";
             // 
-            // kod_r
+            // cost
             // 
-            this.kod_r.Location = new System.Drawing.Point(4, 10);
-            this.kod_r.Name = "kod_r";
-            this.kod_r.Size = new System.Drawing.Size(47, 20);
-            this.kod_r.TabIndex = 1;
-            this.kod_r.Leave += new System.EventHandler(this.kod_r_TextChanged);
+            this.cost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.cost.Location = new System.Drawing.Point(299, 252);
+            this.cost.Name = "cost";
+            this.cost.Size = new System.Drawing.Size(147, 24);
+            this.cost.TabIndex = 10;
+            this.cost.Text = "";
+            // 
+            // secPhone
+            // 
+            this.secPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.secPhone.Location = new System.Drawing.Point(80, 252);
+            this.secPhone.Name = "secPhone";
+            this.secPhone.Size = new System.Drawing.Size(164, 24);
+            this.secPhone.TabIndex = 9;
+            this.secPhone.Text = "";
+            this.secPhone.TextChanged += new System.EventHandler(this.secPhone_TextChanged);
+            // 
+            // phone
+            // 
+            this.phone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.phone.ForeColor = System.Drawing.Color.Red;
+            this.phone.Location = new System.Drawing.Point(90, 192);
+            this.phone.Name = "phone";
+            this.phone.Size = new System.Drawing.Size(517, 24);
+            this.phone.TabIndex = 8;
+            this.phone.Text = "";
+            // 
+            // kol_p
+            // 
+            this.kol_p.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.kol_p.Location = new System.Drawing.Point(538, 252);
+            this.kol_p.Name = "kol_p";
+            this.kol_p.Size = new System.Drawing.Size(67, 29);
+            this.kol_p.TabIndex = 13;
+            this.kol_p.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // string_ob
+            // 
+            this.string_ob.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.string_ob.Location = new System.Drawing.Point(7, 122);
+            this.string_ob.Name = "string_ob";
+            this.string_ob.Size = new System.Drawing.Size(599, 66);
+            this.string_ob.TabIndex = 7;
+            this.string_ob.Text = "";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label10.Location = new System.Drawing.Point(452, 254);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(69, 18);
+            this.label10.TabIndex = 34;
+            this.label10.Text = "Показов";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label11.Location = new System.Drawing.Point(311, 222);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(104, 18);
+            this.label11.TabIndex = 28;
+            this.label11.Text = "Комментарий";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.Location = new System.Drawing.Point(3, 222);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(50, 18);
+            this.label12.TabIndex = 33;
+            this.label12.Text = "Адрес";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label13.Location = new System.Drawing.Point(250, 254);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(43, 18);
+            this.label13.TabIndex = 32;
+            this.label13.Text = "Цена";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label14.Location = new System.Drawing.Point(1, 256);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(81, 18);
+            this.label14.TabIndex = 31;
+            this.label14.Text = "Для связи";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label15.Location = new System.Drawing.Point(1, 192);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(83, 18);
+            this.label15.TabIndex = 30;
+            this.label15.Text = "Телефоны";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label16.Location = new System.Drawing.Point(1, 95);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(62, 24);
+            this.label16.TabIndex = 29;
+            this.label16.Text = "Текст";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label17.Location = new System.Drawing.Point(2, 34);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(105, 24);
+            this.label17.TabIndex = 27;
+            this.label17.Text = "Заголовок";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label18.Location = new System.Drawing.Point(3, 3);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(82, 24);
+            this.label18.TabIndex = 26;
+            this.label18.Text = "Каталог";
+            // 
+            // catName
+            // 
+            this.catName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.catName.ForeColor = System.Drawing.Color.Fuchsia;
+            this.catName.Location = new System.Drawing.Point(90, 3);
+            this.catName.Name = "catName";
+            this.catName.Size = new System.Drawing.Size(516, 29);
+            this.catName.TabIndex = 1;
+            // 
+            // townList
+            // 
+            this.townList.FormattingEnabled = true;
+            this.townList.Location = new System.Drawing.Point(299, 39);
+            this.townList.Name = "townList";
+            this.townList.Size = new System.Drawing.Size(306, 21);
+            this.townList.TabIndex = 35;
+            this.townList.Visible = false;
+            this.townList.SelectedIndexChanged += new System.EventHandler(this.townList_SelectedIndexChanged);
+            this.townList.TextChanged += new System.EventHandler(this.townList_TextChanged);
             // 
             // automobilesList
             // 
@@ -338,225 +490,39 @@
             this.automobilesList.Visible = false;
             this.automobilesList.SelectedIndexChanged += new System.EventHandler(this.automobilesList_SelectedIndexChanged);
             // 
-            // checkBox5
+            // kod_pppr
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox5.Location = new System.Drawing.Point(348, 251);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(98, 24);
-            this.checkBox5.TabIndex = 18;
-            this.checkBox5.Text = "За месяц";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.kod_pppr.Location = new System.Drawing.Point(163, 10);
+            this.kod_pppr.Name = "kod_pppr";
+            this.kod_pppr.Size = new System.Drawing.Size(47, 20);
+            this.kod_pppr.TabIndex = 4;
+            this.kod_pppr.ValueChanged += new System.EventHandler(this.kod_pppr_ValueChanged);
+            this.kod_pppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
             // 
-            // checkBox4
+            // kod_ppr
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox4.Location = new System.Drawing.Point(249, 252);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(93, 24);
-            this.checkBox4.TabIndex = 17;
-            this.checkBox4.Text = "За сутки";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.kod_ppr.Location = new System.Drawing.Point(110, 10);
+            this.kod_ppr.Name = "kod_ppr";
+            this.kod_ppr.Size = new System.Drawing.Size(47, 20);
+            this.kod_ppr.TabIndex = 3;
+            this.kod_ppr.Leave += new System.EventHandler(this.kod_r_TextChanged);
             // 
-            // checkBox1
+            // kod_pr
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox1.Location = new System.Drawing.Point(109, 252);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(143, 24);
-            this.checkBox1.TabIndex = 15;
-            this.checkBox1.Text = "Возможен торг";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.kod_pr.Location = new System.Drawing.Point(57, 10);
+            this.kod_pr.Name = "kod_pr";
+            this.kod_pr.Size = new System.Drawing.Size(47, 20);
+            this.kod_pr.TabIndex = 2;
+            this.kod_pr.Leave += new System.EventHandler(this.kod_r_TextChanged);
             // 
-            // checkBox2
+            // kod_r
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox2.Location = new System.Drawing.Point(4, 252);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(95, 24);
-            this.checkBox2.TabIndex = 14;
-            this.checkBox2.Text = "Платное";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // k_word
-            // 
-            this.k_word.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.k_word.Location = new System.Drawing.Point(7, 62);
-            this.k_word.Name = "k_word";
-            this.k_word.Size = new System.Drawing.Size(599, 33);
-            this.k_word.TabIndex = 6;
-            this.k_word.Text = "";
-            this.k_word.TextChanged += new System.EventHandler(this.k_word_TextChanged);
-            // 
-            // comment
-            // 
-            this.comment.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.comment.Location = new System.Drawing.Point(418, 222);
-            this.comment.Name = "comment";
-            this.comment.Size = new System.Drawing.Size(189, 24);
-            this.comment.TabIndex = 12;
-            this.comment.Text = "";
-            // 
-            // address
-            // 
-            this.address.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.address.Location = new System.Drawing.Point(59, 222);
-            this.address.Name = "address";
-            this.address.Size = new System.Drawing.Size(238, 24);
-            this.address.TabIndex = 11;
-            this.address.Text = "";
-            // 
-            // cost
-            // 
-            this.cost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.cost.Location = new System.Drawing.Point(508, 191);
-            this.cost.Name = "cost";
-            this.cost.Size = new System.Drawing.Size(97, 24);
-            this.cost.TabIndex = 10;
-            this.cost.Text = "";
-            // 
-            // secPhone
-            // 
-            this.secPhone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.secPhone.Location = new System.Drawing.Point(325, 192);
-            this.secPhone.Name = "secPhone";
-            this.secPhone.Size = new System.Drawing.Size(140, 24);
-            this.secPhone.TabIndex = 9;
-            this.secPhone.Text = "";
-            this.secPhone.TextChanged += new System.EventHandler(this.secPhone_TextChanged);
-            // 
-            // phone
-            // 
-            this.phone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.phone.Location = new System.Drawing.Point(90, 192);
-            this.phone.Name = "phone";
-            this.phone.Size = new System.Drawing.Size(152, 24);
-            this.phone.TabIndex = 8;
-            this.phone.Text = "";
-            // 
-            // kol_p
-            // 
-            this.kol_p.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.kol_p.Location = new System.Drawing.Point(538, 252);
-            this.kol_p.Name = "kol_p";
-            this.kol_p.Size = new System.Drawing.Size(67, 29);
-            this.kol_p.TabIndex = 13;
-            this.kol_p.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // string_ob
-            // 
-            this.string_ob.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.string_ob.Location = new System.Drawing.Point(7, 122);
-            this.string_ob.Name = "string_ob";
-            this.string_ob.Size = new System.Drawing.Size(599, 66);
-            this.string_ob.TabIndex = 7;
-            this.string_ob.Text = "";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.Location = new System.Drawing.Point(452, 254);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(69, 18);
-            this.label10.TabIndex = 34;
-            this.label10.Text = "Показов";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label11.Location = new System.Drawing.Point(311, 222);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(104, 18);
-            this.label11.TabIndex = 28;
-            this.label11.Text = "Комментарий";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label12.Location = new System.Drawing.Point(3, 222);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(50, 18);
-            this.label12.TabIndex = 33;
-            this.label12.Text = "Адрес";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label13.Location = new System.Drawing.Point(465, 191);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(43, 18);
-            this.label13.TabIndex = 32;
-            this.label13.Text = "Цена";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label14.Location = new System.Drawing.Point(246, 191);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(81, 18);
-            this.label14.TabIndex = 31;
-            this.label14.Text = "Для связи";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label15.Location = new System.Drawing.Point(1, 192);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(83, 18);
-            this.label15.TabIndex = 30;
-            this.label15.Text = "Телефоны";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label16.Location = new System.Drawing.Point(1, 95);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(62, 24);
-            this.label16.TabIndex = 29;
-            this.label16.Text = "Текст";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label17.Location = new System.Drawing.Point(2, 34);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(105, 24);
-            this.label17.TabIndex = 27;
-            this.label17.Text = "Заголовок";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label18.Location = new System.Drawing.Point(3, 3);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(82, 24);
-            this.label18.TabIndex = 26;
-            this.label18.Text = "Каталог";
-            // 
-            // catName
-            // 
-            this.catName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.catName.Location = new System.Drawing.Point(90, 3);
-            this.catName.Name = "catName";
-            this.catName.Size = new System.Drawing.Size(516, 29);
-            this.catName.TabIndex = 1;
+            this.kod_r.Location = new System.Drawing.Point(4, 10);
+            this.kod_r.Name = "kod_r";
+            this.kod_r.Size = new System.Drawing.Size(47, 20);
+            this.kod_r.TabIndex = 1;
+            this.kod_r.ValueChanged += new System.EventHandler(this.kod_r_ValueChanged);
+            this.kod_r.Leave += new System.EventHandler(this.kod_r_TextChanged);
             // 
             // button1
             // 
@@ -580,16 +546,16 @@
             this.Controls.Add(this.cardPanel);
             this.Controls.Add(this.kod_r);
             this.Name = "EditControl";
-            this.Size = new System.Drawing.Size(612, 318);
+            this.Size = new System.Drawing.Size(612, 317);
             this.Enter += new System.EventHandler(this.EditControl_Enter);
             this.Leave += new System.EventHandler(this.EditControl_Leave);
             this.cardPanel.ResumeLayout(false);
             this.cardPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kol_p)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_pppr)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_ppr)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_pr)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kod_r)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kol_p)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -598,7 +564,6 @@
         #endregion
 
         public System.Windows.Forms.Panel cardPanel;
-        public System.Windows.Forms.CheckBox checkBox2;
         public System.Windows.Forms.RichTextBox k_word;
         public System.Windows.Forms.RichTextBox comment;
         public System.Windows.Forms.RichTextBox address;
@@ -617,15 +582,13 @@
         public System.Windows.Forms.Label label17;
         public System.Windows.Forms.Label label18;
         public System.Windows.Forms.TextBox catName;
-        public System.Windows.Forms.CheckBox checkBox5;
-        public System.Windows.Forms.CheckBox checkBox4;
-        public System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ComboBox automobilesList;
         private System.Windows.Forms.Button button1;
         public System.Windows.Forms.NumericUpDown kod_pppr;
         public System.Windows.Forms.NumericUpDown kod_ppr;
         public System.Windows.Forms.NumericUpDown kod_pr;
         public System.Windows.Forms.NumericUpDown kod_r;
+        private System.Windows.Forms.ComboBox townList;
 
     }
 }

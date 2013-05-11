@@ -38,8 +38,8 @@ namespace AdvertBase
             }
             f.Close();
 
-            
-            }
+
+        }
 
         //public EditControl(string id)
         //{
@@ -156,21 +156,6 @@ namespace AdvertBase
                 automobilesList.Hide();
             }
 
-            DataGridView dg = mf.catalogList;
-
-            dg.ClearSelection();
-            int i = 0;
-            foreach (DataGridViewRow row in dg.Rows)
-            {
-                if (row.Cells[2].Value.ToString() == kod_r.Text && row.Cells[3].Value.ToString() == kod_pr.Text &&
-                    row.Cells[4].Value.ToString() == kod_ppr.Text && row.Cells[5].Value.ToString() == kod_pppr.Text)
-                {
-                    dg.Rows[i].Selected = true;
-                }
-
-                i++;
-            }
-
         }
 
         private void automobilesList_SelectedIndexChanged(object sender, EventArgs e)
@@ -198,7 +183,7 @@ namespace AdvertBase
         public bool SaveAndClose()
         {
             try
-            {                
+            {
                 DateTime now = DateTime.Now;
                 StringBuilder textForErrors = new StringBuilder("");
                 //cardList.Rows.Add(count, DateTime.Now, cardPhone.Text, cardAddress.Text, cardCost.Text, cardHeader.Text, "");
@@ -212,11 +197,11 @@ namespace AdvertBase
                 //ПАРОЛЬ - говорит само за себя - пароль пользователя БД MySQL
                 if (k_word.Text == "")
                 {
-                   textForErrors.Append("Заголовок не задан");
-                   textForErrors.AppendLine();
+                    textForErrors.Append("Заголовок не задан");
+                    textForErrors.AppendLine();
                 }
 
-                if(phone.Text=="")
+                if (phone.Text == "")
                 {
                     textForErrors.Append("Номер телефона не задан");
                     textForErrors.AppendLine();
@@ -251,7 +236,7 @@ namespace AdvertBase
             {
                 return false;
             }
-            
+
         }
 
         private void k_word_TextChanged(object sender, EventArgs e)
@@ -325,6 +310,105 @@ namespace AdvertBase
             {
                 return false;
             }
+        }
+
+        public void kod_pppr_ValueChanged(object sender, EventArgs e)
+        {
+            if ((kod_r.Text == "1") && (kod_pr.Text == "2") && (kod_ppr.Text == "1"))
+            {
+                switch (kod_pppr.Value.ToString())
+                {
+                    case "1":
+                        {
+                            townList.Items.Clear();
+                            string[] towns = new string[] { "пос. Первомайский", "с. Алханчурт", "с. Верхний Кани", "с. Верхняя Саниба", "с. Восход", "с. Гизель", "с. Даргавс", "с. Дачное", "с. Джимара", "с. Донгарон", "с. Ир", "с. Какадур", "с. Камбилеевское", "с. Кармадон", "с. Кобан", "с. Комгарон", "с. Куртат", "с. Ламардон", "с. Майское", "с. Михайловское", "с. Нижний Кани", "с. Нижняя Саниба", "с. Ногир", "с. Октябрьское", "с. Старая Саниба", "с. Сунжа", "с. Тарское", "с. Тменикау", "с. Фазикау", "с. Чермен", "ст. Архонская" };
+                            townList.Items.AddRange(towns);
+                            townList.Show();
+                            break;
+                        }
+                    case "2":
+                        {
+                            townList.Items.Clear();
+                            string[] towns = new string[] { "г. Беслан", "пос. Долаково", "с. Батако", "с. Брут", "с. Заманкул", "с. Зилга", "с. Новый Батако", "с. Ольгинское", "с. Раздзог", "с. Фарн", "с. Хумалаг", "с. Цалык" };
+                            townList.Items.AddRange(towns);
+                            townList.Show();
+                            break;
+                        }
+
+                    case "3":
+                        {
+                            townList.Items.Clear();
+                            string[] towns = new string[] { "г. Алагир", "п. Бурон", "п. Верхний Фиагдон", "п. Рамоново", "п. Холст", "п. Верхний Згид", "п. Нижний Згид", "п. Садон", "пгт Цементный Завод", "с. Абайтикау", "с. Архон", "с. Бад", "с. Барзикау", "с. Биз", "с. Верхний Бирагзанг", "с. Верхний Зарамаг", "с. Верхний Унал", "с. Верхний Цей", "с. Горная Карца", "с. Гусыра", "с. Дагом", "с. Дайкау", "с. Даллагкау", "с. Дзивгис", "с. Дзуарикау", "с. Дзуарикау", "с. Донисар", "с. Зинцар", "с. Кодахджин", "с. Красный ход", "с. Лац", "с. Лисри", "с. Майрамадаг", "с. Мизур", "с. Нижний Бирагзанг", "с. Нижний Унал", "с. Нижний Цей", "с. Ногкау", "с. Суадаг", "с. Тагардон", "с. Урикау", "с. Урсдон", "с. Харисджин", "с. Хидикус", "с. Хукали", "с. Цаликово", "с. Цамад", "с. Цмити", "с. Црау", "с. Варце", "с. Гори", "с. Елгона", "с. Ецина", "с. Згил", "с. Зригатта", "с. Калак", "с. Камсхо", "с. Клиат", "с. Курайтта", "с. Нар", "с. Нижний Зарамаг", "с. Потыфаз", "с. Регах", "с. Сагол", "с. Сатат", "с. Саубын", "с. Сахсат", "с. Синдзисар", "с. Слас", "с. Тапанкау", "с. Тиб", "с. Тибели", "с. Тибсли", "с. Хаталдон", "с. Ход", "с. Худисан", "с. Цасем", "с. Цемса", "с. Цми" };
+
+                            townList.Show();
+                            break;
+                        }
+                    case "4":
+                        {
+                            townList.Items.Clear();
+                            string[] towns = new string[] { "г. Ардон", "п. Бекан", "с. Кадгарон", "с. Кирово", "с. Коста", "с. Красногор", "с. Мичурино", "с. Нарт", "с. Рассвет", "с. Фиагдон", "с. Цмити" };
+                            townList.Show();
+                            break;
+                        }
+                    case "5":
+                        {
+                            townList.Items.Clear();
+                            string[] towns = new string[] { "с. Дарг-Кох", "ст. Змейская", "с. Иран", "с. Карджин", "с. Комсомольское", "с. Ставд-Дурт", "с. Эльхотово" };
+                            townList.Show();
+                            break;
+                        }
+                    case "6":
+                        {
+                            townList.Items.Clear();
+                            string[] towns = new string[] { "г. Дигорас.", "Дур-Дур", "с. Карман-Синдзикау", "с. Кора", "с. Мостиздах", "с. Урсдон", "ст. Николаевская" };
+                            townList.Show();
+                            break;
+                        }
+                    case "7":
+                        {
+                            townList.Items.Clear();
+                            string[] towns = new string[] { "с. Ахсарисар", "с. Калух", "с. Галиат", "с. Камунта", "с. Дунта", "с. Дзинага", "с. Ногкау", "с. Ахсау", "с. Мацута", "с. Нижний Задалеск", "с. Верхний Задалеск", "с. Нижний Нар", "с. Верхний Нар", "с. Ханазс. Лезгор", "с. Донифарс", "с. Лескен", "с. Махческ", "с. Вакац", "с. Казахта", "с. Калнахта", "с. Камата", "с. Фаснал", "с. Фараскатта", "с. Новый Урух", "с. Дзагепбарз", "с. Советское", "с. Средний Урух", "с. Стур-Дигора", "с. Куссус. Моска", "с. Одола", "с. Сурх-Дигора", "с. Толдзгун", "с. Хазнидон", "с. Чикола" };
+                            townList.Show();
+                            break;
+                        }
+                    case "8":
+                        {
+                            townList.Items.Clear();
+                            string[] towns = new string[] { "г. Моздок", "пос. Дружба", "пос. Калининский", "пос. Луковский", "пос. Любы Кондратенко", "пос. Мирный", "пос. Осетинский", "пос. Притеречный", "пос. Садовый", "пос. Советский", "пос. Тельмана", "пос. Теркум", "пос. Черноярский", "с. Весёлое", "с. Виноградное", "с. Елбаево", "с. Киевское", "с. Кизляр", "с. Комарово", "с. Кусово", "с. Малгобек", "с. Малый Малгобек", "с. Ново-Георгиевское", "с. Октябрьское", "с. Предгорное", "с. Раздольное", "с. Сухотское", "с. Троицкое", "с. Хурикау", "ст. Луковская", "ст. Ново-Осетинская", "ст. Павлодольская", "ст. Терская", "ст. Черноярская" };
+                            townList.Show();
+                            break;
+                        }
+                    default:
+                        townList.Hide();
+                        break;
+                }
+            }
+            else
+            {
+                automobilesList.Hide();
+            }
+        }
+
+        public void kod_r_ValueChanged(object sender, EventArgs e)
+        {
+            if (kod_r.Text == "2")
+            {
+                automobilesList.Show();
+            }
+            else
+            {
+                automobilesList.Hide();
+            }
+        }
+
+        private void townList_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void townList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            k_word.Text = townList.Text;
         }
     }
 }
