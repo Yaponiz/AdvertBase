@@ -70,7 +70,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(131, 23);
             this.button1.TabIndex = 4;
-            this.button1.Text = "Количество повторов";
+            this.button1.Text = "Добавить повторы";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // cardList
