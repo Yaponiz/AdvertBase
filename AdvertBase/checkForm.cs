@@ -67,8 +67,8 @@ namespace AdvertBase
                 myConnection.Close(); //Обязательно закрываем соединение!
             }
             catch (Exception exp)
-            { 
-            
+            {
+                MessageBox.Show(exp.Message);
             }
         }
 
@@ -119,7 +119,7 @@ namespace AdvertBase
             }
             catch (Exception exp)
             {
-
+                MessageBox.Show(exp.Message);
             }
         }
     }

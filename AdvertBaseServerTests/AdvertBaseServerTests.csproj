@@ -6,11 +6,11 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C5ADECEB-B012-447C-AEE4-22F7D43C27DC}</ProjectGuid>
+    <ProjectGuid>{BD3B4791-D89B-474E-91F7-1589C38F756D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdvertBaseTests</RootNamespace>
-    <AssemblyName>AdvertBaseTests</AssemblyName>
+    <RootNamespace>AdvertBaseServerTests</RootNamespace>
+    <AssemblyName>AdvertBaseServerTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -46,7 +46,6 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -57,29 +56,22 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="authuserTest.cs" />
-    <Compile Include="CardTest.cs" />
-    <Compile Include="catalogNameDlgTest.cs" />
-    <Compile Include="checkCardTest.cs" />
-    <Compile Include="checkFormTest.cs" />
-    <Compile Include="EditControlJobTest.cs" />
-    <Compile Include="EditControlTest.cs" />
-    <Compile Include="EditFormTest.cs" />
-    <Compile Include="mainFormTest.cs" />
+    <Compile Include="countByDateTest.cs" />
+    <Compile Include="ExportFormTest.cs" />
     <Compile Include="ProgramTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourcesTest.cs" />
-    <Compile Include="SearchTest.cs" />
-    <Compile Include="SearcResultsTest.cs" />
-    <Compile Include="settingsDataTest.cs" />
     <Compile Include="SettingsTest.cs" />
-    <Compile Include="templateEditorTest.cs" />
-    <Compile Include="usersFormTest.cs" />
+    <Compile Include="StatisticsTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Shadow Include="Test References\AdvertBase.accessor" />
+    <Shadow Include="Test References\AdvertBaseServer.accessor" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AdvertBaseServer\AdvertBaseServer.csproj">
+      <Project>{6B4AB80F-D42E-43B0-A389-358866413FC1}</Project>
+      <Name>AdvertBaseServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AdvertBase\AdvertBaseClient.csproj">
       <Project>{E87E29A7-C55F-4BBE-97B6-489B7F9EB3EA}</Project>
       <Name>AdvertBaseClient</Name>

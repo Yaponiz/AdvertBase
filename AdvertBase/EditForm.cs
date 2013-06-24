@@ -56,7 +56,7 @@ namespace AdvertBase
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            DialogResult res = MessageBox.Show("Удалить объявление?", "Удаление сообщения", MessageBoxButtons.YesNo);
+            DialogResult res = MessageBox.Show("Удалить объявление?", "Удаление объявления", MessageBoxButtons.YesNo);
             if (res==System.Windows.Forms.DialogResult.Yes)
             {
                 DateTime now = DateTime.Now;
