@@ -87,7 +87,7 @@
             this.cardPanel.Controls.Add(this.catName);
             this.cardPanel.Controls.Add(this.townList);
             this.cardPanel.Controls.Add(this.automobilesList);
-            this.cardPanel.Location = new System.Drawing.Point(0, 33);
+            this.cardPanel.Location = new System.Drawing.Point(0, 25);
             this.cardPanel.Name = "cardPanel";
             this.cardPanel.Size = new System.Drawing.Size(610, 284);
             this.cardPanel.TabIndex = 28;
@@ -100,7 +100,7 @@
             this.k_word.ForeColor = System.Drawing.Color.Blue;
             this.k_word.Location = new System.Drawing.Point(7, 62);
             this.k_word.Name = "k_word";
-            this.k_word.Size = new System.Drawing.Size(599, 33);
+            this.k_word.Size = new System.Drawing.Size(599, 30);
             this.k_word.TabIndex = 6;
             this.k_word.Text = "";
             this.k_word.TextChanged += new System.EventHandler(this.k_word_TextChanged);
@@ -238,7 +238,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label16.Location = new System.Drawing.Point(1, 95);
+            this.label16.Location = new System.Drawing.Point(2, 95);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(62, 24);
             this.label16.TabIndex = 29;
@@ -492,7 +492,7 @@
             // 
             // kod_pppr
             // 
-            this.kod_pppr.Location = new System.Drawing.Point(163, 10);
+            this.kod_pppr.Location = new System.Drawing.Point(163, 6);
             this.kod_pppr.Name = "kod_pppr";
             this.kod_pppr.Size = new System.Drawing.Size(47, 20);
             this.kod_pppr.TabIndex = 4;
@@ -501,7 +501,7 @@
             // 
             // kod_ppr
             // 
-            this.kod_ppr.Location = new System.Drawing.Point(110, 10);
+            this.kod_ppr.Location = new System.Drawing.Point(110, 6);
             this.kod_ppr.Name = "kod_ppr";
             this.kod_ppr.Size = new System.Drawing.Size(47, 20);
             this.kod_ppr.TabIndex = 3;
@@ -509,7 +509,7 @@
             // 
             // kod_pr
             // 
-            this.kod_pr.Location = new System.Drawing.Point(57, 10);
+            this.kod_pr.Location = new System.Drawing.Point(57, 6);
             this.kod_pr.Name = "kod_pr";
             this.kod_pr.Size = new System.Drawing.Size(47, 20);
             this.kod_pr.TabIndex = 2;
@@ -517,7 +517,7 @@
             // 
             // kod_r
             // 
-            this.kod_r.Location = new System.Drawing.Point(4, 10);
+            this.kod_r.Location = new System.Drawing.Point(4, 6);
             this.kod_r.Name = "kod_r";
             this.kod_r.Size = new System.Drawing.Size(47, 20);
             this.kod_r.TabIndex = 1;
@@ -546,7 +546,7 @@
             this.Controls.Add(this.cardPanel);
             this.Controls.Add(this.kod_r);
             this.Name = "EditControl";
-            this.Size = new System.Drawing.Size(612, 317);
+            this.Size = new System.Drawing.Size(612, 310);
             this.Enter += new System.EventHandler(this.EditControl_Enter);
             this.Leave += new System.EventHandler(this.EditControl_Leave);
             this.cardPanel.ResumeLayout(false);

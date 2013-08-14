@@ -53,7 +53,7 @@ namespace AdvertBase
                     
                     catalogList.Rows.Add(id, R1, R2, R3, R4, name);
                     i++;
-                    catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.DarkGray;
+                    catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(192, 192, 192);
                     if (R1 == "0")
                     {
                         catalogList.Rows[i].DefaultCellStyle.BackColor= System.Drawing.Color.DarkCyan;
@@ -62,17 +62,17 @@ namespace AdvertBase
                     }
                     if (R2 == "0")
                     {
-                        catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.DarkSeaGreen;
+                        catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(0,128,128);
                         continue;
                     }
                     if (R3 == "0")
                     {
-                        catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.ForestGreen;
+                        catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(166, 202, 240);
                         continue;
                     }
                     if (R4 == "0")
                     {
-                        catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.CadetBlue;
+                        catalogList.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(128, 128, 128);
                         continue;
                     }
                 }
@@ -89,7 +89,7 @@ namespace AdvertBase
                 card.Enter += this.cardName;
                 selectedCard = card.Name;
                 listOfCards.Controls.Add(card);
-                listOfCards.Height += card.Height + 10;
+                //listOfCards.Height += card.Height + 10;
                
             }
             catch (Exception e)
@@ -602,7 +602,7 @@ namespace AdvertBase
                     card.Enter += this.cardName;
                     selectedCard = card.Name;
                     listOfCards.Controls.Add(card);
-                    listOfCards.Height += card.Height + 10;
+                    //listOfCards.Height += card.Height + 10;
                 }
                 else
                 {
@@ -1169,6 +1169,13 @@ namespace AdvertBase
         private void groupBox3_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            AdvertBase.update up = new AdvertBase.update();
+            up.checkUpdates();
+            up.downloadUpdate();
         }
     }
 }

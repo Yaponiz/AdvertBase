@@ -116,25 +116,25 @@ namespace AdvertBase
 
         private void cardPanel_Enter(object sender, EventArgs e)
         {
-            this.BackColor = Color.Gray;
+            this.BackColor = Color.DimGray;
             selected = 1;
         }
 
         private void cardPanel_Leave(object sender, EventArgs e)
         {
-            this.BackColor = Color.DimGray;
+            this.BackColor = Color.DarkGray;
             selected = 0;
         }
 
         private void EditControl_Enter(object sender, EventArgs e)
         {
-            this.BackColor = Color.Gray;
+            this.BackColor = Color.DimGray;
             selected = 1;
         }
 
         private void EditControl_Leave(object sender, EventArgs e)
         {
-            this.BackColor = Color.DimGray;
+            this.BackColor = Color.DarkGray;
             selected = 0;
         }
 
@@ -168,13 +168,13 @@ namespace AdvertBase
 
         public void SetSelected()
         {
-            this.BackColor = Color.Gray;
+            this.BackColor = Color.DimGray;
             selected = 1;
         }
 
         public void UnSetSelected()
         {
-            this.BackColor = Color.DimGray;
+            this.BackColor = Color.DarkGray;
             selected = 0;
         }
 

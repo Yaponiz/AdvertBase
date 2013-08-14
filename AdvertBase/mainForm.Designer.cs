@@ -58,21 +58,9 @@ namespace AdvertBase
             this.toolStripButton11 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.listOfCards = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.catalogList = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.addCard = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.catalogTab = new System.Windows.Forms.TabControl();
+            this.serviceController1 = new System.ServiceProcess.ServiceController();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
             this.secondPhone = new System.Windows.Forms.TextBox();
@@ -97,18 +85,29 @@ namespace AdvertBase
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Del = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.serviceController1 = new System.ServiceProcess.ServiceController();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.catalogList = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.listOfCards = new System.Windows.Forms.FlowLayoutPanel();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.addCard = new System.Windows.Forms.Button();
+            this.catalogTab = new System.Windows.Forms.TabControl();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.catalogList)).BeginInit();
-            this.catalogTab.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cardList)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.catalogList)).BeginInit();
+            this.catalogTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -132,7 +131,8 @@ namespace AdvertBase
             this.toolStripButton9,
             this.toolStripButton10,
             this.toolStripButton11,
-            this.toolStripButton12});
+            this.toolStripButton12,
+            this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -254,168 +254,16 @@ namespace AdvertBase
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // tabPage1
-            // 
-            this.tabPage1.AutoScroll = true;
-            this.tabPage1.ContextMenuStrip = this.contextMenuStrip1;
-            this.tabPage1.Controls.Add(this.listOfCards);
-            this.tabPage1.Controls.Add(this.groupBox3);
-            this.tabPage1.Controls.Add(this.button4);
-            this.tabPage1.Controls.Add(this.button3);
-            this.tabPage1.Controls.Add(this.addCard);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1222, 568);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Ввод карточек";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // listOfCards
-            // 
-            this.listOfCards.Location = new System.Drawing.Point(368, 76);
-            this.listOfCards.Name = "listOfCards";
-            this.listOfCards.Size = new System.Drawing.Size(612, 100);
-            this.listOfCards.TabIndex = 29;
-            this.listOfCards.Click += new System.EventHandler(this.listOfCards_Click);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.catalogList);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox3.Location = new System.Drawing.Point(3, 3);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(359, 562);
-            this.groupBox3.TabIndex = 28;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Главный каталог";
-            this.groupBox3.Enter += new System.EventHandler(this.groupBox3_Enter);
-            // 
-            // catalogList
-            // 
-            this.catalogList.AllowUserToAddRows = false;
-            this.catalogList.AllowUserToDeleteRows = false;
-            this.catalogList.AllowUserToResizeColumns = false;
-            this.catalogList.AllowUserToResizeRows = false;
-            this.catalogList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.catalogList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.catalogList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn6,
-            this.dataGridViewTextBoxColumn8,
-            this.dataGridViewTextBoxColumn9,
-            this.dataGridViewTextBoxColumn10,
-            this.dataGridViewTextBoxColumn12,
-            this.dataGridViewTextBoxColumn7});
-            this.catalogList.Location = new System.Drawing.Point(3, 16);
-            this.catalogList.MultiSelect = false;
-            this.catalogList.Name = "catalogList";
-            this.catalogList.ReadOnly = true;
-            this.catalogList.RowHeadersWidth = 4;
-            this.catalogList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.catalogList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.catalogList.Size = new System.Drawing.Size(356, 543);
-            this.catalogList.StandardTab = true;
-            this.catalogList.TabIndex = 29;
-            this.catalogList.TabStop = false;
-            this.catalogList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.catalogList_CellClick);
-            this.catalogList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.catalogList_CellContentClick);
-            // 
-            // dataGridViewTextBoxColumn6
-            // 
-            this.dataGridViewTextBoxColumn6.HeaderText = "id";
-            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-            this.dataGridViewTextBoxColumn6.ReadOnly = true;
-            this.dataGridViewTextBoxColumn6.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn8
-            // 
-            this.dataGridViewTextBoxColumn8.HeaderText = "1";
-            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
-            this.dataGridViewTextBoxColumn8.ReadOnly = true;
-            this.dataGridViewTextBoxColumn8.Width = 20;
-            // 
-            // dataGridViewTextBoxColumn9
-            // 
-            this.dataGridViewTextBoxColumn9.HeaderText = "2";
-            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
-            this.dataGridViewTextBoxColumn9.ReadOnly = true;
-            this.dataGridViewTextBoxColumn9.Width = 20;
-            // 
-            // dataGridViewTextBoxColumn10
-            // 
-            this.dataGridViewTextBoxColumn10.HeaderText = "3";
-            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
-            this.dataGridViewTextBoxColumn10.ReadOnly = true;
-            this.dataGridViewTextBoxColumn10.Width = 20;
-            // 
-            // dataGridViewTextBoxColumn12
-            // 
-            this.dataGridViewTextBoxColumn12.HeaderText = "4";
-            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
-            this.dataGridViewTextBoxColumn12.ReadOnly = true;
-            this.dataGridViewTextBoxColumn12.Width = 20;
-            // 
-            // dataGridViewTextBoxColumn7
-            // 
-            this.dataGridViewTextBoxColumn7.HeaderText = "Название";
-            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-            this.dataGridViewTextBoxColumn7.ReadOnly = true;
-            this.dataGridViewTextBoxColumn7.Width = 255;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(499, 19);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(125, 23);
-            this.button4.TabIndex = 26;
-            this.button4.Text = "Удалить объявление";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button3
-            // 
-            this.button3.AccessibleDescription = "New card";
-            this.button3.Location = new System.Drawing.Point(368, 19);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(125, 23);
-            this.button3.TabIndex = 25;
-            this.button3.Tag = "New card";
-            this.button3.Text = "Новое объявление";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // addCard
-            // 
-            this.addCard.ContextMenuStrip = this.contextMenuStrip1;
-            this.addCard.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.addCard.Image = ((System.Drawing.Image)(resources.GetObject("addCard.Image")));
-            this.addCard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.addCard.Location = new System.Drawing.Point(838, 19);
-            this.addCard.Name = "addCard";
-            this.addCard.Size = new System.Drawing.Size(125, 32);
-            this.addCard.TabIndex = 2;
-            this.addCard.Text = "Добавить";
-            this.addCard.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.addCard.UseVisualStyleBackColor = true;
-            this.addCard.Click += new System.EventHandler(this.addCard_Click);
-            // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "openFolder_16bt.ico");
             // 
-            // catalogTab
+            // serviceController1
             // 
-            this.catalogTab.Controls.Add(this.tabPage1);
-            this.catalogTab.Controls.Add(this.tabPage2);
-            this.catalogTab.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.catalogTab.Location = new System.Drawing.Point(0, 25);
-            this.catalogTab.Name = "catalogTab";
-            this.catalogTab.SelectedIndex = 0;
-            this.catalogTab.Size = new System.Drawing.Size(1230, 594);
-            this.catalogTab.TabIndex = 3;
+            this.serviceController1.MachineName = "hp-ПК";
+            this.serviceController1.ServiceName = "MySQL51";
             // 
             // tabPage2
             // 
@@ -550,9 +398,9 @@ namespace AdvertBase
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSize = true;
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.Controls.Add(this.cardList);
@@ -564,9 +412,9 @@ namespace AdvertBase
             // 
             // cardList
             // 
-            this.cardList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cardList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cardList.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.cardList.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
             this.cardList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -667,10 +515,162 @@ namespace AdvertBase
             this.Del.Name = "Del";
             this.Del.Width = 40;
             // 
-            // serviceController1
+            // tabPage1
             // 
-            this.serviceController1.MachineName = "hp-ПК";
-            this.serviceController1.ServiceName = "MySQL51";
+            this.tabPage1.ContextMenuStrip = this.contextMenuStrip1;
+            this.tabPage1.Controls.Add(this.catalogList);
+            this.tabPage1.Controls.Add(this.listOfCards);
+            this.tabPage1.Controls.Add(this.button4);
+            this.tabPage1.Controls.Add(this.button3);
+            this.tabPage1.Controls.Add(this.addCard);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1222, 568);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Ввод карточек";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // catalogList
+            // 
+            this.catalogList.AllowUserToAddRows = false;
+            this.catalogList.AllowUserToDeleteRows = false;
+            this.catalogList.AllowUserToResizeColumns = false;
+            this.catalogList.AllowUserToResizeRows = false;
+            this.catalogList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.catalogList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.catalogList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn6,
+            this.dataGridViewTextBoxColumn8,
+            this.dataGridViewTextBoxColumn9,
+            this.dataGridViewTextBoxColumn10,
+            this.dataGridViewTextBoxColumn12,
+            this.dataGridViewTextBoxColumn7});
+            this.catalogList.Location = new System.Drawing.Point(858, 3);
+            this.catalogList.MultiSelect = false;
+            this.catalogList.Name = "catalogList";
+            this.catalogList.ReadOnly = true;
+            this.catalogList.RowHeadersWidth = 4;
+            this.catalogList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.catalogList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.catalogList.Size = new System.Drawing.Size(356, 543);
+            this.catalogList.StandardTab = true;
+            this.catalogList.TabIndex = 30;
+            this.catalogList.TabStop = false;
+            this.catalogList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.catalogList_CellClick);
+            this.catalogList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.catalogList_CellContentClick);
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.HeaderText = "id";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            this.dataGridViewTextBoxColumn6.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.HeaderText = "1";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            this.dataGridViewTextBoxColumn8.ReadOnly = true;
+            this.dataGridViewTextBoxColumn8.Width = 20;
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            this.dataGridViewTextBoxColumn9.HeaderText = "2";
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.ReadOnly = true;
+            this.dataGridViewTextBoxColumn9.Width = 20;
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            this.dataGridViewTextBoxColumn10.HeaderText = "3";
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.dataGridViewTextBoxColumn10.ReadOnly = true;
+            this.dataGridViewTextBoxColumn10.Width = 20;
+            // 
+            // dataGridViewTextBoxColumn12
+            // 
+            this.dataGridViewTextBoxColumn12.HeaderText = "4";
+            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.ReadOnly = true;
+            this.dataGridViewTextBoxColumn12.Width = 20;
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.HeaderText = "Название";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            this.dataGridViewTextBoxColumn7.Width = 255;
+            // 
+            // listOfCards
+            // 
+            this.listOfCards.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listOfCards.AutoScroll = true;
+            this.listOfCards.Location = new System.Drawing.Point(6, 41);
+            this.listOfCards.Name = "listOfCards";
+            this.listOfCards.Size = new System.Drawing.Size(670, 521);
+            this.listOfCards.TabIndex = 29;
+            this.listOfCards.Click += new System.EventHandler(this.listOfCards_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(137, 3);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(125, 23);
+            this.button4.TabIndex = 26;
+            this.button4.Text = "Удалить объявление";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button3
+            // 
+            this.button3.AccessibleDescription = "New card";
+            this.button3.Location = new System.Drawing.Point(6, 3);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(125, 23);
+            this.button3.TabIndex = 25;
+            this.button3.Tag = "New card";
+            this.button3.Text = "Новое объявление";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // addCard
+            // 
+            this.addCard.ContextMenuStrip = this.contextMenuStrip1;
+            this.addCard.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.addCard.Image = ((System.Drawing.Image)(resources.GetObject("addCard.Image")));
+            this.addCard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.addCard.Location = new System.Drawing.Point(551, 3);
+            this.addCard.Name = "addCard";
+            this.addCard.Size = new System.Drawing.Size(125, 32);
+            this.addCard.TabIndex = 2;
+            this.addCard.Text = "Добавить";
+            this.addCard.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.addCard.UseVisualStyleBackColor = true;
+            this.addCard.Click += new System.EventHandler(this.addCard_Click);
+            // 
+            // catalogTab
+            // 
+            this.catalogTab.Controls.Add(this.tabPage1);
+            this.catalogTab.Controls.Add(this.tabPage2);
+            this.catalogTab.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.catalogTab.Location = new System.Drawing.Point(0, 25);
+            this.catalogTab.Name = "catalogTab";
+            this.catalogTab.SelectedIndex = 0;
+            this.catalogTab.Size = new System.Drawing.Size(1230, 594);
+            this.catalogTab.TabIndex = 3;
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // mainForm
             // 
@@ -689,10 +689,6 @@ namespace AdvertBase
             this.Shown += new System.EventHandler(this.mainForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.catalogList)).EndInit();
-            this.catalogTab.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -700,6 +696,9 @@ namespace AdvertBase
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cardList)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.catalogList)).EndInit();
+            this.catalogTab.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -711,9 +710,7 @@ namespace AdvertBase
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.TabPage tabPage1;
         private System.ServiceProcess.ServiceController serviceController1;
-        private System.Windows.Forms.Button addCard;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ToolStripButton toolStripButton5;
@@ -723,18 +720,10 @@ namespace AdvertBase
         private ToolStripButton toolStripButton9;
         private ToolStripButton toolStripButton10;
         private ToolStripButton toolStripButton11;
-        private Button button4;
-        private Button button3;
         private ToolTip toolTip1;
-        private GroupBox groupBox3;
         private ToolStripButton toolStripButton12;
-        private FlowLayoutPanel listOfCards;
         private ToolStripButton toolStripButton6;
         private TabPage tabPage2;
-        private Panel panel1;
-        public DataGridView cardList;
-        public TabControl catalogTab;
-        public DataGridView catalogList;
         private Panel panel2;
         private TextBox secondPhone;
         private NumericUpDown numericUpDown1;
@@ -747,12 +736,8 @@ namespace AdvertBase
         private Label label3;
         private TextBox searchstringText;
         private Button button2;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private Panel panel1;
+        public DataGridView cardList;
         private DataGridViewTextBoxColumn num;
         private DataGridViewTextBoxColumn date;
         private DataGridViewTextBoxColumn phone;
@@ -762,6 +747,20 @@ namespace AdvertBase
         private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn author;
         private DataGridViewButtonColumn Del;
+        private TabPage tabPage1;
+        public DataGridView catalogList;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private FlowLayoutPanel listOfCards;
+        private Button button4;
+        private Button button3;
+        private Button addCard;
+        public TabControl catalogTab;
+        private ToolStripButton toolStripButton1;
     }
 }
 

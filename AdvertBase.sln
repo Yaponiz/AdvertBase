@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvertBaseClient", "AdvertBase\AdvertBaseClient.csproj", "{E87E29A7-C55F-4BBE-97B6-489B7F9EB3EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseMover", "DatabaseMover\DatabaseMover.csproj", "{3602DDB0-958D-47A6-BCF3-7650DD2ACD52}"
@@ -23,6 +23,46 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedItemsTest", "SharedItemsTest\SharedItemsTest.csproj", "{C29C873C-D4B0-41DC-804D-B0C99CB2C376}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 7
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://yaponiz.visualstudio.com/defaultcollection
+		SccProjectUniqueName0 = SharedItems\\SharedItems.csproj
+		SccProjectName0 = SharedItems
+		SccAuxPath0 = https://yaponiz.visualstudio.com/defaultcollection
+		SccLocalPath0 = SharedItems
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = AdvertBase\\AdvertBaseClient.csproj
+		SccProjectName1 = AdvertBase
+		SccAuxPath1 = https://yaponiz.visualstudio.com/defaultcollection
+		SccLocalPath1 = AdvertBase
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName2 = DatabaseMover\\DatabaseMover.csproj
+		SccProjectName2 = DatabaseMover
+		SccAuxPath2 = https://yaponiz.visualstudio.com/defaultcollection
+		SccLocalPath2 = DatabaseMover
+		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName3 = AdvertBaseTests\\AdvertBaseTests.csproj
+		SccProjectName3 = AdvertBaseTests
+		SccAuxPath3 = https://yaponiz.visualstudio.com/defaultcollection
+		SccLocalPath3 = AdvertBaseTests
+		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName4 = AdvertBaseServer\\AdvertBaseServer.csproj
+		SccProjectName4 = AdvertBaseServer
+		SccAuxPath4 = https://yaponiz.visualstudio.com/defaultcollection
+		SccLocalPath4 = AdvertBaseServer
+		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName5 = AdvertBaseServerTests\\AdvertBaseServerTests.csproj
+		SccProjectName5 = AdvertBaseServerTests
+		SccAuxPath5 = https://yaponiz.visualstudio.com/defaultcollection
+		SccLocalPath5 = AdvertBaseServerTests
+		SccProvider5 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName6 = SharedItemsTest\\SharedItemsTest.csproj
+		SccProjectName6 = SharedItemsTest
+		SccAuxPath6 = https://yaponiz.visualstudio.com/defaultcollection
+		SccLocalPath6 = SharedItemsTest
+		SccProvider6 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = AdvertBase.vsmdi
 	EndGlobalSection
